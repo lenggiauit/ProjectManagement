@@ -1,4 +1,4 @@
-# Project Management tool
+# Project management tool
 
 This project to build a tool to manage project for a small team like trello.
 
