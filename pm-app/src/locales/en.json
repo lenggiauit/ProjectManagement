@@ -1,4 +1,10 @@
 {
+    "app_title": "PM",
+    "nav_dashboard": "Dashboard",
+    "nav_projects": "Projects",
+    "nav_teams": "Teams",
+    "nav_profile": "Profile",
+    "nav_logout": "Logout",
     "OrLoginWith": "Or Login With",
     "LoginWithDemoAccount": "Login With Demo Account",
     "Rememberme": "Remember me",
@@ -29,5 +35,6 @@
     "ForgotpasswordSubmitedSuccessMsg": "We have sent an email with a link to reset your password. Please help to check your email. Thank!",
     "ResetPassword": "Reset password",
     "ResetPasswordSuccessMsg": "Your password has been reset successfully.",
-    "NotExistUser": "User doesn't exist in our system."
+    "NotExistUserMsg": "User doesn't exist in our system.",
+    "ResetPasswordExpiredMsg": "Time to reset your password was expired."
 }

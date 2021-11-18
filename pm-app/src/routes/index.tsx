@@ -4,9 +4,33 @@ import GlobalSpinner from "../components/globalSpinner";
 import NagistarLoading from "../components/nagistarLoading";
 import history from "../utils/history";
 
-const Home = lazy(() => {
+const Dashboard = lazy(() => {
     return Promise.all([
-        import("../views/home"),
+        import("../views/dashboard"),
+        new Promise(resolve => setTimeout(resolve, 500))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
+const Projects = lazy(() => {
+    return Promise.all([
+        import("../views/projects"),
+        new Promise(resolve => setTimeout(resolve, 500))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
+const Teams = lazy(() => {
+    return Promise.all([
+        import("../views/teams"),
+        new Promise(resolve => setTimeout(resolve, 500))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
+const Profile = lazy(() => {
+    return Promise.all([
+        import("../views/profile"),
         new Promise(resolve => setTimeout(resolve, 500))
     ])
         .then(([moduleExports]) => moduleExports);
@@ -51,7 +75,10 @@ const IndexRouter: React.FC = (): ReactElement => {
             <Router history={history}>
                 <Suspense fallback={<NagistarLoading />}>
                     <Switch>
-                        <Route path="/" exact component={Home} />
+                        <Route path="/" exact component={Dashboard} />
+                        <Route path="/projects" exact component={Projects} />
+                        <Route path="/teams" exact component={Teams} />
+                        <Route path="/profile" exact component={Profile} />
                         <Route path="/login" exact component={Login} />
                         <Route path="/register" exact component={Register} />
                         <Route path="/forgotpassword" exact component={ForgotPassword} />

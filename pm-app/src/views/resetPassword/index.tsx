@@ -8,6 +8,7 @@ import { dictionaryList } from '../../locales';
 import { useResetPasswordMutation } from '../../services/account';
 import { ResultCode } from '../../types/type';
 import { Md5 } from 'md5-typescript';
+import PageLoading from '../../components/pageLoading';
 
 interface FormValues {
     password: string;
@@ -70,6 +71,9 @@ const ResetPassword: React.FC = () => {
 
         return (
             <>
+                {isLoading && <>
+                    <PageLoading />
+                </>}
                 <div className="div-centered">
                     <div className="main-content">
                         <div className="bg-white rounded shadow-7 w-400 mw-100 p-6 position-absolute top-50 start-50 translate-middle">
@@ -99,7 +103,17 @@ const ResetPassword: React.FC = () => {
                                     </div>
                                 </Form>
                             </Formik>
-                            {data && data.resultCode != ResultCode.Success.valueOf() && <>
+                            {data && data.resultCode == ResultCode.Expired.valueOf() && <>
+                                <div className="alert alert-danger" role="alert">
+                                    <Translation tid="ResetPasswordExpiredMsg" />
+                                </div>
+                            </>}
+                            {data && data.resultCode == ResultCode.NotExistUser.valueOf() && <>
+                                <div className="alert alert-danger" role="alert">
+                                    <Translation tid="NotExistUserMsg" />
+                                </div>
+                            </>}
+                            {data && data.resultCode == ResultCode.Error.valueOf() && <>
                                 <div className="alert alert-danger" role="alert">
                                     <Translation tid="ErrorMsg" />
                                 </div>

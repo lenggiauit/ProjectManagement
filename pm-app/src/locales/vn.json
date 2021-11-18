@@ -1,4 +1,10 @@
 {
+    "app_title": "PM",
+    "nav_dashboard": "Dashboard",
+    "nav_projects": "Projects",
+    "nav_teams": "Teams",
+    "nav_profile": "Profile",
+    "nav_logout": "Logout",
     "OrLoginWith": "Hoặc đăng nhập với",
     "LoginWithDemoAccount": "Đăng nhập với tài khoản demo",
     "Rememberme": "Nhớ đăng nhập",

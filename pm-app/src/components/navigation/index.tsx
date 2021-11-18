@@ -4,28 +4,35 @@ import * as bt from 'react-bootstrap';
 import { Translation } from '../../components/translation/'
 import { LanguageSelector } from '../languageSelector';
 import { AppProvider } from '../../contexts/appContext';
+import { logout } from '../../utils/functions';
+import { AnimationLogo } from '../animationLogo';
 const Navigation: React.FC = () => {
     return (
         <>
-            <bt.Navbar collapseOnSelect variant="light" expand="lg">
-                <bt.Container>
-                    <bt.Navbar.Brand href="/"><Translation tid="app_title" /></bt.Navbar.Brand>
-                    <bt.Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <bt.Navbar.Collapse id="responsive-navbar-nav">
-                        <bt.Nav>
-                            <bt.Nav.Link href="/"><Translation tid="home" /></bt.Nav.Link>
-                        </bt.Nav>
-                        {/* <bt.Nav>
-                            <bt.Nav.Link href="/who"><Translation tid="who" /></bt.Nav.Link>
-                        </bt.Nav>
-                        <bt.Nav>
-                            <bt.Nav.Link href="/vaccinedata"><Translation tid="vaccinedata" /></bt.Nav.Link>
-                        </bt.Nav> */}
-                        <bt.Nav className="me-auto"></bt.Nav>
+
+            <nav className="navbar navbar-expand-lg navbar-dark">
+                <div className="container">
+
+                    <div className="navbar-left mr-4">
+                        <button className="navbar-toggler" type="button"><span className="navbar-toggler-icon"></span></button>
+                        <a className="navbar-brand" href="/">
+                            <AnimationLogo width={45} height={45} />
+                        </a>
+                    </div>
+
+                    <section className="navbar-mobile">
+                        <nav className="nav nav-navbar nav-text-normal mr-auto">
+                            <a className="nav-link" href="/"><Translation tid="nav_dashboard" /></a>
+                            <a className="nav-link" href="/projects"><Translation tid="nav_projects" /></a>
+                            <a className="nav-link" href="/teams"><Translation tid="nav_teams" /></a>
+                            <a className="nav-link" href="/profile"><Translation tid="nav_profile" /></a>
+                            <a className="nav-link" href="#" onClick={() => logout()}><Translation tid="nav_logout" /></a>
+                        </nav>
                         <LanguageSelector />
-                    </bt.Navbar.Collapse>
-                </bt.Container>
-            </bt.Navbar>
+                    </section>
+
+                </div>
+            </nav>
         </>
     )
 };

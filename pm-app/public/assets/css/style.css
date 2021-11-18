@@ -168,3 +168,21 @@
   display: block !important;
   background-color: rgba(200, 200, 200, 0.5);
 }
+.navbar-dark {
+  background-color: #191919;
+}
+.navbar {
+  position: relative !important;
+  top: 0px !important;
+  width: 100%;
+}
+.navbar-dark .nav-navbar > .nav-link {
+  color: #ccc !important;
+}
+.navbar-dark .nav-navbar > .nav-link:hover {
+  color: #fff !important;
+}
+.nav-container {
+  width: 100%;
+  max-width: 100% !important;
+}

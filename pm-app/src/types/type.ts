@@ -22,6 +22,7 @@ export enum ResultCode {
     RegisterExistUserName = 4,
     NotExistUser = 5,
     NotExistEmail = 51,
+    Expired = 6,
 }
 export interface AppSetting {
     BaseUrl: string;

@@ -45,7 +45,8 @@ namespace PM.API.Services
             {
                 try
                 {
-                    string resetPasswordUrl = _appSettings.ForgotPasswordUrl + "?code=" + EncryptionHelper.Encrypt(user.Id.ToString(), _appSettings.Secret);
+                    long expireTime = DateTime.Now.AddDays(1).ToUniversalTime().Ticks;
+                    string resetPasswordUrl = string.Format("{0}?code={1}", _appSettings.ForgotPasswordUrl, EncryptionHelper.Encrypt(user.Id.ToString() + "_" + expireTime.ToString(), _appSettings.Secret)); 
                     await _emailService.Send(email,
                         _appSettings.MailForgotPasswordSubject,
                         string.Format(_appSettings.MailForgotPasswordContent, user.UserName, resetPasswordUrl));
@@ -88,17 +89,27 @@ namespace PM.API.Services
         {
             try
             {
-                Guid userId = Guid.Parse(EncryptionHelper.Decrypt(userInfo, _appSettings.Secret));
-                var user = await _accountServiceRepository.GetById(userId);
-                if (user != null)
-                { 
-                    await _accountServiceRepository.UpdateUserPasword(userId, newPassword);
-                    await _unitOfWork.CompleteAsync();
-                    return ResultCode.Success; 
+                string decryptedStr = EncryptionHelper.Decrypt(userInfo, _appSettings.Secret);
+
+                Guid userId = Guid.Parse(decryptedStr.Split('_')[0]);
+                long expireTime = long.Parse(decryptedStr.Split('_')[1]);
+                if (expireTime > DateTime.Now.ToUniversalTime().Ticks)
+                {
+                    var user = await _accountServiceRepository.GetById(userId);
+                    if (user != null)
+                    {
+                        await _accountServiceRepository.UpdateUserPasword(userId, newPassword);
+                        await _unitOfWork.CompleteAsync();
+                        return ResultCode.Success;
+                    }
+                    else
+                    {
+                        return ResultCode.NotExistUser;
+                    }
                 }
                 else
                 {
-                    return ResultCode.NotExistUser;
+                    return ResultCode.Expired;
                 }
             }
             catch (Exception e)

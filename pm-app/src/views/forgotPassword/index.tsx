@@ -7,6 +7,7 @@ import { useAppContext } from '../../contexts/appContext';
 import { dictionaryList } from '../../locales';
 import { useForgotPasswordMutation } from '../../services/account';
 import { ResultCode } from '../../types/type';
+import PageLoading from '../../components/pageLoading';
 
 interface FormValues {
     email: string;
@@ -48,6 +49,9 @@ const ForgotPassword: React.FC = (): ReactElement => {
 
         return (
             <>
+                {isLoading && <>
+                    <PageLoading />
+                </>}
                 <div className="div-centered">
                     <div className="main-content">
                         <div className="bg-white rounded shadow-7 w-400 mw-100 p-6 position-absolute top-50 start-50 translate-middle">
