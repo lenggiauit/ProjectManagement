@@ -1,6 +1,6 @@
 # Project management tool
 
-This project to build a tool to manage project for a small team like trello.
+This project is build a tool to manage project for a small team like trello.
 
 Technologies: .Net Core 3x, React TypeScript, Redux Toolkit - RTK Query, React Bootstrap.
 
