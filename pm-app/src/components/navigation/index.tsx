@@ -19,8 +19,8 @@ const Navigation: React.FC = () => {
                             <AnimationLogo width={45} height={45} />
                         </a>
                     </div>
-
                     <section className="navbar-mobile">
+                        <span className="navbar-divider d-mobile-none"></span>
                         <nav className="nav nav-navbar nav-text-normal mr-auto">
                             <a className="nav-link" href="/"><Translation tid="nav_dashboard" /></a>
                             <a className="nav-link" href="/projects"><Translation tid="nav_projects" /></a>

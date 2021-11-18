@@ -186,3 +186,6 @@
   width: 100%;
   max-width: 100% !important;
 }
+.navbar-dark .navbar-divider {
+  background-color: rgba(250, 250, 250, 0.85) !important;
+}
