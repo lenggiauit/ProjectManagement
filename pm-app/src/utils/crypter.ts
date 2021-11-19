@@ -1,4 +1,4 @@
-import { GlobalKeys } from '../types/type';
+import { GlobalKeys } from '../utils/constants';
 
 var CryptoJS = require("crypto-js");
 

@@ -2,12 +2,13 @@ import React, { useContext, MouseEvent } from 'react';
 import { localeOptions } from '../../locales';
 import { useAppContext } from '../../contexts/appContext';
 import * as bt from 'react-bootstrap';
+import { GlobalKeys } from '../../utils/constants';
 
 export const LanguageSelector: React.FC = () => {
     const { locale, setLocale } = useAppContext();
     const handleLanguageChange: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
         var selectLang = (e.target as HTMLAnchorElement).id;
-        window.localStorage.setItem('covid-19-tracking-lang', selectLang);
+        window.localStorage.setItem(GlobalKeys.LanguageSelectedKey, selectLang);
         setLocale(selectLang);
         console.log(selectLang);
     }

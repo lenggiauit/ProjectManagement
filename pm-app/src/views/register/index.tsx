@@ -7,9 +7,10 @@ import { dictionaryList } from '../../locales';
 import { useUserRegisterMutation } from '../../services/account';
 import PageLoading from '../../components/pageLoading';
 import TermOfService from '../termsOfService';
-import { AppSetting, ResultCode } from '../../types/type';
 import { Md5 } from "md5-typescript";
 import { GoogleLoginButton } from 'ts-react-google-login-component';
+import { ResultCode } from '../../utils/enums';
+import { AppSetting } from '../../types/type';
 
 let appSetting: AppSetting = require('../../appSetting.json');
 

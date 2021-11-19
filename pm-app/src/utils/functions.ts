@@ -1,8 +1,9 @@
 
 import { number } from "yup/lib/locale";
-import { AppSetting, GlobalKeys } from "../types/type";
+import { AppSetting } from "../types/type";
 import { decrypt, encrypt } from "./crypter";
 import { Cookies } from 'react-cookie';
+import { GlobalKeys } from "./constants";
 
 var cookies = new Cookies();
 const bgColors = ["primary", "secondary", "success", "danger", "warning", "info", "dark"];

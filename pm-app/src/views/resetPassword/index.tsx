@@ -6,9 +6,9 @@ import Loader from 'react-loader-spinner';
 import { useAppContext } from '../../contexts/appContext';
 import { dictionaryList } from '../../locales';
 import { useResetPasswordMutation } from '../../services/account';
-import { ResultCode } from '../../types/type';
 import { Md5 } from 'md5-typescript';
 import PageLoading from '../../components/pageLoading';
+import { ResultCode } from '../../utils/enums';
 
 interface FormValues {
     password: string;

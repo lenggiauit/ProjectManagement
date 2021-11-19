@@ -36,5 +36,9 @@
     "ResetPassword": "Reset password",
     "ResetPasswordSuccessMsg": "Your password has been reset successfully.",
     "NotExistUserMsg": "User doesn't exist in our system.",
-    "ResetPasswordExpiredMsg": "Time to reset your password was expired."
+    "ResetPasswordExpiredMsg": "Time to reset your password was expired.",
+    "page_not_found": "Page not found",
+    "page_not_found_msg": "Seems you're looking for something that doesn't exist.",
+    "Goback": "Go back",
+    "ReturnHome": "Return Home"
 }

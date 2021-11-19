@@ -1,5 +1,5 @@
 import React, { ReactElement, Suspense, lazy } from "react";
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 import GlobalSpinner from "../components/globalSpinner";
 import NagistarLoading from "../components/nagistarLoading";
 import history from "../utils/history";
@@ -67,6 +67,13 @@ const ResetPassword = lazy(() => {
         .then(([moduleExports]) => moduleExports);
 });
 
+const Page404 = lazy(() => {
+    return Promise.all([
+        import("../views/pageNotFound"),
+        new Promise(resolve => setTimeout(resolve, 500))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
 
 
 const IndexRouter: React.FC = (): ReactElement => {
@@ -83,6 +90,8 @@ const IndexRouter: React.FC = (): ReactElement => {
                         <Route path="/register" exact component={Register} />
                         <Route path="/forgotpassword" exact component={ForgotPassword} />
                         <Route path="/resetPassword" exact component={ResetPassword} />
+                        <Route path="/404" component={Page404} />
+                        <Redirect to="/404" />
                     </Switch>
                 </Suspense>
             </Router>

@@ -7,7 +7,6 @@ import { store } from './store';
 
 import reportWebVitals from './reportWebVitals';
 import { setAuthenticateUser } from './store/userSlice';
-import { GlobalKeys } from './types/type';
 import { decrypt, encrypt } from './utils/crypter';
 import { getLoggedUser } from './utils/functions';
 

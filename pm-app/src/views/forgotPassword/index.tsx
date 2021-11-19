@@ -6,8 +6,9 @@ import Loader from 'react-loader-spinner';
 import { useAppContext } from '../../contexts/appContext';
 import { dictionaryList } from '../../locales';
 import { useForgotPasswordMutation } from '../../services/account';
-import { ResultCode } from '../../types/type';
+
 import PageLoading from '../../components/pageLoading';
+import { ResultCode } from '../../utils/enums';
 
 interface FormValues {
     email: string;

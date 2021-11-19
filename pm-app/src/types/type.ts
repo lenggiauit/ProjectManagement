@@ -1,29 +1,10 @@
 import { number, string } from "yup/lib/locale";
+import { ResultCode } from "../utils/enums";
 
 export interface Dictionary<T> {
     [Key: string]: T;
 }
 
-export enum GlobalKeys {
-    LoggedUserKey = 'loggedUserKey',
-    EncryptKey = "encryptKey",
-}
-export enum Locale {
-    English = 'English',
-    VietNam = 'Việt Nam'
-}
-export enum ResultCode {
-    Invalid = -2,
-    Unknown = -1,
-    UnAuthorized = 0,
-    Success = 1,
-    Error = 2,
-    RegisterExistEmail = 3,
-    RegisterExistUserName = 4,
-    NotExistUser = 5,
-    NotExistEmail = 51,
-    Expired = 6,
-}
 export interface AppSetting {
     BaseUrl: string;
     GoogleClientId: string;

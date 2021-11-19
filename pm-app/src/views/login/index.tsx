@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { dictionaryList } from '../../locales';
 import { useAppContext } from '../../contexts/appContext';
 import { GoogleLoginButton } from 'ts-react-google-login-component';
-import { AppSetting, ResultCode } from '../../types/type';
+import { AppSetting } from '../../types/type';
 import { useUserLoginMutation } from '../../services/account';
 import { Md5 } from "md5-typescript";
 import PageLoading from '../../components/pageLoading';
@@ -14,6 +14,7 @@ import { setAuthenticateUser } from "../../store/userSlice";
 import { User } from '../../services/models/user';
 import { encrypt } from '../../utils/crypter';
 import { logout, setLoggedUser } from '../../utils/functions';
+import { ResultCode } from '../../utils/enums';
 let appSetting: AppSetting = require('../../appSetting.json');
 
 interface FormValues {

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { number } from 'yup/lib/locale';
 import { User } from '../services/models/user';
-import { GlobalKeys } from '../types/type';
+import { GlobalKeys } from '../utils/constants';
 import { decrypt, encrypt } from '../utils/crypter';
 
 interface CurrentUserState {
