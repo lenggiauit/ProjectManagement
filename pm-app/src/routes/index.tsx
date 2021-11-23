@@ -28,6 +28,14 @@ const Teams = lazy(() => {
         .then(([moduleExports]) => moduleExports);
 });
 
+const Messages = lazy(() => {
+    return Promise.all([
+        import("../views/messages"),
+        new Promise(resolve => setTimeout(resolve, 500))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
 const Profile = lazy(() => {
     return Promise.all([
         import("../views/profile"),
@@ -75,7 +83,6 @@ const Page404 = lazy(() => {
         .then(([moduleExports]) => moduleExports);
 });
 
-
 const IndexRouter: React.FC = (): ReactElement => {
     return (
         <>
@@ -85,6 +92,7 @@ const IndexRouter: React.FC = (): ReactElement => {
                         <Route path="/" exact component={Dashboard} />
                         <Route path="/projects" exact component={Projects} />
                         <Route path="/teams" exact component={Teams} />
+                        <Route path="/messages" exact component={Messages} />
                         <Route path="/profile" exact component={Profile} />
                         <Route path="/login" exact component={Login} />
                         <Route path="/register" exact component={Register} />

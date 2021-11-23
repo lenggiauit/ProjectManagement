@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -17,20 +15,15 @@ namespace PM.API.Domain.Entities
             User = new HashSet<User>();
         }
 
-        [Key]
         public Guid Id { get; set; }
-        [StringLength(50)]
         public string Name { get; set; }
-        [StringLength(250)]
         public string Description { get; set; }
         public bool? IsActive { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatedBy { get; set; }
+        public bool? IsSystemRole { get; set; }
 
-        [InverseProperty("Role")]
         public virtual ICollection<PermissionInRole> PermissionInRole { get; set; }
-        [InverseProperty("Role")]
         public virtual ICollection<User> User { get; set; }
     }
 }

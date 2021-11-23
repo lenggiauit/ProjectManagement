@@ -12,20 +12,10 @@ import { RegisterResponse } from './communication/response/registerResponse';
 let appSetting: AppSetting = require('../appSetting.json');
 
 export const AccountService = createApi({
-    reducerPath: 'Register',
+    reducerPath: 'AccountService',
 
     baseQuery: fetchBaseQuery({
         baseUrl: appSetting.BaseUrl,
-        // prepareHeaders: (headers, { getState }) => {
-        //     // Get token from store (userSlice)
-        //     const token = "aaa"; //getState().user.currentUser?.token;
-
-        //     // Add token to headers
-        //     if (token) {
-        //         headers.set('Authorization', `Bearer ${token}`);
-        //     }
-        //     return headers;
-        // },
     }),
     endpoints: (builder) => ({
         UserRegister: builder.mutation<ApiResponse<RegisterResponse>, ApiRequest<RegisterRequest>>({

@@ -16,7 +16,7 @@ namespace PM.API.Persistence.Repositories
 
         public async Task<ResultCode> CheckEmail(string email)
         {
-            var existUser = await _context.User.Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
+            var existUser = await _context.User.AsNoTracking().Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
             if (existUser != null)
             { 
                 return  ResultCode.Invalid; 
@@ -29,7 +29,7 @@ namespace PM.API.Persistence.Repositories
 
         public async Task<ResultCode> CheckUserName(string userName)
         {
-            var existUser = await _context.User.Where(u => u.UserName.Equals(userName)).FirstOrDefaultAsync();
+            var existUser = await _context.User.AsNoTracking().Where(u => u.UserName.Equals(userName)).FirstOrDefaultAsync();
             if (existUser != null)
             {
                 return  ResultCode.Invalid;
@@ -42,36 +42,45 @@ namespace PM.API.Persistence.Repositories
 
         public async Task<User> GetByEmail(string email)
         {
-            return await _context.User.Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
+            return await _context.User.AsNoTracking().Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
         }
 
         public async Task<User> GetById(Guid id)
         {
-            return await _context.User.Where(u => u.Id.Equals(id)).FirstOrDefaultAsync();
+            return await _context.User.AsNoTracking().Where(u => u.Id.Equals(id)).FirstOrDefaultAsync();
         }
 
         public async Task<User> Login(string name, string password)
-        {
-            return await _context.User.AsQueryable().Where(a => (a.UserName.Equals(name) || a.Email.Equals(name)) && a.Password.Equals(password))
-            .Select(acc => new User()
-            {
-                Id = acc.Id, 
-                UserName = acc.UserName, 
-                Email = acc.Email,
-                Avatar = acc.Avatar,
-                RoleId = acc.RoleId,
-                Role = _context.Role.Where(r => r.Id == acc.RoleId).FirstOrDefault(),
-                //Permissions = _context.PermissionInRole.Where(pir => pir.RoleId == acc.RoleId)
-                //            .Join(_context.Permission,
-                //            perInRole => perInRole.PermissionId,
-                //            per => per.Id,
-                //            (perInRole, per) => per).ToList() 
-            }).FirstOrDefaultAsync();
+        { 
+                return await _context.User.AsNoTracking().Where(a => (a.UserName.Equals(name) || a.Email.Equals(name)) && a.Password.Equals(password))
+                 
+                .Select(acc => new User()
+                {
+                    Id = acc.Id,
+                    UserName = acc.UserName,
+                    Email = acc.Email,
+                    Avatar = acc.Avatar,
+                    RoleId = acc.RoleId,
+                    Role = _context.Role.Where(r => r.Id == acc.RoleId).FirstOrDefault(),
+                    Permissions = _context.PermissionInRole.Where(pir => pir.RoleId == acc.RoleId)
+                                .Join(_context.Permission.Select(per => new Permission
+                                {
+                                    Id = per.Id,
+                                    Code = per.Code,
+                                    Name = per.Name,
+                                    Description = per.Description,
+                                    IsActive = per.IsActive
+                                }),
+                                perInRole => perInRole.PermissionId,
+                                per => per.Id,
+                                (perInRole, per) => per).ToList()
+                }).FirstOrDefaultAsync();
+            
         }
 
         public async Task<User> LoginWithGoogle(string email)
         {
-            return await _context.User.AsQueryable().Where(a => a.Email.Equals(email))
+            return await _context.User.AsNoTracking().Where(a => a.Email.Equals(email))
             .Select(acc => new User()
             {
                 Id = acc.Id,
@@ -80,17 +89,24 @@ namespace PM.API.Persistence.Repositories
                 Avatar = acc.Avatar,
                 RoleId = acc.RoleId,
                 Role = _context.Role.Where(r => r.Id == acc.RoleId).FirstOrDefault(),
-                //Permissions = _context.PermissionInRole.Where(pir => pir.RoleId == acc.RoleId)
-                //            .Join(_context.Permission,
-                //            perInRole => perInRole.PermissionId,
-                //            per => per.Id,
-                //            (perInRole, per) => per).ToList()
+                Permissions = _context.PermissionInRole.Where(pir => pir.RoleId == acc.RoleId)
+                            .Join(_context.Permission.Select(per => new Permission
+                            {
+                                Id = per.Id,
+                                Code = per.Code,
+                                Name = per.Name,
+                                Description = per.Description,
+                                IsActive = per.IsActive
+                            }),
+                                perInRole => perInRole.PermissionId,
+                                per => per.Id,
+                                (perInRole, per) => per).ToList()
             }).FirstOrDefaultAsync();
         }
 
         public async Task<ResultCode> Register(string name, string email, string password)
         {
-            var existUser = await _context.User.Where(u => u.UserName.Equals(name) || u.Email.Equals(email)).FirstOrDefaultAsync();
+            var existUser = await _context.User.AsNoTracking().Where(u => u.UserName.Equals(name) || u.Email.Equals(email)).FirstOrDefaultAsync();
             if (existUser != null)
             {
                 if(existUser.Email.Equals(email))

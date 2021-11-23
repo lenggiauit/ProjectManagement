@@ -189,3 +189,54 @@
 .navbar-dark .navbar-divider {
   background-color: rgba(250, 250, 250, 0.85) !important;
 }
+.section {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+.card-body.team-container {
+  min-height: 120px;
+  max-height: 120px;
+}
+
+.team-container {
+  text-align: right;
+  padding: 2rem;
+  border-radius: 10px;
+}
+.team-container.team-type {
+  position: relative;
+}
+.team-container .team-type-tag {
+  position: absolute;
+  top: 0;
+  left: 40px;
+  color: #fff;
+  padding: 1px 0.75rem;
+  padding-right: 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  font-weight: 400;
+  border-top-right-radius: 5rem;
+  border-bottom-right-radius: 5rem;
+  transform: rotate(90deg);
+  transform-origin: top left;
+}
+.team-container .team-type-tag.dev {
+  background-color: #3cd458;
+}
+.team-container .team-type-tag.qc {
+  background-color: #0cc2f7;
+}
+.team-container .team-type-tag.ba {
+  background-color: #f70c70;
+}
+.team-container .team-type-tag.po {
+  background-color: #e220f1;
+}
+.team-container .team-type-tag.production {
+  background-color: #c3f114;
+}
+.team-container .team-type-tag.management {
+  background-color: #f1a114;
+}

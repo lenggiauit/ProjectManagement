@@ -3,6 +3,7 @@
     "nav_dashboard": "Dashboard",
     "nav_projects": "Projects",
     "nav_teams": "Teams",
+    "nav_messages": "Messages",
     "nav_profile": "Profile",
     "nav_logout": "Logout",
     "OrLoginWith": "Or Login With",
@@ -40,5 +41,6 @@
     "page_not_found": "Page not found",
     "page_not_found_msg": "Seems you're looking for something that doesn't exist.",
     "Goback": "Go back",
-    "ReturnHome": "Return Home"
+    "ReturnHome": "Return Home",
+    "TeamsList": "Team List"
 }

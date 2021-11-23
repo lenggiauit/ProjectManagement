@@ -13,6 +13,10 @@ namespace PM.API.Mapping
         public AutoMapperProfile()
         { 
             CreateMap<User, UserResource>();
+            CreateMap<Role, RoleResource>();
+            CreateMap<Permission, PermissionResource>();
+            CreateMap<Team, TeamResource>();
+
 
         }
     }

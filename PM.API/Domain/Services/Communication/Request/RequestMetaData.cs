@@ -7,8 +7,7 @@ namespace PM.API.Domain.Services.Communication.Request
 {
     public class RequestMetaData
     {
-        public Paging Paging { get; set; }
-        public string[] SortBy { get; set; }
+        public Paging Paging { get; set; } 
         public string[] OrderBy { get; set; }
     }
     public class Paging

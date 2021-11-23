@@ -6,15 +6,18 @@ import { selectUser } from "../../store/userSlice";
 import { decrypt } from '../../utils/crypter';
 import { getLoggedUser } from '../../utils/functions';
 import * as bt from 'react-bootstrap';
-import ListTeam from '../../components/team/listTeam';
 
 
-const Teams: React.FC = (): ReactElement => {
+const Message: React.FC = (): ReactElement => {
 
     return (
         <>
             <Layout>
-                <ListTeam />
+                <bt.Container>
+                    <bt.Row>
+                        <h1>Message</h1>
+                    </bt.Row>
+                </bt.Container>
 
             </Layout>
 
@@ -22,4 +25,4 @@ const Teams: React.FC = (): ReactElement => {
     );
 }
 
-export default Teams;
+export default Message;

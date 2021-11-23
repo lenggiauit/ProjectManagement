@@ -52,7 +52,7 @@ namespace PM.API
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {
                 // Adds a custom error response factory when ModelState is invalid
-                options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.ProduceErrorResponse;
+                options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.ProduceErrorResponse; 
             });
             services.AddCors();
             services.AddDbContext<PMContext>();
@@ -65,9 +65,11 @@ namespace PM.API
             services.Configure<AppSettings>(appSettingsSection);
             // services
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEmailService, EmailService>();
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IHttpClientFactoryService, HttpClientFactoryService>();
@@ -91,7 +93,7 @@ namespace PM.API
                     {
                         var accService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
                         var userId = Guid.Parse(context.Principal.Identity.Name);
-                        var user = accService.GetById(userId);
+                        var user = accService.GetById(userId).Result;
                         if (user == null)
                         {
                             context.Fail("Unauthorized");
@@ -136,8 +138,7 @@ namespace PM.API
                 RequestPath = "/Files"
             });
             app.UseRouting();
-
-
+             
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()

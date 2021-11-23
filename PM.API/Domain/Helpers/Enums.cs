@@ -17,7 +17,8 @@ namespace PM.API.Domain.Helpers
         RegisterExistUserName = 4,
         NotExistUser = 5,
         NotExistEmail = 51,
-        Expired = 6
+        Expired = 6,
+        DoNotPermission = 7
 
     }
 }

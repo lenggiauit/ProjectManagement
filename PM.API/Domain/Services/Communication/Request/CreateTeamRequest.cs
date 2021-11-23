@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Resources
+namespace PM.API.Domain.Services.Communication.Request
 {
-    public class TeamResource
+    public class CreateTeamRequest
     {
-        public Guid Id { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required] 
         public string Description { get; set; }
         public bool? IsPublic { get; set; }
-        public bool? IsActive { get; set; }
-        public Guid? CreateBy { get; set; }
-        public DateTime? CreateDate { get; set; }
     }
 }
