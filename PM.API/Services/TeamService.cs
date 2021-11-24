@@ -17,9 +17,9 @@ namespace PM.API.Services
         private readonly ITeamRepository _teamRepository; 
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppSettings _appSettings;
-        private readonly ILogger<AccountService> _logger;
+        private readonly ILogger<TeamService> _logger;
 
-        public TeamService(ITeamRepository teamRepository,  ILogger<AccountService> logger, IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        public TeamService(ITeamRepository teamRepository,  ILogger<TeamService> logger, IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
         {
             _teamRepository = teamRepository; 
             _logger = logger;

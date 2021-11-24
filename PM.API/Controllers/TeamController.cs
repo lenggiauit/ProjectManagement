@@ -19,11 +19,11 @@ namespace PM.API.Controllers
     public class TeamController : Controller
     {
         private readonly ITeamService _teamServices; 
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<TeamController> _logger;
         private readonly AppSettings _appSettings;
         private IMapper _mapper;
         public TeamController(
-            ILogger<AccountController> logger,
+            ILogger<TeamController> logger,
             IMapper mapper,
             ITeamService teamServices, 
             IOptions<AppSettings> appSettings)

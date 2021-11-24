@@ -16,7 +16,9 @@ namespace PM.API.Mapping
             CreateMap<Role, RoleResource>();
             CreateMap<Permission, PermissionResource>();
             CreateMap<Team, TeamResource>();
-
+            CreateMap<Project, ProjectResource>();
+            CreateMap<ProjectStatus, ProjectStatusResource>();
+            CreateMap<Todo, TodoResource>();
 
         }
     }
