@@ -4,6 +4,7 @@ import { AuthenticateRequest } from './communication/request/authenticateRequest
 import { ForgotpasswordRequest } from './communication/request/forgotpasswordRequest';
 import { RegisterRequest } from './communication/request/registerRequest';
 import { ResetPasswordRequest } from './communication/request/resetPasswordRequest';
+import { UpdateProfileRequest } from './communication/request/updateProfileRequest';
 import { AuthenticateResponse } from './communication/response/authenticateResponse';
 import { CommonResponse } from './communication/response/commonResponse';
 import { ForgotpasswordResponse } from './communication/response/forgotpasswordResponse';
@@ -58,8 +59,18 @@ export const AccountService = createApi({
                 return response;
             },
         }),
+        UserUpdateProfile: builder.mutation<ApiResponse<CommonResponse>, ApiRequest<UpdateProfileRequest>>({
+            query: (payload) => ({
+                url: 'account/updateProfile',
+                method: 'post',
+                body: payload
+            }),
+            transformResponse(response: ApiResponse<CommonResponse>) {
+                return response;
+            },
+        }),
 
     })
 });
 
-export const { useUserRegisterMutation, useUserLoginMutation, useForgotPasswordMutation, useResetPasswordMutation } = AccountService;
+export const { useUserRegisterMutation, useUserLoginMutation, useForgotPasswordMutation, useResetPasswordMutation, useUserUpdateProfileMutation } = AccountService;

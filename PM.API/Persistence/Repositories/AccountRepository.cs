@@ -61,12 +61,16 @@ namespace PM.API.Persistence.Repositories
                     Email = acc.Email,
                     Avatar = acc.Avatar,
                     RoleId = acc.RoleId,
+                    FullName = acc.FullName,
+                    Phone = acc.Phone,
+                    Address = acc.Address,
+                    JobTitle = acc.JobTitle,
                     Role = _context.Role.Where(r => r.Id == acc.RoleId).FirstOrDefault(),
                     Permissions = _context.PermissionInRole.Where(pir => pir.RoleId == acc.RoleId)
                                 .Join(_context.Permission.Select(per => new Permission
                                 {
                                     Id = per.Id,
-                                    Code = per.Code,
+                                    Code = per.Code.Trim(),
                                     Name = per.Name,
                                     Description = per.Description,
                                     IsActive = per.IsActive
@@ -87,13 +91,17 @@ namespace PM.API.Persistence.Repositories
                 UserName = acc.UserName,
                 Email = acc.Email,
                 Avatar = acc.Avatar,
+                FullName = acc.FullName,
+                Phone = acc.Phone,
+                Address = acc.Address,
+                JobTitle = acc.JobTitle,
                 RoleId = acc.RoleId,
                 Role = _context.Role.Where(r => r.Id == acc.RoleId).FirstOrDefault(),
                 Permissions = _context.PermissionInRole.Where(pir => pir.RoleId == acc.RoleId)
                             .Join(_context.Permission.Select(per => new Permission
                             {
                                 Id = per.Id,
-                                Code = per.Code,
+                                Code = per.Code.Trim(),
                                 Name = per.Name,
                                 Description = per.Description,
                                 IsActive = per.IsActive

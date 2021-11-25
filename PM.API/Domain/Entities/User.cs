@@ -12,6 +12,7 @@ namespace PM.API.Domain.Entities
         public User()
         {
             Todo = new HashSet<Todo>();
+            UserOnProject = new HashSet<UserOnProject>();
             UserOnTeam = new HashSet<UserOnTeam>();
         }
 
@@ -24,12 +25,16 @@ namespace PM.API.Domain.Entities
         public string Avatar { get; set; }
         public string Email { get; set; }
         public Guid? RoleId { get; set; }
+        public string FullName { get; set; }
+        public string Phone { get; set; }
+        public string JobTitle { get; set; }
+        public string Address { get; set; }
 
         public virtual Role Role { get; set; }
         public virtual ICollection<Todo> Todo { get; set; }
+        public virtual ICollection<UserOnProject> UserOnProject { get; set; }
         public virtual ICollection<UserOnTeam> UserOnTeam { get; set; }
         public virtual List<Permission> Permissions { get; set; }
         public virtual List<Team> Teams { get; set; }
-
     }
 }

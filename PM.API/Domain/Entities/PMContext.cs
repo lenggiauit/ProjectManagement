@@ -31,6 +31,7 @@ namespace PM.API.Domain.Entities
         public virtual DbSet<TodoStatus> TodoStatus { get; set; }
         public virtual DbSet<TodoType> TodoType { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserOnProject> UserOnProject { get; set; }
         public virtual DbSet<UserOnTeam> UserOnTeam { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -217,15 +218,25 @@ namespace PM.API.Domain.Entities
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
+                entity.Property(e => e.Address).HasMaxLength(250);
+
                 entity.Property(e => e.Avatar).HasMaxLength(255);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Email).HasMaxLength(250);
 
+                entity.Property(e => e.FullName).HasMaxLength(150);
+
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.JobTitle).HasMaxLength(250);
+
                 entity.Property(e => e.Password).HasMaxLength(250);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(20)
+                    .IsFixedLength();
 
                 entity.Property(e => e.UserName).HasMaxLength(250);
 
@@ -233,6 +244,29 @@ namespace PM.API.Domain.Entities
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK__User__RoleId__1EA48E88");
+            });
+
+            modelBuilder.Entity<UserOnProject>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.UserOnProject)
+                    .HasForeignKey(d => d.ProjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserOnPro__Proje__3F115E1A");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.UserOnProject)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserOnPro__RoleI__40058253");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserOnProject)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserOnPro__UserI__3E1D39E1");
             });
 
             modelBuilder.Entity<UserOnTeam>(entity =>

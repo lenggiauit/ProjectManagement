@@ -1,6 +1,7 @@
 USE [ProjectManagement]
 GO
-
+--- Delete from [dbo].[Permission]
+--- Select * from [dbo].[Permission]
 INSERT INTO [dbo].[Permission]
            ([Id]
            ,[Name]
@@ -50,7 +51,43 @@ INSERT INTO [dbo].[Permission]
            ,'Update team member'
            ,1
            ,GETDATE()
+            ), 
+			(NEWID()
+			   ,'Add New Project'
+			   ,'AddNewProject'
+			   ,'Add New Project'
+			   ,1
+			   ,GETDATE()
+            ), 
+			(NEWID()
+			   ,'Update Project'
+			   ,'UpdateProject'
+			   ,'Update Project Detail'
+			   ,1
+			   ,GETDATE()
+            ),
+			(NEWID()
+			   ,'Delete Project'
+			   ,'DeleteProject'
+			   ,'Delete Project Detail'
+			   ,1
+			   ,GETDATE()
+            ),
+			(NEWID()
+			   ,'Get Project list'
+			   ,'GetProjectList'
+			   ,'Get Project list'
+			   ,1
+			   ,GETDATE()
+            ), 
+			(NEWID()
+			   ,'Get Project list by user'
+			   ,'GetProjectListByUser'
+			   ,'Get Project list by user'
+			   ,1
+			   ,GETDATE()
             ) 
+			 
 GO
 
 

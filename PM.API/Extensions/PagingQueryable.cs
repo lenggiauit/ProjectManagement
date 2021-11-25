@@ -12,12 +12,12 @@ namespace PM.API.Extensions
     {
         public static IQueryable<T> GetPagingQueryable<T>(this IQueryable<T> query, RequestMetaData requestMetaData)
         {
-            if(requestMetaData.OrderBy != null)
+            if(requestMetaData?.OrderBy != null)
             { 
                 query = query.OrderBy(string
                     .Join(',', requestMetaData.OrderBy)); 
             }
-            if (requestMetaData.Paging != null)
+            if (requestMetaData?.Paging != null)
             {
                 query = query.Skip((requestMetaData.Paging.Index - 1) * requestMetaData.Paging.Size).Take(requestMetaData.Paging.Size);
             }

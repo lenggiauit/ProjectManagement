@@ -42,5 +42,17 @@
     "page_not_found_msg": "Seems you're looking for something that doesn't exist.",
     "Goback": "Go back",
     "ReturnHome": "Return Home",
-    "TeamsList": "Team List"
+    "TeamsList": "Team List",
+    "ProjectList": "Project List",
+    "all": "All",
+    "archived": "Archived",
+    "Profile": "Profile",
+    "FullName": "Full name",
+    "JobTitle": "Job title",
+    "Phone": "Phone",
+    "Email": "Email",
+    "Address": "Address",
+    "Edit": "Edit",
+    "Save": "Save",
+    "Cancel": "Cancel"
 }

@@ -21,6 +21,7 @@ namespace PM.API.Domain.Helpers
         public string MailForgotPasswordSubject { get; set; }
         public string MailForgotPasswordContent { get; set; } 
         public string ForgotPasswordUrl { get; set; }
+        public string ClientErrorMappingUrl { get; set; }
 
 
     }

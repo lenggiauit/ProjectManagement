@@ -1,5 +1,5 @@
 export enum GlobalKeys {
-    LoggedUserKey = 'loggedUserKey',
+    LoggedUserKey = 'loggedUserKey_pm',
     EncryptKey = "encryptKey",
     LanguageSelectedKey = "PM.LanguageSelected"
 }

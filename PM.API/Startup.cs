@@ -1,7 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting; 
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -47,36 +48,39 @@ namespace PM.API
             //    option.Configuration = "[yourconnection string]";
             //    option.InstanceName = "[your instance name]";
             //});
-            services.AddCustomSwagger();
-            services.AddControllers();
-            services.AddControllers().ConfigureApiBehaviorOptions(options =>
-            {
-                // Adds a custom error response factory when ModelState is invalid
-                options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.ProduceErrorResponse; 
-            });
-            services.AddCors();
-            services.AddDbContext<PMContext>();
-            services.AddAutoMapper(typeof(Startup));
-            // ..... 
+
+            // AppSetting
             var appSettingsSection = Configuration.GetSection("AppSettings");
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             services.Configure<AppSettings>(appSettingsSection);
+
+            services.AddCustomSwagger();
+            services.AddControllers();
+            services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                // Adds a custom error response factory when ModelState is invalid
+                options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.ProduceErrorResponse;
+                options.ClientErrorMapping[StatusCodes.Status404NotFound].Link = appSettings.ClientErrorMappingUrl;
+            });
+            services.AddCors();
+            services.AddDbContext<PMContext>();
+            services.AddAutoMapper(typeof(Startup));
+           
             // services
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEmailService, EmailService>();
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IHttpClientFactoryService, HttpClientFactoryService>();
-
-            
-
-           
+             
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddHttpClient();
 
@@ -137,6 +141,7 @@ namespace PM.API
                 Path.Combine(Directory.GetCurrentDirectory(), "UploadFiles")),
                 RequestPath = "/Files"
             });
+             
             app.UseRouting();
              
             app.UseCors(x => x

@@ -1,6 +1,7 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { AccountService } from '../services/account';
+import { ProjectService } from '../services/project';
 import { TeamService } from '../services/team';
 import userReducer from './userSlice';
 export const store = configureStore({
@@ -8,14 +9,15 @@ export const store = configureStore({
         currentUser: userReducer,
         // Add the generated reducer as a specific top-level slice 
         [AccountService.reducerPath]: AccountService.reducer,
+        [ProjectService.reducerPath]: ProjectService.reducer,
         [TeamService.reducerPath]: TeamService.reducer,
-
     },
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({ serializableCheck: false })
             .concat(AccountService.middleware)
+            .concat(ProjectService.middleware)
             .concat(TeamService.middleware);
     }
 });

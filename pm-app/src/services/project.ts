@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ApiRequest, ApiResponse, AppSetting } from "../types/type";
 import { getLoggedUser } from '../utils/functions';
-import { GetTeamRequest } from './communication/request/getTeamRequest';
-import { GetTeamResponse } from './communication/response/getTeamResponse';
+import { GetProjectRequest } from './communication/request/getProjectRequest';
+import { GetProjectResponse } from './communication/response/getProjectResponse';
 
 let appSetting: AppSetting = require('../appSetting.json');
 
-export const TeamService = createApi({
-    reducerPath: 'TeamService',
+export const ProjectService = createApi({
+    reducerPath: 'ProjectService',
 
     baseQuery: fetchBaseQuery({
         baseUrl: appSetting.BaseUrl,
@@ -21,13 +21,13 @@ export const TeamService = createApi({
         },
     }),
     endpoints: (builder) => ({
-        GetTeamList: builder.mutation<ApiResponse<GetTeamResponse>, ApiRequest<GetTeamRequest>>({
+        GetProjectListByUser: builder.mutation<ApiResponse<GetProjectResponse>, ApiRequest<GetProjectRequest>>({
             query: (payload) => ({
-                url: 'team/getTeamList',
+                url: 'Project/getProjectListByUser',
                 method: 'post',
                 body: payload
             }),
-            transformResponse(response: ApiResponse<GetTeamResponse>) {
+            transformResponse(response: ApiResponse<GetProjectResponse>) {
                 return response;
             },
         }),
@@ -36,4 +36,4 @@ export const TeamService = createApi({
     })
 });
 
-export const { useGetTeamListMutation, } = TeamService;
+export const { useGetProjectListByUserMutation, } = ProjectService;

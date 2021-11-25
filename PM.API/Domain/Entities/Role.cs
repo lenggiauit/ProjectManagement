@@ -13,6 +13,7 @@ namespace PM.API.Domain.Entities
         {
             PermissionInRole = new HashSet<PermissionInRole>();
             User = new HashSet<User>();
+            UserOnProject = new HashSet<UserOnProject>();
         }
 
         public Guid Id { get; set; }
@@ -25,5 +26,6 @@ namespace PM.API.Domain.Entities
 
         public virtual ICollection<PermissionInRole> PermissionInRole { get; set; }
         public virtual ICollection<User> User { get; set; }
+        public virtual ICollection<UserOnProject> UserOnProject { get; set; }
     }
 }
