@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,6 +8,7 @@ using PM.API.Domain.Helpers;
 using PM.API.Domain.Services;
 using PM.API.Domain.Services.Communication.Request;
 using PM.API.Domain.Services.Communication.Response;
+using PM.API.Infrastructure;
 using PM.API.Resources;
 using System;
 using System.Collections.Generic;
@@ -16,8 +18,9 @@ using System.Threading.Tasks;
 
 namespace PM.API.Controllers
 {
+    [Authorize]
     [Route("Account")]
-    public class AccountController : Controller
+    public class AccountController : PMBaseController
     {
         private readonly IAccountService _accountServices;
         private readonly IHttpClientFactoryService _httpClientFactoryService;
@@ -38,6 +41,7 @@ namespace PM.API.Controllers
             _appSettings = appSettings.Value; 
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<AuthenticateResponse> Login([FromBody] BaseRequest<AuthenticateRequest> request)
         {
@@ -48,7 +52,7 @@ namespace PM.API.Controllers
                 {
                     var resources = _mapper.Map<User, UserResource>(user);
                     AccessToken accessToken = new AccessToken(); 
-                    resources.AccessToken = accessToken.GenerateToken(resources, _appSettings.Secret); 
+                    resources.AccessToken = accessToken.GenerateToken(user, _appSettings.Secret); 
                     return new AuthenticateResponse(resources);
                 }
                 else
@@ -61,7 +65,8 @@ namespace PM.API.Controllers
                 return new AuthenticateResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
-         
+
+        [AllowAnonymous]
         [HttpGet("LoginWithGoogle")]
         public async Task<AuthenticateResponse> LoginWithGoogle(string access_token)
         {
@@ -75,7 +80,7 @@ namespace PM.API.Controllers
                     {
                         var resources = _mapper.Map<User, UserResource>(user);
                         AccessToken accessToken = new AccessToken(); 
-                        resources.AccessToken = accessToken.GenerateToken(resources, _appSettings.Secret); 
+                        resources.AccessToken = accessToken.GenerateToken(user, _appSettings.Secret); 
                         return new AuthenticateResponse(resources);
                     }
                     else
@@ -94,7 +99,8 @@ namespace PM.API.Controllers
                 return new AuthenticateResponse(Constants.InvalidMsg, ResultCode.Error);
             }
         }
-          
+
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<RegisterResponse> Register([FromBody] BaseRequest<RegisterRequest> request)
         {
@@ -109,6 +115,7 @@ namespace PM.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("RegisterWithGoogle")]
         public async Task<RegisterResponse> RegisterWithGoogle(string access_token)
         {  
@@ -131,7 +138,8 @@ namespace PM.API.Controllers
                 return new RegisterResponse(Constants.InvalidMsg, ResultCode.Error);
             }
         }
-           
+
+        [AllowAnonymous]
         [HttpGet("CheckEmail")]
         public async Task<RegisterResponse> CheckEmail(string email)
         { 
@@ -139,6 +147,15 @@ namespace PM.API.Controllers
             return new RegisterResponse(string.Empty, result); 
         }
 
+        [AllowAnonymous]
+        [HttpGet("CheckEmailWithUser")]
+        public async Task<CommonResponse> CheckEmailWithUser(string email, Guid Id)
+        {
+            var result = await _accountServices.CheckEmailWithUser(email, Id);
+            return new CommonResponse(string.Empty, result);
+        }
+
+        [AllowAnonymous]
         [HttpGet("CheckUserName")]
         public async Task<RegisterResponse> CheckUserName(string name)
         {
@@ -146,6 +163,7 @@ namespace PM.API.Controllers
             return new RegisterResponse(string.Empty, result);
         }
 
+        [AllowAnonymous]
         [HttpPost("ForgotPassword")]
         public async Task<CommonResponse> ForgotPassword([FromBody] BaseRequest<ForgotPasswordRequest> request)
         {
@@ -172,7 +190,35 @@ namespace PM.API.Controllers
             {
                 return new CommonResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
-        } 
+        }
+
+        [HttpPost("UpdateProfile")]
+        public async Task<CommonResponse> UpdateProfile([FromBody] BaseRequest<UpdateProfileRequest> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _accountServices.UpdateProfile(GetCurrentUserId(), request);
+                return new CommonResponse(string.Empty, result); 
+            }
+            else
+            {
+                return new CommonResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+        }
+        
+        [HttpPost("UpdateUserAvatar")]
+        public async Task<CommonResponse> UpdateUserAvatar([FromBody] BaseRequest<UpdateUserAvatarRequest> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _accountServices.UpdateUserAvatar(GetCurrentUserId(), request);
+                return new CommonResponse(result);
+            }
+            else
+            {
+                return new CommonResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+        }
 
     }
 }

@@ -9,11 +9,7 @@ namespace PM.API.Domain.Entities
 {
     public partial class ProjectStatus
     {
-        public ProjectStatus()
-        {
-            Project = new HashSet<Project>();
-        }
-
+         
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -21,6 +17,6 @@ namespace PM.API.Domain.Entities
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatedBy { get; set; }
 
-        public virtual ICollection<Project> Project { get; set; }
+        public virtual List<Project> Project { get; set; }
     }
 }

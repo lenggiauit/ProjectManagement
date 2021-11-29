@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using PM.API.Domain.Entities;
 using PM.API.Resources;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace PM.API.Domain.Helpers
 {
     public class AccessToken
     {
-		public string GenerateToken(UserResource account, string secretKey)
+		public string GenerateToken(User user, string secretKey)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var key = Encoding.ASCII.GetBytes(secretKey);
@@ -21,8 +22,8 @@ namespace PM.API.Domain.Helpers
 			{
 				Subject = new ClaimsIdentity(new Claim[]
 				{
-					 new Claim(ClaimTypes.Name, account.Id.ToString()),
-					 new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(account)),
+					 new Claim(ClaimTypes.Name, user.Id.ToString()),
+					 new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(user)),
 				}),
 				Expires = DateTime.UtcNow.AddYears(10),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

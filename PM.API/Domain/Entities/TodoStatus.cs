@@ -9,11 +9,7 @@ namespace PM.API.Domain.Entities
 {
     public partial class TodoStatus
     {
-        public TodoStatus()
-        {
-            Todo = new HashSet<Todo>();
-        }
-
+        
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -21,6 +17,6 @@ namespace PM.API.Domain.Entities
         public Guid? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public virtual ICollection<Todo> Todo { get; set; }
+        public virtual List<Todo> Todo { get; set; }
     }
 }

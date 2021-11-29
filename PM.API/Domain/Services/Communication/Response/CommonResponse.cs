@@ -16,5 +16,7 @@ namespace PM.API.Domain.Services.Communication.Response
         { }
         public CommonResponse(bool success) : base(success)
         { }
+        public CommonResponse(ResultCode resultCode) : base(resultCode)
+        { }
     }
 } 

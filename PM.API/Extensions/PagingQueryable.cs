@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Data; 
 using System.Linq.Dynamic.Core;
+using PM.API.Domain.Helpers;
 
 namespace PM.API.Extensions
 {
@@ -16,6 +17,10 @@ namespace PM.API.Extensions
             { 
                 query = query.OrderBy(string
                     .Join(',', requestMetaData.OrderBy)); 
+            }
+            if(requestMetaData?.Paging == null)
+            {
+                query = query.Take(10);
             }
             if (requestMetaData?.Paging != null)
             {

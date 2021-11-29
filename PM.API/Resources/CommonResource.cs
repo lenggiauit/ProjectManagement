@@ -7,5 +7,6 @@ namespace PM.API.Resources
 {
     public class CommonResource
     {
+        public string ResultValue { get; set; }
     }
 }

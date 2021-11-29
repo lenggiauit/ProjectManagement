@@ -22,6 +22,14 @@ namespace PM.API.Domain.Helpers
         public string MailForgotPasswordContent { get; set; } 
         public string ForgotPasswordUrl { get; set; }
         public string ClientErrorMappingUrl { get; set; }
+        public string FileFolderPath { get; set; }
+        public string FileRequestUrl { get; set; }
+        public string AllowOriginUrl { get; set; }
+        public string AllowOriginUrl1 { get; set; }
+        public string AllowOriginUrl2 { get; set; }
+        public string AllowOriginUrl3 { get; set; }
+        public string AllowOriginUrl4 { get; set; } 
+        public int DefaultPageSize { get; set; }
 
 
     }

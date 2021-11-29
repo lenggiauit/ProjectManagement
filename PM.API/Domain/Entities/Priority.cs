@@ -8,18 +8,13 @@ using System.Collections.Generic;
 namespace PM.API.Domain.Entities
 {
     public partial class Priority
-    {
-        public Priority()
-        {
-            Todo = new HashSet<Todo>();
-        }
-
+    { 
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int? Order { get; set; }
         public string Color { get; set; }
         public bool? IsActive { get; set; }
 
-        public virtual ICollection<Todo> Todo { get; set; }
+        public virtual List<Todo> Todo { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PM.API.Domain.Helpers;
+using PM.API.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PM.API.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : PMBaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppSettings _appSettings;

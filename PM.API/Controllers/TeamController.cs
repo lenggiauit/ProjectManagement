@@ -8,6 +8,7 @@ using PM.API.Domain.Helpers;
 using PM.API.Domain.Services;
 using PM.API.Domain.Services.Communication.Request;
 using PM.API.Domain.Services.Communication.Response;
+using PM.API.Infrastructure;
 using PM.API.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace PM.API.Controllers
 {
     [Authorize]
     [Route("Team")]
-    public class TeamController : Controller
+    public class TeamController : PMBaseController
     {
         private readonly ITeamService _teamServices; 
         private readonly ILogger<TeamController> _logger;

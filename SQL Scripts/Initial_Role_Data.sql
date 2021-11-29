@@ -21,6 +21,12 @@ INSERT INTO [dbo].[Role]
            ,'Member role has some permission'
            , 1
 		   , 1
-           , GETDATE()) 
+           , GETDATE()),
+		    ( NEWID()
+           ,'Member'
+           ,'Member role has some permission'
+           , 1
+		   , 1
+           , GETDATE())  
 GO
 

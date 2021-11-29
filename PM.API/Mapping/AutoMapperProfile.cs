@@ -12,13 +12,18 @@ namespace PM.API.Mapping
     {
         public AutoMapperProfile()
         { 
-            CreateMap<User, UserResource>();
+            CreateMap<User, UserResource>(); 
             CreateMap<Role, RoleResource>();
             CreateMap<Permission, PermissionResource>();
             CreateMap<Team, TeamResource>();
             CreateMap<Project, ProjectResource>();
-            CreateMap<ProjectStatus, ProjectStatusResource>();
+            CreateMap<ProjectStatus, ProjectStatusResource>(); 
+            CreateMap<Conversation,ConversationResource>();
+            CreateMap<User, ConversationerResource>();
+            CreateMap<ConversationMessage, ConversationMessageResource>(); 
             CreateMap<Todo, TodoResource>();
+             
+
 
         }
     }

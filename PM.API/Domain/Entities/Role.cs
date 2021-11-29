@@ -9,12 +9,7 @@ namespace PM.API.Domain.Entities
 {
     public partial class Role
     {
-        public Role()
-        {
-            PermissionInRole = new HashSet<PermissionInRole>();
-            User = new HashSet<User>();
-            UserOnProject = new HashSet<UserOnProject>();
-        }
+        
 
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -24,8 +19,8 @@ namespace PM.API.Domain.Entities
         public Guid? CreatedBy { get; set; }
         public bool? IsSystemRole { get; set; }
 
-        public virtual ICollection<PermissionInRole> PermissionInRole { get; set; }
-        public virtual ICollection<User> User { get; set; }
-        public virtual ICollection<UserOnProject> UserOnProject { get; set; }
+        public virtual List<PermissionInRole> PermissionInRole { get; set; }
+        public virtual List<User> User { get; set; }
+        public virtual List<UserOnProject> UserOnProject { get; set; }
     }
 }

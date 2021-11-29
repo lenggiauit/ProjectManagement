@@ -254,9 +254,93 @@
   margin-bottom: 1.5rem;
   min-height: 380px;
 }
-.profile-me-2 {
-  margin-right: 0.5rem !important;
-}
 .profile-card hr {
   margin: 15px auto !important;
+}
+.profile-avatar-container {
+  position: relative;
+  width: 50%;
+  height: 50%;
+  overflow: hidden;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-avatar-container .profile-avatar-img {
+  /* width: 200px;
+  height: 150px; */
+}
+.profile-avatar-container .profile-avatar-edit-link-container {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+}
+.profile-avatar-container .profile-avatar-edit-link-container a {
+  width: 150px;
+  display: block;
+  margin: 0px auto;
+  height: 36px;
+  border-radius: 0 0 150px 150px;
+  background-color: #eee;
+  text-align: center;
+  line-height: 36px;
+}
+
+.profile-avatar-container:hover .profile-avatar-edit-link-container {
+  display: block;
+}
+.hide {
+  display: none;
+}
+.height-100vh-60px {
+  height: calc(100vh - 60px);
+}
+.conversationer-item-body-container:hover {
+  background-color: #f1f2f3;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.conversationer-container {
+  height: calc(100vh - 190px);
+}
+.conversation-detail-container {
+  height: calc(100vh - 190px);
+}
+.conversation-detail-body-container {
+  position: relative;
+}
+.conversation-detail-body-container .conversation-list-container {
+  height: calc(100vh - 220px);
+}
+.conversation-detail-body-container .conversation-detail-typing-users {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  max-height: 50px;
+  width: 100%;
+  display: block;
+}
+.typing-avatar {
+  width: 28px;
+  height: 28px;
+  margin-right: 5px;
+}
+.conversation-avatars-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.conversation-avatars-container img {
+  border: solid 3px rgba(250, 250, 250, 0.85);
+}
+.conversation-avatars-container img:first {
+  background-color: #e220f1;
+}
+.conversation-avatars-container img ~ img {
+  position: absolute;
+  left: 20%;
+  width: 78%;
 }

@@ -9,7 +9,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting; 
 using Microsoft.IdentityModel.Tokens;
 using PM.API.Domain.Entities;
-using PM.API.Domain.Helpers;
+using PM.API.Domain.Helpers; 
 using PM.API.Domain.Repositories;
 using PM.API.Domain.Services;
 using PM.API.Extensions;
@@ -67,17 +67,32 @@ namespace PM.API
             services.AddCors();
             services.AddDbContext<PMContext>();
             services.AddAutoMapper(typeof(Startup));
-           
+            // SignalR
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithOrigins(appSettings.AllowOriginUrl, appSettings.AllowOriginUrl1, appSettings.AllowOriginUrl2, appSettings.AllowOriginUrl3, appSettings.AllowOriginUrl4)
+                    .AllowCredentials();
+            }));
+            services.AddScoped<ConversationServiceHub>();
+            services.AddSignalR(); 
             // services
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IChatService, ChatService>();
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // File Service
+            services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IImageWriter, ImageWriter>();
 
             services.AddScoped<IHttpClientFactoryService, HttpClientFactoryService>();
              
@@ -101,6 +116,20 @@ namespace PM.API
                         if (user == null)
                         {
                             context.Fail("Unauthorized");
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/conversationServiceHub")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
                         }
                         return Task.CompletedTask;
                     }
@@ -132,31 +161,35 @@ namespace PM.API
             app.UseCustomSwagger(appSettings);
 
             app.UseStaticFiles();
-            string fileFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadFiles");
+            string fileFolder = Path.Combine(Directory.GetCurrentDirectory(), appSettings.FileFolderPath);
             if (!Directory.Exists(fileFolder))
                 Directory.CreateDirectory(fileFolder);
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "UploadFiles")),
-                RequestPath = "/Files"
+                Path.Combine(Directory.GetCurrentDirectory(), appSettings.FileFolderPath)),
+                RequestPath = appSettings.FileRequestUrl
             });
              
             app.UseRouting();
              
             app.UseCors(x => x
-                .AllowAnyOrigin()
+                .WithOrigins(appSettings.AllowOriginUrl, appSettings.AllowOriginUrl1, appSettings.AllowOriginUrl2, appSettings.AllowOriginUrl3, appSettings.AllowOriginUrl4)
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader()
+                .AllowCredentials());
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
+            app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            }); 
+                endpoints.MapHub<ConversationServiceHub>("/conversationServiceHub");
+            });
+
+           
+
 
         }
     }

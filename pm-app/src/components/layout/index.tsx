@@ -14,6 +14,7 @@ const Layout: React.FC = ({ children }): ReactElement => {
         return (
             <>
                 <AppProvider>
+
                     <bt.Container className="nav-container">
                         <bt.Row>
                             <Navigation />

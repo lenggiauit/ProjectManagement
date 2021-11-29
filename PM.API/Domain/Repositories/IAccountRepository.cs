@@ -1,5 +1,6 @@
 ﻿using PM.API.Domain.Entities;
 using PM.API.Domain.Helpers;
+using PM.API.Domain.Services.Communication.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,8 @@ namespace PM.API.Domain.Repositories
         Task<ResultCode> CheckUserName(string userName);
         Task<User> GetByEmail(string email);
         Task UpdateUserPasword(Guid id, string newPassword);
+        Task<bool> UpdateProfile(Guid id, UpdateProfileRequest payload);
+        Task<bool> UpdateUserAvatar(Guid id, string avartarUrl);
+        Task<ResultCode> CheckEmailWithUser(string email, Guid id);
     }
 }

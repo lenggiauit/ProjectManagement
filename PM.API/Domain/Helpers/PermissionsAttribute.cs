@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
+using PM.API.Domain.Entities;
 using PM.API.Domain.Services.Communication.Response;
 using PM.API.Resources;
 using System; 
@@ -29,7 +30,7 @@ namespace PM.API.Domain.Helpers
             {
                 try
                 {
-                    UserResource userResource = JsonConvert.DeserializeObject<UserResource>(claimUser.Value);
+                    User userResource = JsonConvert.DeserializeObject<User>(claimUser.Value);
                     if (!userResource.Permissions.Select(p => p.Code).AsEnumerable().Intersect(_permissions.AsEnumerable()).Any())
                     {
                         context.Result = new JsonResult(new CommonResponse("Do not permission", ResultCode.DoNotPermission));

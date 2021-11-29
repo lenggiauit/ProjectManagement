@@ -54,5 +54,9 @@
     "Address": "Address",
     "Edit": "Edit",
     "Save": "Save",
-    "Cancel": "Cancel"
+    "Cancel": "Cancel",
+    "Uploading": "Uploading",
+    "Updating": "Updating",
+    "UpdatedSuccessfully": "Updated successfully",
+    "isTyping": " is typing..."
 }

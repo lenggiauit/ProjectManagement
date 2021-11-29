@@ -4,6 +4,7 @@ using PM.API.Domain.Entities;
 using PM.API.Domain.Helpers;
 using PM.API.Domain.Repositories;
 using PM.API.Domain.Services;
+using PM.API.Domain.Services.Communication.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,15 @@ namespace PM.API.Services
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
         }
-        
+
         public async Task<ResultCode> CheckEmail(string email)
         {
             return await _accountServiceRepository.CheckEmail(email);
+        }
+
+        public async Task<ResultCode> CheckEmailWithUser(string email, Guid id)
+        {
+            return await _accountServiceRepository.CheckEmailWithUser(email, id);
         }
 
         public async Task<ResultCode> CheckUserName(string userName)
@@ -41,19 +47,19 @@ namespace PM.API.Services
         public async Task<ResultCode> ForgotPassword(string email)
         {
             var user = await _accountServiceRepository.GetByEmail(email);
-            if(user != null)
+            if (user != null)
             {
                 try
                 {
                     long expireTime = DateTime.Now.AddDays(1).ToUniversalTime().Ticks;
-                    string resetPasswordUrl = string.Format("{0}?code={1}", _appSettings.ForgotPasswordUrl, EncryptionHelper.Encrypt(user.Id.ToString() + "_" + expireTime.ToString(), _appSettings.Secret)); 
+                    string resetPasswordUrl = string.Format("{0}?code={1}", _appSettings.ForgotPasswordUrl, EncryptionHelper.Encrypt(user.Id.ToString() + "_" + expireTime.ToString(), _appSettings.Secret));
                     await _emailService.Send(email,
                         _appSettings.MailForgotPasswordSubject,
                         string.Format(_appSettings.MailForgotPasswordContent, user.UserName, resetPasswordUrl));
 
                     return ResultCode.Success;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     _logger.LogError(e.Message);
                     return ResultCode.Error;
@@ -62,7 +68,7 @@ namespace PM.API.Services
             else
             {
                 return ResultCode.NotExistEmail;
-            } 
+            }
         }
 
         public async Task<User> GetById(Guid id)
@@ -85,7 +91,7 @@ namespace PM.API.Services
             return await _accountServiceRepository.Register(name, email, password);
         }
 
-        public async  Task<ResultCode> ResetPassword(string userInfo, string newPassword)
+        public async Task<ResultCode> ResetPassword(string userInfo, string newPassword)
         {
             try
             {
@@ -116,6 +122,48 @@ namespace PM.API.Services
             {
                 _logger.LogError(e.Message);
                 return ResultCode.Error;
+            }
+        }
+
+        public async Task<ResultCode> UpdateProfile(Guid userId, BaseRequest<UpdateProfileRequest> request)
+        {
+            try
+            { 
+                if (await _accountServiceRepository.UpdateProfile(userId, request.Payload))
+                { 
+                    await _unitOfWork.CompleteAsync();
+                    return ResultCode.Success;
+                }
+                else
+                {
+                    return ResultCode.NotExistUser;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return (ResultCode.Error);
+            }
+        }
+
+        public async Task<ResultCode> UpdateUserAvatar(Guid userId, BaseRequest<UpdateUserAvatarRequest> request)
+        {
+            try
+            { 
+                if (await _accountServiceRepository.UpdateUserAvatar(userId, request.Payload.Avatar))
+                { 
+                    await _unitOfWork.CompleteAsync();
+                    return (ResultCode.Success);
+                }
+                else
+                {
+                    return (ResultCode.NotExistUser);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return (ResultCode.Error);
             }
         }
     }

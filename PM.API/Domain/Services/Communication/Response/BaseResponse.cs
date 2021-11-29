@@ -29,6 +29,12 @@ namespace PM.API.Domain.Services.Communication.Response
             Messages = string.Empty;
             Resource = default;
             ResultCode = success ? ResultCode.Success : ResultCode.Error;
-        } 
+        }
+        protected BaseResponse(ResultCode resultCode)
+        {
+            Messages = string.Empty;
+            Resource = default;
+            ResultCode = resultCode;
+        }
     }
 }

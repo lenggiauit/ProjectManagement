@@ -3,6 +3,7 @@ import { ApiRequest, ApiResponse, AppSetting } from "../types/type";
 import { getLoggedUser } from '../utils/functions';
 import { GetProjectRequest } from './communication/request/getProjectRequest';
 import { GetProjectResponse } from './communication/response/getProjectResponse';
+import * as FormDataFile from "form-data";
 
 let appSetting: AppSetting = require('../appSetting.json');
 

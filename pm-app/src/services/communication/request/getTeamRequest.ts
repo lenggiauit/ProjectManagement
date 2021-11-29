@@ -1,3 +1,3 @@
 export type GetTeamRequest = {
-    Id: any,
+    userId: any,
 };

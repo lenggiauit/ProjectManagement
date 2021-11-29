@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -9,13 +10,7 @@ namespace PM.API.Domain.Entities
 {
     public partial class User
     {
-        public User()
-        {
-            Todo = new HashSet<Todo>();
-            UserOnProject = new HashSet<UserOnProject>();
-            UserOnTeam = new HashSet<UserOnTeam>();
-        }
-
+        
         public Guid Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -31,10 +26,16 @@ namespace PM.API.Domain.Entities
         public string Address { get; set; }
 
         public virtual Role Role { get; set; }
-        public virtual ICollection<Todo> Todo { get; set; }
-        public virtual ICollection<UserOnProject> UserOnProject { get; set; }
-        public virtual ICollection<UserOnTeam> UserOnTeam { get; set; }
+        [NotMapped]
+        public virtual List<Todo> Todo { get; set; }
+        [NotMapped]
+        public virtual List<UserOnProject> UserOnProject { get; set; }
+        [NotMapped]
+        public virtual List<UserOnTeam> UserOnTeam { get; set; }
+        [NotMapped]
         public virtual List<Permission> Permissions { get; set; }
+        [NotMapped]
         public virtual List<Team> Teams { get; set; }
+
     }
 }

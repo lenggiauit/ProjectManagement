@@ -8,12 +8,7 @@ using System.Collections.Generic;
 namespace PM.API.Domain.Entities
 {
     public partial class Project
-    {
-        public Project()
-        {
-            Todo = new HashSet<Todo>();
-            UserOnProject = new HashSet<UserOnProject>();
-        }
+    { 
 
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -25,7 +20,7 @@ namespace PM.API.Domain.Entities
         public Guid? UpdatedBy { get; set; }
 
         public virtual ProjectStatus Status { get; set; }
-        public virtual ICollection<Todo> Todo { get; set; }
-        public virtual ICollection<UserOnProject> UserOnProject { get; set; }
+        public virtual List<Todo> Todo { get; set; }
+        public virtual List<UserOnProject> UserOnProject { get; set; }
     }
 }

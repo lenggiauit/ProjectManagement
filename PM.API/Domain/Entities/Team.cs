@@ -8,11 +8,7 @@ using System.Collections.Generic;
 namespace PM.API.Domain.Entities
 {
     public partial class Team
-    {
-        public Team()
-        {
-            UserOnTeam = new HashSet<UserOnTeam>();
-        }
+    { 
 
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -22,6 +18,6 @@ namespace PM.API.Domain.Entities
         public Guid? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public virtual ICollection<UserOnTeam> UserOnTeam { get; set; }
+        public virtual List<UserOnTeam> UserOnTeam { get; set; }
     }
 }

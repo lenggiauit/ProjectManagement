@@ -1,11 +1,9 @@
-
-import { number } from "yup/lib/locale";
 import { AppSetting } from "../types/type";
 import { decrypt, encrypt } from "./crypter";
 import { Cookies } from 'react-cookie';
 import { GlobalKeys } from "./constants";
-import { userInfo } from "os";
 import { User } from "../services/models/user";
+import { Redirect } from "react-router";
 
 var cookies = new Cookies();
 const bgColors = ["primary", "secondary", "success", "danger", "warning", "info", "dark"];
@@ -20,16 +18,15 @@ export const getLoggedUser = () => {
         const loggedUser = localStorage.getItem(GlobalKeys.LoggedUserKey);
         //const loggedUser = cookies.get(GlobalKeys.LoggedUserKey); 
         if (loggedUser) {
-
             return <User>JSON.parse(JSON.stringify(decrypt(loggedUser)));
         }
         else {
-            return null;
+            window.location.href = "/login";
         }
     }
     catch (e) {
         console.log(e);
-        return null;
+        window.location.href = "/login";
     }
 }
 

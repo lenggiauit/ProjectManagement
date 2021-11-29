@@ -8,6 +8,7 @@ using PM.API.Domain.Helpers;
 using PM.API.Domain.Services;
 using PM.API.Domain.Services.Communication.Request;
 using PM.API.Domain.Services.Communication.Response;
+using PM.API.Infrastructure;
 using PM.API.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace PM.API.Controllers
 {
     [Authorize]
     [Route("Project")]
-    public class ProjectController : Controller
+    public class ProjectController : PMBaseController
     {
         private readonly IProjectService _projectServices;
         private readonly ILogger<ProjectController> _logger;

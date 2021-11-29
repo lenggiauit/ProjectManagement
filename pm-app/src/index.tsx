@@ -1,25 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Routes from './routes/';
-
 import { Provider } from 'react-redux';
 import { store } from './store';
-
 import reportWebVitals from './reportWebVitals';
-import { setAuthenticateUser } from './store/userSlice';
-import { decrypt, encrypt } from './utils/crypter';
-import { getLoggedUser } from './utils/functions';
-
-
-// const loggedUser = getLoggedUser()
-// if (loggedUser) {
-//   store.dispatch(setAuthenticateUser(loggedUser))
-// }
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.render(
   <Provider store={store} >
     <React.StrictMode>
       <Routes />
+      <ToastContainer newestOnTop hideProgressBar position="bottom-right" autoClose={2000} />
     </React.StrictMode >
   </Provider>,
   document.getElementById('root')

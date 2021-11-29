@@ -9,7 +9,7 @@ const ListTeam: React.FC = () => {
     // get team list
     const [GetTeamList, { isLoading, data, error }] = useGetTeamListMutation();
     useEffect(() => {
-        GetTeamList({ payload: { Id: '' } });
+        GetTeamList({ payload: { userId: '' } });
 
     }, [])
 

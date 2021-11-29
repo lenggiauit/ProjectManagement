@@ -1,8 +1,7 @@
 ﻿using PM.API.Domain.Entities;
 using PM.API.Domain.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using PM.API.Domain.Services.Communication.Request; 
+using System; 
 using System.Threading.Tasks;
 
 namespace PM.API.Domain.Services
@@ -17,5 +16,8 @@ namespace PM.API.Domain.Services
         Task<ResultCode> CheckUserName(string userName);
         Task<ResultCode> ForgotPassword(string email);
         Task<ResultCode> ResetPassword(string userInfo, string newPassword);
+        Task<ResultCode> UpdateProfile(Guid userId, BaseRequest<UpdateProfileRequest> request);
+        Task<ResultCode> UpdateUserAvatar(Guid userId,BaseRequest<UpdateUserAvatarRequest> request);
+        Task<ResultCode> CheckEmailWithUser(string email, Guid id);
     }
 }
