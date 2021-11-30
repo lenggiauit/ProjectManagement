@@ -68,6 +68,10 @@ namespace PM.API.Services
                 var convResource =  JsonConvert.DeserializeObject<ConversationResource>(jsonConversation);
                 if(convResource != null)
                 {
+                    BaseRequest<CreateConversationRequest> request = new BaseRequest<CreateConversationRequest>() {  Payload = new CreateConversationRequest{
+                        Users = convResource.Conversationers.Select( u => u.Id).ToArray()
+                    } };
+                    await _chatServices.CreateConversation(GetCurrentUserId(), request);
                     foreach (var user in convResource.Conversationers)
                     {
                         await Clients.Group(user.Id.ToString().Trim()).SendAsync("onStartConversation", jsonConversation);
@@ -88,6 +92,7 @@ namespace PM.API.Services
                 if (convMessageResource != null)
                 {  
                     await Clients.Group(convMessageResource.ConversationId.ToString().Trim()).SendAsync("onReceivedMessage", jsonConversation);
+                    await Clients.Group(convMessageResource.ConversationId.ToString().Trim()).SendAsync("onConversationReceivedMessage", jsonConversation);
                     await _chatServices.SaveMessage(GetCurrentUserId(), convMessageResource.ConversationId, convMessageResource.Message);
                 }
             }
@@ -100,7 +105,8 @@ namespace PM.API.Services
 
         public async Task OnTyping(Guid conversationId, Guid userId)
         {
-            await Clients.Group(conversationId.ToString().Trim()).SendAsync("onUserTyping", userId.ToString().Trim());
+            await Clients.Group(conversationId.ToString().Trim()).SendAsync("onUserTyping", conversationId.ToString().Trim(), userId.ToString().Trim());
+            await Clients.Group(conversationId.ToString().Trim()).SendAsync("onConversationTyping", conversationId.ToString().Trim(), userId.ToString().Trim());
         }
         public async Task OnInviting(Guid conversationId, Guid userId)
         {

@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ApiRequest, ApiResponse, AppSetting } from "../types/type";
 import { getLoggedUser } from '../utils/functions';
 import { Conversation } from './models/conversation';
-import { GetConversationListRequest, GetMessagesRequest } from './communication/request/getConversationListRequest';
+import { ConversationalSearchRequest, GetConversationListRequest, GetMessagesRequest } from './communication/request/getConversationListRequest';
 import * as signalR from "@microsoft/signalr";
 import { ConversationMessage } from './models/conversationMessage';
 let appSetting: AppSetting = require('../appSetting.json');
@@ -15,7 +15,7 @@ export const signalRHubConnection = new signalR.HubConnectionBuilder()
     .build();
 
 export const StartSignalRHubConnection = () => {
-    if (!CheckSignalRHubConnection()) {
+    if (CheckSignalRHubConnection()) {
         signalRHubConnection.start().then(() => {
             // check connection
             signalRHubConnection.send("checkConnectionStatus", getLoggedUser()?.id);
@@ -30,7 +30,7 @@ export const StartSignalRHubConnection = () => {
 }
 
 export const CheckSignalRHubConnection = () => {
-    return signalRHubConnection.state === 'Connected';
+    return signalRHubConnection.state == 'Disconnected';
 }
 
 export const StopSignalRHubConnection = () => {
@@ -74,7 +74,18 @@ export const ChatService = createApi({
                 return response;
             },
         }),
+        ConversationalSearchKeyword: builder.mutation<ApiResponse<Conversation[]>, ApiRequest<ConversationalSearchRequest>>({
+            query: (payload) => ({
+                url: 'chat/conversationalSearch',
+                method: 'post',
+                body: payload,
+
+            }),
+            transformResponse(response: ApiResponse<Conversation[]>) {
+                return response;
+            },
+        }),
     })
 });
 
-export const { useGetConversationListByUserMutation, useGetMessagesByConversationMutation } = ChatService;
+export const { useGetConversationListByUserMutation, useGetMessagesByConversationMutation, useConversationalSearchKeywordMutation } = ChatService;

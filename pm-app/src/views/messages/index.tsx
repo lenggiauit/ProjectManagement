@@ -6,7 +6,7 @@ import Conversationer from '../../components/messages/conversationer';
 //@ts-ignore
 import { Scrollbars } from 'react-custom-scrollbars';
 import ConversationDetail from '../../components/messages/conversationDetail';
-import { signalRHubConnection, StartSignalRHubConnection, StopSignalRHubConnection, useGetConversationListByUserMutation } from '../../services/chat';
+import { signalRHubConnection, StartSignalRHubConnection, StopSignalRHubConnection, useConversationalSearchKeywordMutation, useGetConversationListByUserMutation } from '../../services/chat';
 import { ResultCode } from '../../utils/enums';
 import { Conversation } from '../../services/models/conversation';
 import { v4 } from 'uuid';
@@ -23,14 +23,21 @@ const Message: React.FC = (): ReactElement => {
     const { locale, } = useAppContext();
     const currentUser = getLoggedUser()!;
     const [GetConversationListByUser, GetConversationListByUserStatus] = useGetConversationListByUserMutation();
+    const [conversationalSearchKeyword, ConversationalSearchKeywordStatus] = useConversationalSearchKeywordMutation();
     const [selectedConversation, setSelectedConversation] = useState<Conversation>();
+
+    const [currentConversationTying, setcurrentConversationTying] = useState<Conversation>();
+
     const [isSelectedConversation, setIsSelectedConversation] = useState<boolean>(false);
+    const [isSearchingUser, setIsSearchingUser] = useState<boolean>(false);
     const [currentListConversations, setCurrentListConversations] = useState<Conversation[]>([]);
     const selectedConversationHandler = (conv: Conversation) => {
-        if (signalRHubConnection.state === 'Connected') {
-            signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
+        // console.log(conv.id);
+        // if (signalRHubConnection.state === 'Connected') {
+        //     //signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
 
-        }
+        // }
+        setSelectedConversation(conv);
     };
     // setCurrentListConversations when GetConversationListByUser compeleted 
     useEffect(() => {
@@ -40,38 +47,111 @@ const Message: React.FC = (): ReactElement => {
     }, [GetConversationListByUserStatus])
     // Start onload
     useEffect(() => {
-        GetConversationListByUser({ payload: { userId: currentUser?.id } });
         StartSignalRHubConnection();
+        GetConversationListByUser({ payload: { userId: currentUser?.id } });
+
         return () => {
             StopSignalRHubConnection();
         }
     }, []);
 
-    useEffect(() => {
-        signalRHubConnection.on("onStartConversation", conversationInfo => {
-            try {
-                const convInfo = JSON.parse(conversationInfo) as Conversation;
-                if (!isSelectedConversation) {
-                    if (currentListConversations.find(c => c.id === convInfo.id)) {
-                        setSelectedConversation(convInfo);
-                        setIsSelectedConversation(true);
-                        console.log("have conversation");
-                    }
-                    else {
-                        console.log("no conversation");
-                    }
-                }
-                else {
 
-                }
-            }
-            catch {
-                toast.error(dictionaryList[locale]["Error"]);
-            }
-        });
+    // setTimeout(() => {
+    //     if (signalRHubConnection.state === 'Connected') {
+    //         currentListConversations.map((conv) => {
+    //             signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
+    //             console.log("Send startConversation 111: " + conv.id);
+    //         }
+    //         )
+    //     }
+
+    // }, 1000);
+
+    useEffect(() => {
+
+        if (signalRHubConnection.state === 'Connected') {
+            currentListConversations.map((conv) => {
+                setTimeout(() => {
+                    signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
+                    // console.log("Send startConversation: " + conv.id);
+                }, 2000);
+            });
+        }
+
     }, [currentListConversations])
 
 
+
+    // useEffect(() => {
+    //     if (signalRHubConnection.state == 'Connected') {
+    //         signalRHubConnection.on("onStartConversation", conversationInfo => {
+    //             try {
+    //                 const convInfo = JSON.parse(conversationInfo) as Conversation;
+
+    //                 if (!isSelectedConversation) {
+    //                     if (currentListConversations.find(c => c.id === convInfo.id)) {
+    //                         // setSelectedConversation(convInfo);
+    //                         // setIsSelectedConversation(true);
+    //                         //console.log("have conversation");
+    //                     }
+    //                     else {
+    //                         //console.log("no conversation");
+    //                     }
+    //                 }
+    //                 else {
+
+    //                 }
+    //             }
+    //             catch {
+    //                 toast.error(dictionaryList[locale]["Error"]);
+    //             }
+
+    //         });
+    //     }
+    // }, [currentListConversations])
+
+    // handle user focus on chat message
+    let windowIsOnFocus = true;
+    const onWindowFocus = () => {
+        StartSignalRHubConnection();
+        windowIsOnFocus = true;
+    };
+
+    const onWindowBlur = () => {
+
+        setTimeout(() => {
+            if (!windowIsOnFocus) {
+                StopSignalRHubConnection();
+                windowIsOnFocus = false;
+            }
+        }, 15000);
+
+    };
+    // 
+    const WindowFocusHandler = () => {
+        useEffect(() => {
+            window.addEventListener('focus', onWindowFocus);
+            window.addEventListener('blur', onWindowBlur);
+            return () => {
+                window.removeEventListener('focus', onWindowFocus);
+                window.removeEventListener('blur', onWindowBlur);
+            };
+        });
+    };
+    WindowFocusHandler();
+
+    // handle searching user 
+    const handleSeachingUser: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+        let searchkeys = e.currentTarget.value;
+        if (searchkeys.length >= 3 && e.key !== 'Backspace') {
+            setIsSearchingUser(true);
+            conversationalSearchKeyword({ payload: { keyword: searchkeys } });
+        }
+        if (searchkeys.length == 0) {
+            setIsSearchingUser(false);
+        }
+    }
+    // render
     return (
         <>
             <Layout>
@@ -81,28 +161,44 @@ const Message: React.FC = (): ReactElement => {
                             <h2><Translation tid="Chats" /></h2>
                             <div className="form-group m-2 mb-5">
                                 <div className="d-inline">
-                                    <input type="text" className="form-control form-control-sm rounded-pill" placeholder="Search messenger" />
+                                    <input type="text" className="form-control form-control-sm rounded-pill" onKeyDown={handleSeachingUser} placeholder="Search messenger" />
                                 </div>
                             </div>
-                            {(GetConversationListByUserStatus.isLoading) &&
+                            {((GetConversationListByUserStatus.isLoading) || (ConversationalSearchKeywordStatus.isLoading)) &&
                                 <>
                                     <LocalSpinner />
                                 </>
                             }
                             <div className="conversationer-container overflow-auto">
-                                <Scrollbars key={"message-scrollbars-" + v4().toString()} >
-                                    {!GetConversationListByUserStatus.error
-                                        && GetConversationListByUserStatus.data?.resultCode == ResultCode.Success && GetConversationListByUserStatus.data?.resource != null &&
-                                        <> {
-                                            GetConversationListByUserStatus.data?.resource.map((item, index) => (
-                                                <>
-                                                    <Conversationer key={"conversationer-" + index + v4().toString() + item.id} data={item} selectedConversation={selectedConversationHandler} currentUser={currentUser} />
-                                                </>
-                                            ))
+                                {!isSearchingUser && <>
+                                    <Scrollbars key={"message-scrollbars-" + v4().toString()} >
+                                        {!GetConversationListByUserStatus.error
+                                            && GetConversationListByUserStatus.data?.resultCode == ResultCode.Success && GetConversationListByUserStatus.data?.resource != null &&
+                                            <> {
+                                                GetConversationListByUserStatus.data?.resource.map((item, index) => (
+                                                    <Conversationer key={"conversationer-" + index + v4().toString() + item.id} hubConnection={signalRHubConnection} data={item} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
+
+                                                ))
+                                            }
+                                            </>
                                         }
-                                        </>
-                                    }
-                                </Scrollbars>
+                                    </Scrollbars>
+                                </>}
+                                {isSearchingUser && <>
+                                    <Scrollbars key={"message-search-scrollbars-" + v4().toString()} >
+                                        {!ConversationalSearchKeywordStatus.error
+                                            && ConversationalSearchKeywordStatus.data?.resultCode == ResultCode.Success && ConversationalSearchKeywordStatus.data?.resource != null &&
+                                            <> {
+                                                ConversationalSearchKeywordStatus.data?.resource.map((item, index) => (
+
+                                                    <Conversationer key={"conversationer-" + index + v4().toString() + item.id} data={item} hubConnection={signalRHubConnection} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
+
+                                                ))
+                                            }
+                                            </>
+                                        }
+                                    </Scrollbars>
+                                </>}
                             </div>
                         </div>
                         <div className="col-sm-9">

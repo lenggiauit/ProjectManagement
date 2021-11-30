@@ -27,5 +27,19 @@ namespace PM.API.Infrastructure
                 return Guid.Empty;
             }
         }
+
+        [NonAction]
+        public User GetCurrentUser()
+        {
+            var claimUser = HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.UserData).FirstOrDefault();
+            if (claimUser != null)
+            {
+                return JsonConvert.DeserializeObject<User>(claimUser.Value); 
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

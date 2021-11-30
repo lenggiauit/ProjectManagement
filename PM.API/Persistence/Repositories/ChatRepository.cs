@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Nancy.Extensions;
 using PM.API.Domain.Entities;
 using PM.API.Domain.Helpers;
 using PM.API.Domain.Repositories;
@@ -92,7 +93,7 @@ namespace PM.API.Persistence.Repositories
         {
             try
             {
-                return await _context.Conversation.OrderByDescending(s => s.UpdatedBy).Join(_context.ConversationUsers.Where(cu => cu.UserId.Equals(userId)),
+                return await _context.Conversation.OrderByDescending(s => s.LastMessageDate).Join(_context.ConversationUsers.Where(cu => cu.UserId.Equals(userId)),
                     c => c.Id,
                     cus => cus.ConversationId,
                     (c, cus) => new Conversation()
@@ -114,11 +115,11 @@ namespace PM.API.Persistence.Repositories
                             FullName = u.FullName,
                             Phone = u.Phone,
                             Address = u.Address,
-                            JobTitle = u.JobTitle, 
-                            Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault() 
-                        }) 
+                            JobTitle = u.JobTitle,
+                            Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
+                        })
                         .ToList()
-                    })
+                    }) 
                     .AsNoTracking().GetPagingQueryable(request.MetaData).ToListAsync();
             }
             catch (Exception ex)
@@ -127,35 +128,6 @@ namespace PM.API.Persistence.Repositories
                 return null;
             }
         }
-        public async Task<List<User>> SearchConversationer(BaseRequest<SearchConversationerRequest> request)
-        {
-            try
-            {
-                return await _context.User.AsNoTracking()
-                    .Where(u =>
-                        u.FullName.Contains(request.Payload.Keyword) ||
-                        u.UserName.Contains(request.Payload.Keyword) ||
-                        u.Email.Contains(request.Payload.Keyword))
-                    .Select(acc => new User()
-                    {
-                        Id = acc.Id,
-                        UserName = acc.UserName,
-                        Avatar = acc.Avatar,
-                        FullName = acc.FullName,
-                        Phone = acc.Phone,
-                        Address = acc.Address,
-                        JobTitle = acc.JobTitle,
-                        Role = _context.Role.Where(r => r.Id == acc.RoleId).FirstOrDefault()
-                    })
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return null;
-            }
-        }
-
         public async Task<ConversationMessage> SendMessage(Guid userId, BaseRequest<SendMessageRequest> request)
         {
             try
@@ -164,11 +136,11 @@ namespace PM.API.Persistence.Repositories
                 {
                     Id = Guid.NewGuid(),
                     ConversationId = request.Payload.ConversationId,
-                    UserId  = userId,
+                    UserId = userId,
                     SendDate = DateTime.Now,
                     Message = request.Payload.Message
                 };
-                await _context.ConversationMessage.AddAsync(message); 
+                await _context.ConversationMessage.AddAsync(message);
                 await _context.SaveChangesAsync();
                 return message;
             }
@@ -191,11 +163,19 @@ namespace PM.API.Persistence.Repositories
                     SendDate = DateTime.Now,
                     Message = message
                 };
-                await _context.ConversationMessage.AddAsync(convMessage); 
+                await _context.ConversationMessage.AddAsync(convMessage);
+
+                var conversation = _context.Conversation.Where(c => c.Id.Equals(conversationId)).FirstOrDefault();
+                if(conversation != null)
+                {
+                    conversation.LastMessage = message;
+                    conversation.LastMessageDate = DateTime.Now;
+                }
+                _context.Update(conversation);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message); 
+                _logger.LogError(ex.Message);
             }
         }
 
@@ -203,8 +183,63 @@ namespace PM.API.Persistence.Repositories
         {
             try
             {
-                return await _context.ConversationMessage.OrderByDescending(s => s.SendDate).Where( cm => cm.ConversationId.Equals(request.Payload.ConversationId)) 
+                return await _context.ConversationMessage.OrderByDescending(s => s.SendDate).Where(cm => cm.ConversationId.Equals(request.Payload.ConversationId))
                     .AsNoTracking().GetPagingQueryable(request.MetaData).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<List<Conversation>> ConversationalSearch(User currentUser, BaseRequest<ConversationalSearchRequest> request)
+        {
+            try
+            {
+                return _context.Conversation.AsNoTracking()
+                    .OrderByDescending(s => s.UpdatedBy)
+                    .Where(c => c.Title.ToLower().Contains(request.Payload.Keyword.ToLower()))
+                    .Join(_context.ConversationUsers,
+                    c => c.Id,
+                    cus => cus.ConversationId,
+                    (c, cus) => new Conversation()
+                    {
+                        Id = c.Id,
+                        Title = c.Title,
+                        LastMessage = c.LastMessage,
+                        CreatedBy = c.CreatedBy,
+                        CreatedDate = c.CreatedDate,
+                        UpdatedBy = c.UpdatedBy,
+                        LastMessageDate = c.LastMessageDate,
+                        Conversationers = _context.ConversationUsers.Where(cus2 => cus2.ConversationId.Equals(c.Id))
+                        .Join(_context.User, cus2 => cus2.UserId, u => u.Id, (cus2, u) => new User()
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            Email = u.Email,
+                            Avatar = u.Avatar,
+                            FullName = u.FullName,
+                            Phone = u.Phone,
+                            Address = u.Address,
+                            JobTitle = u.JobTitle,
+                            Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
+                        })
+                        .ToList()
+                    })
+                    .AsEnumerable()
+                    .Union(_context.User.AsNoTracking().Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword)) && u.Id != currentUser.Id)
+                        .Select(u => new Conversation()
+                        {
+                            Id = Guid.NewGuid(),
+                            Title = !string.IsNullOrEmpty(u.FullName) ? u.FullName : u.UserName,
+                            LastMessage = string.Empty,
+                            CreatedDate = DateTime.Now,
+                            Conversationers = new List<User> { currentUser, u },
+                        }))
+                     //.DistinctBy(d => d.Conversationers )
+                    .ToList();
+
             }
             catch (Exception ex)
             {

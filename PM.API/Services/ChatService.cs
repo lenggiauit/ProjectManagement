@@ -27,6 +27,12 @@ namespace PM.API.Services
             _appSettings = appSettings.Value;
         }
 
+        public async Task<List<Conversation>> ConversationalSearch(User currentUser, BaseRequest<ConversationalSearchRequest> request)
+        {
+            return await _chatRepository.ConversationalSearch(currentUser, request);
+
+        }
+
         public async Task<Conversation> CreateConversation(Guid userId, BaseRequest<CreateConversationRequest> request)
         {
             return await _chatRepository.CreateConversation(userId, request); 
@@ -51,12 +57,8 @@ namespace PM.API.Services
         {
             await _chatRepository.SaveMessage(userId, conversationId, message);
             await _unitOfWork.CompleteAsync();
-        }
-
-        public async Task<List<User>> SearchConversationer(BaseRequest<SearchConversationerRequest> request)
-        {
-            return await _chatRepository.SearchConversationer(request);
-        }
+        } 
+          
 
         public async Task<ConversationMessage> SendMessage(Guid userId, BaseRequest<SendMessageRequest> request)
         {

@@ -73,8 +73,8 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
     }, [])
 
     useEffect(() => {
-        if (getMessagesByConversationStatus.data && getMessagesByConversationStatus.data.resultCode == ResultCode.Success) {
-            ///setListReceivedMessage([...getMessagesByConversationStatus.data.resource]);
+        if (scrollbarsRef.current != null) {
+            scrollbarsRef.current.scrollToBottom();
         }
     }, [getMessagesByConversationStatus.data])
 
@@ -84,8 +84,8 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
         }
         if (hubConnection.state === 'Connected') {
 
-            hubConnection.on("onUserTyping", userId => {
-                if (currentUser.id != userId) {
+            hubConnection.on("onUserTyping", (conversationId, userId) => {
+                if (conversationId == currentConversation?.id && currentUser.id != userId) {
                     setListTypingUsers(prev => [...prev, userId]);
                     isOnHandleTyping = true;
                     handleTyping();
@@ -98,6 +98,12 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
         if (scrollbarsRef.current != null) {
             scrollbarsRef.current.scrollToBottom();
         }
+    }, [listReceivedMessage])
+
+    useEffect(() => {
+        if (scrollbarsRef.current != null) {
+            scrollbarsRef.current.scrollToBottom();
+        }
         if (hubConnection.state === 'Connected') {
             hubConnection.on("onReceivedMessage", receivedMessage => {
                 try {
@@ -105,7 +111,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                     if (convMessage) {
                         let listMessages = listReceivedMessage;
                         listMessages.push(convMessage);
-                        setListReceivedMessage(listMessages);
+                        setListReceivedMessage([...listMessages]);
                         if (scrollbarsRef.current != null) {
                             scrollbarsRef.current.scrollToBottom();
                         }
@@ -116,12 +122,12 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                 }
             });
         }
-    }, [listReceivedMessage])
+    }, [hubConnection])
 
 
     if (currentConversation) {
         let title: string = currentConversation.title;
-        if (title.trim().length == 0) {
+        if (title == null || title.trim().length == 0) {
             title = currentConversation.conversationers.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.email }).join(', ');
         }
         return (<>
@@ -132,9 +138,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                             {currentConversation.conversationers
                                 .filter(c => c.id != currentUser.id)
                                 .map((c, i) =>
-                                    <>
-                                        <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
-                                    </>
+                                    <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
                                 )}
                         </div>
                         <div className="col-md-10 text-left m-0 pr-0 pl-0 align-self-center">
@@ -154,14 +158,14 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                         {getMessagesByConversationStatus.isSuccess && <>
                             <Scrollbars ref={scrollbarsRef} >
                                 {getMessagesByConversationStatus.data && getMessagesByConversationStatus.data.resource.map((item, index) =>
-                                    <>
-                                        <ConversationMessageItem key={"message-" + index + v4().toString()} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
-                                    </>
+
+                                    <ConversationMessageItem key={"message-" + index + v4().toString()} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
+
                                 )}
                                 {listReceivedMessage.map((item, index) =>
-                                    <>
-                                        <ConversationMessageItem key={"message-" + index + v4().toString()} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
-                                    </>
+
+                                    <ConversationMessageItem key={"message-" + index + v4().toString()} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
+
                                 )}
                             </Scrollbars>
                         </>}
@@ -173,9 +177,9 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                                     .filter(c => listTypingUsers.find(l => l = c.id))
                                     .filter(c => c.id != currentUser.id)
                                     .map((c, i) =>
-                                        <>
-                                            <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle typing-avatar" />
-                                        </>
+
+                                        <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle typing-avatar" />
+
                                     )}
                             </div>
                             <div className="d-inline"><Translation tid="isTyping" /></div>

@@ -143,19 +143,19 @@ namespace PM.API.Controllers
         }
 
 
-        [Permissions("SearchConversationer")]
-        [HttpPost("SearchConversationer")]
-        public async Task<SearchUserResponse> SearchConversationer([FromBody] BaseRequest<SearchConversationerRequest> request)
+        //[Permissions("SearchConversationer")]
+        [HttpPost("ConversationalSearch")]
+        public async Task<GetConversationListResponse> ConversationalSearch([FromBody] BaseRequest<ConversationalSearchRequest> request)
         {
             if (ModelState.IsValid)
             {
-                var userList = await _chatServices.SearchConversationer(request);
-                var resources = _mapper.Map<List<User>, List<ConversationerResource>>(userList);
-                return new SearchUserResponse(resources);
+                var searchResult  = await _chatServices.ConversationalSearch(GetCurrentUser(), request);
+                var resources = _mapper.Map<List<Conversation>, List<ConversationResource>>(searchResult);
+                return new GetConversationListResponse(resources);
             }
             else
             {
-                return new SearchUserResponse(Constants.InvalidMsg, ResultCode.Invalid);
+                return new GetConversationListResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
 

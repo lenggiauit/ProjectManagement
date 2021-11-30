@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PM.API.Domain.Services.Communication.Request
 {
-    public class SearchConversationerRequest
+    public class ConversationalSearchRequest
     {
         [Required]
         public string Keyword { get; set; }

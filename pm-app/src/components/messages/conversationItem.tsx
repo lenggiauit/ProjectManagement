@@ -18,7 +18,7 @@ const ConversationMessageItem: React.FC<Props> = ({ message, user, currentUser }
                         <img src={user.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
                     </div>
                     <div className="col-md-11 text-left m-0 pr-0 pl-0 align-self-center">
-                        <p>{message.message}</p>
+                        <p className="p-2 pl-0">{message.message}</p>
                     </div>
                 </>}
                 {user.id == currentUser.id && <>
