@@ -306,6 +306,7 @@
 }
 .conversation-detail-container {
   height: calc(100vh - 190px);
+  min-width: 760px !important;
 }
 .conversation-detail-body-container {
   position: relative;
@@ -365,4 +366,7 @@
   100% {
     background: #50a1ff;
   }
+}
+.conversation-item-container {
+  padding: 10px auto;
 }

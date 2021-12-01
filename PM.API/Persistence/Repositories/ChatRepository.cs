@@ -25,41 +25,72 @@ namespace PM.API.Persistence.Repositories
         {
             try
             {
-                var conversation = new Conversation()
+                var existCons = await _context.Conversation.Where(c => c.Id.Equals(request.Payload.Id)).FirstOrDefaultAsync();
+                if (existCons == null)
                 {
-                    Id = Guid.NewGuid(),
-                    Title = request.Payload.Title,
-                    CreatedBy = userId,
-                    CreatedDate = DateTime.Now
-                };
-                await _context.Conversation.AddAsync(conversation);
-                List<ConversationUsers> listc = new List<ConversationUsers>();
-
-                foreach (var id in request.Payload.Users)
-                {
-                    listc.Add(new ConversationUsers()
+                    var conversation = new Conversation()
                     {
                         Id = Guid.NewGuid(),
-                        ConversationId = conversation.Id,
-                        UserId = id
-                    });
-                }
-                // add current user
-                listc.Add(new ConversationUsers()
-                {
-                    Id = Guid.NewGuid(),
-                    ConversationId = conversation.Id,
-                    UserId = userId
-                });
+                        Title = request.Payload.Title,
+                        CreatedBy = userId,
+                        CreatedDate = DateTime.Now
+                    };
+                    await _context.Conversation.AddAsync(conversation);
+                    List<ConversationUsers> listc = new List<ConversationUsers>();
 
-                await _context.ConversationUsers.AddRangeAsync(listc);
-                await _context.SaveChangesAsync();
-                return conversation;
+                    foreach (var id in request.Payload.Users)
+                    {
+                        listc.Add(new ConversationUsers()
+                        {
+                            Id = Guid.NewGuid(),
+                            ConversationId = conversation.Id,
+                            UserId = id
+                        });
+                    }  
+                    await _context.ConversationUsers.AddRangeAsync(listc);
+                    await _context.SaveChangesAsync();
+                    conversation.Conversationers = _context.ConversationUsers.Where(cus2 => cus2.ConversationId.Equals(conversation.Id))
+                        .Join(_context.User, cus2 => cus2.UserId, u => u.Id, (cus2, u) => new User()
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            Email = u.Email,
+                            Avatar = u.Avatar,
+                            FullName = u.FullName,
+                            Phone = u.Phone,
+                            Address = u.Address,
+                            JobTitle = u.JobTitle,
+                            Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
+                        })
+                        .ToList();
+                    return conversation;
+                }
+                else
+                {
+                    return existCons;
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return null;
+            }
+        }
+
+        public async Task<ResultCode> DeleteConversation(Guid userId, BaseRequest<Guid> request)
+        {
+            try 
+            { 
+                _context.ConversationMessage.RemoveRange(_context.ConversationMessage.Where(cm => cm.ConversationId.Equals(request.Payload)).ToArray());
+                _context.ConversationUsers.RemoveRange(_context.ConversationUsers.Where(cm => cm.ConversationId.Equals(request.Payload)).ToArray());
+                _context.Conversation.Remove(new Conversation() {  Id = request.Payload});
+                await _context.SaveChangesAsync();
+                return ResultCode.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return ResultCode.Error;
             }
         }
 
@@ -197,38 +228,7 @@ namespace PM.API.Persistence.Repositories
         {
             try
             {
-                return _context.Conversation.AsNoTracking()
-                    .OrderByDescending(s => s.UpdatedBy)
-                    .Where(c => c.Title.ToLower().Contains(request.Payload.Keyword.ToLower()))
-                    .Join(_context.ConversationUsers,
-                    c => c.Id,
-                    cus => cus.ConversationId,
-                    (c, cus) => new Conversation()
-                    {
-                        Id = c.Id,
-                        Title = c.Title,
-                        LastMessage = c.LastMessage,
-                        CreatedBy = c.CreatedBy,
-                        CreatedDate = c.CreatedDate,
-                        UpdatedBy = c.UpdatedBy,
-                        LastMessageDate = c.LastMessageDate,
-                        Conversationers = _context.ConversationUsers.Where(cus2 => cus2.ConversationId.Equals(c.Id))
-                        .Join(_context.User, cus2 => cus2.UserId, u => u.Id, (cus2, u) => new User()
-                        {
-                            Id = u.Id,
-                            UserName = u.UserName,
-                            Email = u.Email,
-                            Avatar = u.Avatar,
-                            FullName = u.FullName,
-                            Phone = u.Phone,
-                            Address = u.Address,
-                            JobTitle = u.JobTitle,
-                            Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
-                        })
-                        .ToList()
-                    })
-                    .AsEnumerable()
-                    .Union(_context.User.AsNoTracking().Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword)) && u.Id != currentUser.Id)
+                return await _context.User.AsNoTracking().Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword)) && u.Id != currentUser.Id)
                         .Select(u => new Conversation()
                         {
                             Id = Guid.NewGuid(),
@@ -236,9 +236,52 @@ namespace PM.API.Persistence.Repositories
                             LastMessage = string.Empty,
                             CreatedDate = DateTime.Now,
                             Conversationers = new List<User> { currentUser, u },
-                        }))
-                     //.DistinctBy(d => d.Conversationers )
-                    .ToList();
+                        }) 
+                    .ToListAsync();
+
+
+                //return _context.Conversation.AsNoTracking()
+                //    .OrderByDescending(s => s.UpdatedBy)
+                //    .Where(c => c.Title.ToLower().Contains(request.Payload.Keyword.ToLower()))
+                //    .Join(_context.ConversationUsers,
+                //    c => c.Id,
+                //    cus => cus.ConversationId,
+                //    (c, cus) => new Conversation()
+                //    {
+                //        Id = c.Id,
+                //        Title = c.Title,
+                //        LastMessage = c.LastMessage,
+                //        CreatedBy = c.CreatedBy,
+                //        CreatedDate = c.CreatedDate,
+                //        UpdatedBy = c.UpdatedBy,
+                //        LastMessageDate = c.LastMessageDate,
+                //        Conversationers = _context.ConversationUsers.Where(cus2 => cus2.ConversationId.Equals(c.Id))
+                //        .Join(_context.User, cus2 => cus2.UserId, u => u.Id, (cus2, u) => new User()
+                //        {
+                //            Id = u.Id,
+                //            UserName = u.UserName,
+                //            Email = u.Email,
+                //            Avatar = u.Avatar,
+                //            FullName = u.FullName,
+                //            Phone = u.Phone,
+                //            Address = u.Address,
+                //            JobTitle = u.JobTitle,
+                //            Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
+                //        })
+                //        .ToList()
+                //    })
+                //    .AsEnumerable()
+                //    .Union(_context.User.AsNoTracking().Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword)) && u.Id != currentUser.Id)
+                //        .Select(u => new Conversation()
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            Title = !string.IsNullOrEmpty(u.FullName) ? u.FullName : u.UserName,
+                //            LastMessage = string.Empty,
+                //            CreatedDate = DateTime.Now,
+                //            Conversationers = new List<User> { currentUser, u },
+                //        }))
+                //     //.DistinctBy(d => d.Conversationers )
+                //    .ToList();
 
             }
             catch (Exception ex)
@@ -247,5 +290,7 @@ namespace PM.API.Persistence.Repositories
                 return null;
             }
         }
+
+        
     }
 }

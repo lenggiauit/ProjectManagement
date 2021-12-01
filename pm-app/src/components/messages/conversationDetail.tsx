@@ -10,19 +10,24 @@ import { Translation } from "../translation";
 import { ConversationMessage } from "../../services/models/conversationMessage";
 import ConversationMessageItem from "./conversationItem";
 import { v4 } from "uuid";
-import { useGetMessagesByConversationMutation } from "../../services/chat";
+import { useDeleteConversationMutation, useGetMessagesByConversationMutation } from "../../services/chat";
 import { ResultCode } from "../../utils/enums";
 import LocalSpinner from "../localSpinner";
+import ConfirmModal from "../modal";
+import showConfirmModal from "../modal";
+import { dictionaryList } from "../../locales";
 
 const appSetting: AppSetting = require('../../appSetting.json');
 
 interface Props {
     hubConnection: signalR.HubConnection,
-    currentConversation?: Conversation,
+    currentConversation?: Conversation | null,
     currentUser: User,
+    onDeleteEvent: (conv: Conversation) => void
 }
 
-const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversation, currentUser }) => {
+const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversation, currentUser, onDeleteEvent }) => {
+
 
     const { locale } = useAppContext();
     const scrollbarsRef = useRef<Scrollbars>(null);
@@ -30,6 +35,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
     const [listReceivedMessage, setListReceivedMessage] = useState<ConversationMessage[]>([]);
 
     const [getMessagesByConversation, getMessagesByConversationStatus] = useGetMessagesByConversationMutation();
+    const [deleteConversation, deleteConversationStatus] = useDeleteConversationMutation();
 
     let currentTypingMessage = '';
     const handleOnTyping: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
@@ -56,6 +62,23 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
             }
         }
     }
+
+    const onInviteMember: React.MouseEventHandler<HTMLAnchorElement> = (e) => { }
+    const onDeleteConversation: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+        showConfirmModal({
+            message: dictionaryList[locale]["deleteConversationmsg"],
+            onConfirm: () => {
+                deleteConversation({ payload: currentConversation?.id });
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (deleteConversationStatus.isSuccess) {
+            onDeleteEvent(currentConversation!);
+        }
+    }, [deleteConversationStatus])
+
     let isOnHandleTyping = false;
     const handleTyping = () => {
         if (isOnHandleTyping) {
@@ -141,12 +164,13 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                                     <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
                                 )}
                         </div>
-                        <div className="col-md-10 text-left m-0 pr-0 pl-0 align-self-center">
+                        <div className="col-md-9 text-left m-0 pr-0 pl-0 align-self-center">
                             <div>{title}</div>
                             <div>{new Date(currentConversation?.lastMessageDate).toLocaleDateString(locale)}</div>
                         </div>
-                        <div className="col-md-1 text-left m-0 pr-0 pl-0 align-self-center">
-
+                        <div className="col-md-2 text-left m-0 pr-0 pl-0 text-right">
+                            <a className="btn btn-link p-0 m-1 d-inline align-baseline " href="#" onClick={onInviteMember} > <i className="bi bi-person-plus" style={{ fontSize: 18 }} ></i> </a>
+                            <a className="btn btn-link p-0 m-1 d-inline align-baseline " href="#" onClick={onDeleteConversation}> <i className="bi bi-trash" style={{ fontSize: 18 }} ></i> </a>
                         </div>
                     </div>
                 </div>

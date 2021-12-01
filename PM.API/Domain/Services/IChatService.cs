@@ -17,5 +17,6 @@ namespace PM.API.Domain.Services
         Task SaveMessage(Guid userId, Guid conversationId, string message);
         Task<List<ConversationMessage>> GetMessagesByConversation(Guid guid, BaseRequest<GetMessagesRequest> request);
         Task<List<Conversation>> ConversationalSearch(User currentUser, BaseRequest<ConversationalSearchRequest> request);
+        Task<ResultCode> DeleteConversation(Guid userId, BaseRequest<Guid> request);
     }
 }

@@ -17,12 +17,12 @@ const ConversationMessageItem: React.FC<Props> = ({ message, user, currentUser }
                     <div className="col-md-1 ">
                         <img src={user.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
                     </div>
-                    <div className="col-md-11 text-left m-0 pr-0 pl-0 align-self-center">
+                    <div className="col-md-11 text-left m-0 pr-0 pl-0 align-self-center message-content">
                         <p className="p-2 pl-0">{message.message}</p>
                     </div>
                 </>}
                 {user.id == currentUser.id && <>
-                    <div className="col-md-12 text-right m-0 pr-0 pl-0 align-self-center">
+                    <div className="col-md-12 text-right m-0 pr-0 pl-0 align-self-center message-content">
                         <p className="bg-primary bg-rounded rounded text-white d-inline p-2">{message.message}</p>
                     </div>
                 </>}

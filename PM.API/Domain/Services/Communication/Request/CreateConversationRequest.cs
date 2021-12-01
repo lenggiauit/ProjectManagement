@@ -9,6 +9,8 @@ namespace PM.API.Domain.Services.Communication.Request
     public class CreateConversationRequest
     {
         [Required]
+        public Guid Id { get; set; }
+        [Required]
         public Guid[] Users { get; set; } 
         public string Title { get; set; }
     }

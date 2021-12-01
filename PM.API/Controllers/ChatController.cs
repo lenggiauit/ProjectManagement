@@ -44,7 +44,7 @@ namespace PM.API.Controllers
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-         
+
         // [Permissions("CreateConversation")]
         [HttpPost("CreateConversation")]
         public async Task<CreateConversationResponse> CreateConversation([FromBody] BaseRequest<CreateConversationRequest> request)
@@ -55,8 +55,6 @@ namespace PM.API.Controllers
                 if (conversation != null)
                 {
                     var resources = _mapper.Map<Conversation, ConversationResource>(conversation);
-                   // _chatServiceHub.AddConversationGroup(conversation.Id);
-                    await  _chatServiceHub.Clients.Group(conversation.Id.ToString()).SendAsync("SendToConversation", "[ConversationCreated]");
                     return new CreateConversationResponse(resources);
                 }
                 else
@@ -68,6 +66,22 @@ namespace PM.API.Controllers
             else
             {
                 return new CreateConversationResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+
+        }
+
+        // [Permissions("DeleteConversation")]
+        [HttpPost("DeleteConversation")]
+        public async Task<CommonResponse> DeleteConversation([FromBody] BaseRequest<Guid> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _chatServices.DeleteConversation(GetCurrentUserId(), request);                 
+                return new CommonResponse(result);
+            }
+            else
+            {
+                return new CommonResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
 

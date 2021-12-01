@@ -6,6 +6,7 @@ import { store } from './store';
 import reportWebVitals from './reportWebVitals';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 ReactDOM.render(
   <Provider store={store} >

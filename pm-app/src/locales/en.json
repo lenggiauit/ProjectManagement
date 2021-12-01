@@ -58,5 +58,8 @@
     "Uploading": "Uploading",
     "Updating": "Updating",
     "UpdatedSuccessfully": "Updated successfully",
-    "isTyping": " is typing..."
+    "isTyping": " is typing...",
+    "btnClose": "Close",
+    "btnConfirm": "Confirm",
+    "deleteConversationmsg": "Once you delete your copy of this conversation, it cannot be undone."
 }

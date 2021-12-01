@@ -2,9 +2,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ApiRequest, ApiResponse, AppSetting } from "../types/type";
 import { getLoggedUser } from '../utils/functions';
 import { Conversation } from './models/conversation';
-import { ConversationalSearchRequest, GetConversationListRequest, GetMessagesRequest } from './communication/request/getConversationListRequest';
+import { ConversationalSearchRequest, CreateConversationRequest, GetConversationListRequest, GetMessagesRequest } from './communication/request/getConversationListRequest';
 import * as signalR from "@microsoft/signalr";
 import { ConversationMessage } from './models/conversationMessage';
+import { CommonResponse } from './communication/response/commonResponse';
 let appSetting: AppSetting = require('../appSetting.json');
 
 export const signalRHubConnection = new signalR.HubConnectionBuilder()
@@ -85,7 +86,35 @@ export const ChatService = createApi({
                 return response;
             },
         }),
+        CreateConversation: builder.mutation<ApiResponse<Conversation>, ApiRequest<CreateConversationRequest>>({
+            query: (payload) => ({
+                url: 'chat/createConversation',
+                method: 'post',
+                body: payload,
+
+            }),
+            transformResponse(response: ApiResponse<Conversation>) {
+                return response;
+            },
+        }),
+        DeleteConversation: builder.mutation<ApiResponse<CommonResponse>, ApiRequest<any>>({
+            query: (payload) => ({
+                url: 'chat/deleteConversation',
+                method: 'post',
+                body: payload,
+
+            }),
+            transformResponse(response: ApiResponse<CommonResponse>) {
+                return response;
+            },
+        }),
+
     })
 });
 
-export const { useGetConversationListByUserMutation, useGetMessagesByConversationMutation, useConversationalSearchKeywordMutation } = ChatService;
+export const
+    { useGetConversationListByUserMutation,
+        useGetMessagesByConversationMutation,
+        useConversationalSearchKeywordMutation,
+        useCreateConversationMutation,
+        useDeleteConversationMutation } = ChatService;

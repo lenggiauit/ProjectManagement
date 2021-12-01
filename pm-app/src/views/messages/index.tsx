@@ -6,7 +6,7 @@ import Conversationer from '../../components/messages/conversationer';
 //@ts-ignore
 import { Scrollbars } from 'react-custom-scrollbars';
 import ConversationDetail from '../../components/messages/conversationDetail';
-import { signalRHubConnection, StartSignalRHubConnection, StopSignalRHubConnection, useConversationalSearchKeywordMutation, useGetConversationListByUserMutation } from '../../services/chat';
+import { signalRHubConnection, StartSignalRHubConnection, StopSignalRHubConnection, useConversationalSearchKeywordMutation, useCreateConversationMutation, useGetConversationListByUserMutation } from '../../services/chat';
 import { ResultCode } from '../../utils/enums';
 import { Conversation } from '../../services/models/conversation';
 import { v4 } from 'uuid';
@@ -22,27 +22,62 @@ const Message: React.FC = (): ReactElement => {
 
     const { locale, } = useAppContext();
     const currentUser = getLoggedUser()!;
+
     const [GetConversationListByUser, GetConversationListByUserStatus] = useGetConversationListByUserMutation();
     const [conversationalSearchKeyword, ConversationalSearchKeywordStatus] = useConversationalSearchKeywordMutation();
-    const [selectedConversation, setSelectedConversation] = useState<Conversation>();
+    const [CreateConversation, CreateConversationStatus] = useCreateConversationMutation();
 
-    const [currentConversationTying, setcurrentConversationTying] = useState<Conversation>();
+    const [selectedConversation, setSelectedConversation] = useState<Conversation | null>();
 
-    const [isSelectedConversation, setIsSelectedConversation] = useState<boolean>(false);
+
     const [isSearchingUser, setIsSearchingUser] = useState<boolean>(false);
     const [currentListConversations, setCurrentListConversations] = useState<Conversation[]>([]);
-    const selectedConversationHandler = (conv: Conversation) => {
-        // console.log(conv.id);
-        // if (signalRHubConnection.state === 'Connected') {
-        //     //signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
+    const [currentSearchListConversations, setCurrentSearchListConversations] = useState<Conversation[]>([]);
 
-        // }
+    useEffect(() => {
+        if (GetConversationListByUserStatus.isSuccess && GetConversationListByUserStatus.data.resultCode == ResultCode.Success && GetConversationListByUserStatus.data.resource) {
+
+            setCurrentListConversations(GetConversationListByUserStatus.data.resource);
+        }
+    }, [GetConversationListByUserStatus])
+
+    useEffect(() => {
+        if (ConversationalSearchKeywordStatus.isSuccess && ConversationalSearchKeywordStatus.data.resultCode == ResultCode.Success && ConversationalSearchKeywordStatus.data.resource) {
+
+            setCurrentSearchListConversations(ConversationalSearchKeywordStatus.data.resource);
+        }
+    }, [ConversationalSearchKeywordStatus])
+
+
+    const selectedConversationHandler = (conv: Conversation) => {
         setSelectedConversation(conv);
     };
+
+    const createConversationHandler = (conv: Conversation) => {
+        CreateConversation({ payload: { id: conv.id, users: Array.from(conv.conversationers.map(c => { return c.id })) } });
+
+    };
+
+    const onDeleteConversationHandler = (conv: Conversation) => {
+        let listConv = currentListConversations.filter(c => c.id != conv.id);
+        setCurrentListConversations(listConv);
+        setSelectedConversation(null);
+    };
+
+    //
+    useEffect(() => {
+        if (CreateConversationStatus.isSuccess && CreateConversationStatus.data.resultCode == ResultCode.Success && CreateConversationStatus.data.resource) {
+            var listConv = currentListConversations;
+            setIsSearchingUser(false);
+            setCurrentListConversations([...listConv, CreateConversationStatus.data.resource]);
+            setSelectedConversation(CreateConversationStatus.data.resource);
+        }
+    }, [CreateConversationStatus])
+
     // setCurrentListConversations when GetConversationListByUser compeleted 
     useEffect(() => {
         if (GetConversationListByUserStatus.isSuccess && GetConversationListByUserStatus.data && GetConversationListByUserStatus.data.resultCode == ResultCode.Success) {
-            setCurrentListConversations(prev => ([...prev, ...GetConversationListByUserStatus.data.resource]));
+            setCurrentListConversations(GetConversationListByUserStatus.data.resource);
         }
     }, [GetConversationListByUserStatus])
     // Start onload
@@ -54,18 +89,6 @@ const Message: React.FC = (): ReactElement => {
             StopSignalRHubConnection();
         }
     }, []);
-
-
-    // setTimeout(() => {
-    //     if (signalRHubConnection.state === 'Connected') {
-    //         currentListConversations.map((conv) => {
-    //             signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
-    //             console.log("Send startConversation 111: " + conv.id);
-    //         }
-    //         )
-    //     }
-
-    // }, 1000);
 
     useEffect(() => {
 
@@ -79,36 +102,6 @@ const Message: React.FC = (): ReactElement => {
         }
 
     }, [currentListConversations])
-
-
-
-    // useEffect(() => {
-    //     if (signalRHubConnection.state == 'Connected') {
-    //         signalRHubConnection.on("onStartConversation", conversationInfo => {
-    //             try {
-    //                 const convInfo = JSON.parse(conversationInfo) as Conversation;
-
-    //                 if (!isSelectedConversation) {
-    //                     if (currentListConversations.find(c => c.id === convInfo.id)) {
-    //                         // setSelectedConversation(convInfo);
-    //                         // setIsSelectedConversation(true);
-    //                         //console.log("have conversation");
-    //                     }
-    //                     else {
-    //                         //console.log("no conversation");
-    //                     }
-    //                 }
-    //                 else {
-
-    //                 }
-    //             }
-    //             catch {
-    //                 toast.error(dictionaryList[locale]["Error"]);
-    //             }
-
-    //         });
-    //     }
-    // }, [currentListConversations])
 
     // handle user focus on chat message
     let windowIsOnFocus = true;
@@ -172,37 +165,24 @@ const Message: React.FC = (): ReactElement => {
                             <div className="conversationer-container overflow-auto">
                                 {!isSearchingUser && <>
                                     <Scrollbars key={"message-scrollbars-" + v4().toString()} >
-                                        {!GetConversationListByUserStatus.error
-                                            && GetConversationListByUserStatus.data?.resultCode == ResultCode.Success && GetConversationListByUserStatus.data?.resource != null &&
-                                            <> {
-                                                GetConversationListByUserStatus.data?.resource.map((item, index) => (
-                                                    <Conversationer key={"conversationer-" + index + v4().toString() + item.id} hubConnection={signalRHubConnection} data={item} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
-
-                                                ))
-                                            }
-                                            </>
-                                        }
+                                        {currentListConversations.map((item, index) => (
+                                            <Conversationer key={"conversationer-" + index + v4().toString() + item.id} hubConnection={signalRHubConnection} data={item} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
+                                        ))}
                                     </Scrollbars>
                                 </>}
                                 {isSearchingUser && <>
                                     <Scrollbars key={"message-search-scrollbars-" + v4().toString()} >
-                                        {!ConversationalSearchKeywordStatus.error
-                                            && ConversationalSearchKeywordStatus.data?.resultCode == ResultCode.Success && ConversationalSearchKeywordStatus.data?.resource != null &&
-                                            <> {
-                                                ConversationalSearchKeywordStatus.data?.resource.map((item, index) => (
-
-                                                    <Conversationer key={"conversationer-" + index + v4().toString() + item.id} data={item} hubConnection={signalRHubConnection} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
-
-                                                ))
-                                            }
-                                            </>
+                                        {
+                                            currentSearchListConversations.map((item, index) => (
+                                                <Conversationer key={"conversationer-" + index + v4().toString() + item.id} data={item} hubConnection={signalRHubConnection} selectedConversationEvent={createConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
+                                            ))
                                         }
                                     </Scrollbars>
                                 </>}
                             </div>
                         </div>
                         <div className="col-sm-9">
-                            <ConversationDetail key={v4()} hubConnection={signalRHubConnection} currentConversation={selectedConversation} currentUser={currentUser} />
+                            <ConversationDetail key={v4()} hubConnection={signalRHubConnection} currentConversation={selectedConversation} currentUser={currentUser} onDeleteEvent={onDeleteConversationHandler} />
                         </div>
                     </div>
                 </div>
@@ -213,3 +193,5 @@ const Message: React.FC = (): ReactElement => {
 }
 
 export default Message;
+
+
