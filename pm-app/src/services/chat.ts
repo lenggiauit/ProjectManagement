@@ -2,10 +2,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ApiRequest, ApiResponse, AppSetting } from "../types/type";
 import { getLoggedUser } from '../utils/functions';
 import { Conversation } from './models/conversation';
-import { ConversationalSearchRequest, CreateConversationRequest, GetConversationListRequest, GetMessagesRequest } from './communication/request/getConversationListRequest';
+import { CreateConversationRequest, GetConversationListRequest, GetMessagesRequest, InviteToConversationRequest, MessengeSearchRequest, RemoveFromConversationRequest, SearchRequest } from './communication/request/getConversationListRequest';
 import * as signalR from "@microsoft/signalr";
 import { ConversationMessage } from './models/conversationMessage';
 import { CommonResponse } from './communication/response/commonResponse';
+import { Messenger } from './models/messenger';
 let appSetting: AppSetting = require('../appSetting.json');
 
 export const signalRHubConnection = new signalR.HubConnectionBuilder()
@@ -75,7 +76,7 @@ export const ChatService = createApi({
                 return response;
             },
         }),
-        ConversationalSearchKeyword: builder.mutation<ApiResponse<Conversation[]>, ApiRequest<ConversationalSearchRequest>>({
+        ConversationalSearchKeyword: builder.mutation<ApiResponse<Conversation[]>, ApiRequest<SearchRequest>>({
             query: (payload) => ({
                 url: 'chat/conversationalSearch',
                 method: 'post',
@@ -83,6 +84,17 @@ export const ChatService = createApi({
 
             }),
             transformResponse(response: ApiResponse<Conversation[]>) {
+                return response;
+            },
+        }),
+        SearchMessengerByKeyword: builder.mutation<ApiResponse<Messenger[]>, ApiRequest<MessengeSearchRequest>>({
+            query: (payload) => ({
+                url: 'chat/messengerSearch',
+                method: 'post',
+                body: payload,
+
+            }),
+            transformResponse(response: ApiResponse<Messenger[]>) {
                 return response;
             },
         }),
@@ -108,6 +120,28 @@ export const ChatService = createApi({
                 return response;
             },
         }),
+        InviteToConversation: builder.mutation<ApiResponse<CommonResponse>, ApiRequest<InviteToConversationRequest>>({
+            query: (payload) => ({
+                url: 'chat/inviteToConversation',
+                method: 'post',
+                body: payload,
+
+            }),
+            transformResponse(response: ApiResponse<CommonResponse>) {
+                return response;
+            },
+        }),
+        RemoveFromConversation: builder.mutation<ApiResponse<CommonResponse>, ApiRequest<RemoveFromConversationRequest>>({
+            query: (payload) => ({
+                url: 'chat/removeFromConversation',
+                method: 'post',
+                body: payload,
+
+            }),
+            transformResponse(response: ApiResponse<CommonResponse>) {
+                return response;
+            },
+        }),
 
     })
 });
@@ -117,4 +151,7 @@ export const
         useGetMessagesByConversationMutation,
         useConversationalSearchKeywordMutation,
         useCreateConversationMutation,
-        useDeleteConversationMutation } = ChatService;
+        useDeleteConversationMutation,
+        useSearchMessengerByKeywordMutation,
+        useInviteToConversationMutation,
+        useRemoveFromConversationMutation } = ChatService;

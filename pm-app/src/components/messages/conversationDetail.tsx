@@ -10,32 +10,42 @@ import { Translation } from "../translation";
 import { ConversationMessage } from "../../services/models/conversationMessage";
 import ConversationMessageItem from "./conversationItem";
 import { v4 } from "uuid";
-import { useDeleteConversationMutation, useGetMessagesByConversationMutation } from "../../services/chat";
+import { useDeleteConversationMutation, useGetMessagesByConversationMutation, useInviteToConversationMutation, useRemoveFromConversationMutation, useSearchMessengerByKeywordMutation } from "../../services/chat";
 import { ResultCode } from "../../utils/enums";
 import LocalSpinner from "../localSpinner";
 import ConfirmModal from "../modal";
 import showConfirmModal from "../modal";
 import { dictionaryList } from "../../locales";
+import { Messenger } from "../../services/models/messenger";
+import showInviteMemberModal from "./inviteMember";
+import InviteMember from "./inviteMember";
+import RemoveMember from "./removeMember";
+import { render } from "@testing-library/react";
 
 const appSetting: AppSetting = require('../../appSetting.json');
 
 interface Props {
     hubConnection: signalR.HubConnection,
     currentConversation?: Conversation | null,
-    currentUser: User,
-    onDeleteEvent: (conv: Conversation) => void
+    currentUser: Messenger,
+    onDeleteEvent: (conv: Conversation) => void,
+    onInviteMemberEvent: (conv: Conversation) => void,
+    onRemoveMemberEvent: (conv: Conversation) => void,
 }
 
-const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversation, currentUser, onDeleteEvent }) => {
-
+const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversation, currentUser, onDeleteEvent, onInviteMemberEvent, onRemoveMemberEvent }) => {
 
     const { locale } = useAppContext();
     const scrollbarsRef = useRef<Scrollbars>(null);
     const [listTypingUsers, setListTypingUsers] = useState<string[]>([]);
+    const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
+    const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [listReceivedMessage, setListReceivedMessage] = useState<ConversationMessage[]>([]);
 
     const [getMessagesByConversation, getMessagesByConversationStatus] = useGetMessagesByConversationMutation();
     const [deleteConversation, deleteConversationStatus] = useDeleteConversationMutation();
+    const [inviteToConversation, inviteToConversationStatus] = useInviteToConversationMutation();
+    const [removeFromConversation, removeFromConversationStatus] = useRemoveFromConversationMutation();
 
     let currentTypingMessage = '';
     const handleOnTyping: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
@@ -62,13 +72,82 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
             }
         }
     }
+    // invite
+    const onInviteMember: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+        e.preventDefault();
+        setShowInviteModal(current => !current);
+    }
+    const onCloseInviteMember: any = () => {
+        setShowInviteModal(current => !current);
+    }
 
-    const onInviteMember: React.MouseEventHandler<HTMLAnchorElement> = (e) => { }
+    const onSelectedInviteMember: any = (ms: Messenger[]) => {
+        setShowInviteModal(current => !current);
+        inviteToConversation({ payload: { conversationId: currentConversation?.id, users: ms.map(m => m.id) } });
+        if (currentConversation) {
+            let inviteConv: Conversation = {
+                id: currentConversation.id,
+                title: currentConversation.title,
+                createdBy: currentConversation.createdBy,
+                conversationers: currentConversation.conversationers.concat(ms),
+                createdDate: currentConversation.createdBy,
+                lastMessage: currentConversation.lastMessage,
+                lastMessageDate: new Date(),
+                updatedBy: currentConversation.updatedBy
+            };
+            onInviteMemberEvent(inviteConv);
+        }
+    }
+    // remove
+    const onRemoveMember: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+        e.preventDefault();
+        setShowRemoveModal(true);
+    }
+    const onCloseRemoveMember: any = () => {
+        setShowRemoveModal(false);
+
+    }
+
+    const onSelectedRemoveMember: any = (ms: Messenger[]) => {
+        setShowRemoveModal(false);
+        removeFromConversation({ payload: { conversationId: currentConversation?.id, users: ms.map(m => m.id) } });
+        if (currentConversation) {
+            let removeConv: Conversation = {
+                id: currentConversation.id,
+                title: currentConversation.title,
+                createdBy: currentConversation.createdBy,
+                conversationers: currentConversation.conversationers.filter(u => !ms.includes(u)),
+                createdDate: currentConversation.createdBy,
+                lastMessage: currentConversation.lastMessage,
+                lastMessageDate: new Date(),
+                updatedBy: currentConversation.updatedBy
+            };
+            onRemoveMemberEvent(removeConv);
+        }
+    }
+
+    //
+    useEffect(() => {
+        if (inviteToConversationStatus.isSuccess) {
+
+
+        }
+    }, [inviteToConversationStatus])
+    useEffect(() => {
+        if (removeFromConversationStatus.isSuccess) {
+
+        }
+    }, [removeFromConversationStatus])
+
+
+
     const onDeleteConversation: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+        e.preventDefault();
         showConfirmModal({
             message: dictionaryList[locale]["deleteConversationmsg"],
             onConfirm: () => {
                 deleteConversation({ payload: currentConversation?.id });
+                onDeleteEvent(currentConversation!);
             }
         });
     }
@@ -151,25 +230,42 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
     if (currentConversation) {
         let title: string = currentConversation.title;
         if (title == null || title.trim().length == 0) {
-            title = currentConversation.conversationers.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.email }).join(', ');
+            title = currentConversation.conversationers.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.name }).join(', ');
+            title = title.length > 50 ? title.substring(0, 50) + ", ..." : title;
         }
         return (<>
-            <div className="conversation-detail-container">
+            {showInviteModal === true &&
+                <InviteMember isShow={showInviteModal} conv={currentConversation} onClose={onCloseInviteMember} onSelected={onSelectedInviteMember} />
+            }
+
+            {showRemoveModal === true &&
+                <RemoveMember conv={currentConversation} currentUser={currentUser} onClose={onCloseRemoveMember} onSelected={onSelectedRemoveMember} />
+
+            }
+            <div className="conversation-detail-container mt-2">
                 <div className="message-header-container p-2">
                     <div className="row m-0" key={"message-header-container-" + v4().toString()}>
-                        <div className="col-md-1 m-0 pl-0 conversation-avatars-container">
-                            {currentConversation.conversationers
-                                .filter(c => c.id != currentUser.id)
-                                .map((c, i) =>
-                                    <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
-                                )}
+                        <div className="col-md-10 m-0 pl-0 ">
+                            <div className="row m-0 p-0">
+                                <div className="col-md-2 m-0 pl-0 ">
+                                    <div className="conversation-avatars-container">
+                                        {currentConversation.conversationers
+                                            .filter(c => c.id != currentUser.id)
+                                            .map((c, i) =>
+                                                <img key={"avatar-detail-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle multiple conversation-avatars" />
+                                            )}
+                                    </div>
+                                </div>
+                                <div className="col-md-10 m-0 pl-0 ">
+                                    <div>{title}</div>
+                                    <div>{new Date(currentConversation?.lastMessageDate).toLocaleDateString(locale)}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-9 text-left m-0 pr-0 pl-0 align-self-center">
-                            <div>{title}</div>
-                            <div>{new Date(currentConversation?.lastMessageDate).toLocaleDateString(locale)}</div>
-                        </div>
+
                         <div className="col-md-2 text-left m-0 pr-0 pl-0 text-right">
                             <a className="btn btn-link p-0 m-1 d-inline align-baseline " href="#" onClick={onInviteMember} > <i className="bi bi-person-plus" style={{ fontSize: 18 }} ></i> </a>
+                            <a className="btn btn-link p-0 m-1 d-inline align-baseline " href="#" onClick={onRemoveMember} > <i className="bi bi-person-x" style={{ fontSize: 18 }} ></i> </a>
                             <a className="btn btn-link p-0 m-1 d-inline align-baseline " href="#" onClick={onDeleteConversation}> <i className="bi bi-trash" style={{ fontSize: 18 }} ></i> </a>
                         </div>
                     </div>
@@ -218,6 +314,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                     </div>
                 </div>
             </div>
+
         </>);
     }
     else {

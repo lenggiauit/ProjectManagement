@@ -291,6 +291,43 @@ namespace PM.API.Persistence.Repositories
             }
         }
 
-        
+        public async Task<List<User>> MessengerSearch(User currentUser, BaseRequest<MessengerSearchRequest> request)
+        {
+            return await _context.User.AsNoTracking()
+                .Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword)) 
+                &&  u.Id != currentUser.Id
+                && ( !request.Payload.CurrentIds.Contains(u.Id) ))
+                       .Select(u => new User()
+                       {
+                           Id = u.Id,
+                           UserName =  u.UserName,
+                           FullName = u.FullName,
+                           JobTitle = u.JobTitle,
+                           Avatar = u.Avatar
+                       })
+                   .ToListAsync();
+        }
+
+        public async Task<ResultCode> RemoveFromConversation(Guid userId, BaseRequest<RemoveFromConversationRequest> request)
+        {
+            try
+            {
+                List<ConversationUsers> listc = _context.ConversationUsers
+                    .Where(cu => 
+                    cu.ConversationId.Equals(request.Payload.ConversationId)
+                    && request.Payload.Users.Contains(cu.UserId)
+                    && cu.UserId != userId
+                    ).ToList(); 
+                
+                _context.ConversationUsers.RemoveRange(listc);
+                await _context.SaveChangesAsync();
+                return ResultCode.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return ResultCode.Error;
+            }
+        }
     }
 }

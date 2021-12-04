@@ -58,6 +58,16 @@ namespace PM.API.Services
             return await _chatRepository.InviteToConversation(request);
         }
 
+        public async Task<List<User>> MessengerSearch(User user, BaseRequest<MessengerSearchRequest> request)
+        {
+            return await _chatRepository.MessengerSearch(user, request);
+        }
+
+        public async Task<ResultCode> RemoveFromConversation(Guid userId, BaseRequest<RemoveFromConversationRequest> request)
+        {
+            return await _chatRepository.RemoveFromConversation(userId, request);
+        }
+
         public async Task SaveMessage(Guid userId, Guid conversationId, string message)
         {
             await _chatRepository.SaveMessage(userId, conversationId, message);

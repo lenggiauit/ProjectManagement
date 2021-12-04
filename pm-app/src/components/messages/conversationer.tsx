@@ -5,13 +5,14 @@ import { dictionaryList } from "../../locales";
 import { StartSignalRHubConnection } from "../../services/chat";
 import { Conversation } from "../../services/models/conversation";
 import { ConversationMessage } from "../../services/models/conversationMessage";
+import { Messenger } from "../../services/models/messenger";
 import { User } from "../../services/models/user";
 
 type Props = {
     data?: Conversation,
     selectedConversationEvent(arg?: Conversation): void,
     selectedConversation?: Conversation | null,
-    currentUser: User,
+    currentUser: Messenger,
     hubConnection: signalR.HubConnection,
 }
 
@@ -59,7 +60,8 @@ const Conversationer: React.FC<Props> = ({ hubConnection, data, selectedConversa
     if (data) {
         let title: string = data.title;
         if (title == null || title.trim().length == 0) {
-            title = data.conversationers.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.email }).join(', ');
+            title = data.conversationers.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.name }).join(', ');
+            title = title.length > 20 ? title.substring(0, 20) + ", ..." : title;
         }
         return (<>
             <div className={"conversationer-item-container " + (data.id == selectedConversation?.id ? "active-conversation" : "") + (isReceivedMessageButNotActive ? "receiving-message" : "")} onClick={() => { selectedConversationEvent(data) }}>
@@ -69,7 +71,7 @@ const Conversationer: React.FC<Props> = ({ hubConnection, data, selectedConversa
                             {data.conversationers
                                 .filter(c => c.id != currentUser.id)
                                 .map((c, i) =>
-                                    <img key={"avatar-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle" />
+                                    <img key={"avatar-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle multiple conversation-avatars" />
                                 )}
                         </div>
                         <div className="col-md-8 text-left m-0 pr-0 pl-0 align-self-center">

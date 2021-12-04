@@ -61,5 +61,8 @@
     "isTyping": " is typing...",
     "btnClose": "Close",
     "btnConfirm": "Confirm",
-    "deleteConversationmsg": "Once you delete your copy of this conversation, it cannot be undone."
+    "deleteConversationmsg": "Once you delete your copy of this conversation, it cannot be undone.",
+    "InviteToConversation": "Invite to conversation",
+    "btnInvite": "Invite",
+    "btnRemove": "Remove"
 }

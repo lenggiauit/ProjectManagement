@@ -109,6 +109,8 @@ namespace PM.API.Controllers
         }
 
 
+
+
        // [Permissions("InviteToConversation")]
         [HttpPost("InviteToConversation")]
         public async Task<CommonResponse> InviteToConversation([FromBody] BaseRequest<InviteConversationRequest> request)
@@ -124,6 +126,20 @@ namespace PM.API.Controllers
             }
         }
 
+        // [Permissions("RemoveFromConversation")]
+        [HttpPost("RemoveFromConversation")]
+        public async Task<CommonResponse> RemoveFromConversation([FromBody] BaseRequest<RemoveFromConversationRequest> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var resultCode = await _chatServices.RemoveFromConversation(GetCurrentUserId(), request);
+                return new CommonResponse(resultCode);
+            }
+            else
+            {
+                return new CommonResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+        }
 
         //[Permissions("GetConversationListByUser")]
         [HttpPost("GetConversationListByUser")]
@@ -172,6 +188,26 @@ namespace PM.API.Controllers
                 return new GetConversationListResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
+
+        //[Permissions("SearchConversationer")]
+        [HttpPost("MessengerSearch")]
+        public async Task<MessengerListResponse> MessengerSearch([FromBody] BaseRequest<MessengerSearchRequest> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var searchResult = await _chatServices.MessengerSearch(GetCurrentUser(), request);
+                var resources = _mapper.Map<List<User>, List<ConversationerResource>>(searchResult);
+                return new MessengerListResponse(resources);
+            }
+            else
+            {
+                return new MessengerListResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+        }
+
+        
+
+
 
     }
 }

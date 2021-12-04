@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import Layout from '../../components/layout';
 import { getLoggedUser } from '../../utils/functions';
 import { Translation } from '../../components/translation';
@@ -16,13 +16,14 @@ import { AppSetting } from '../../types/type';
 import { toast } from 'react-toastify';
 import { dictionaryList } from '../../locales';
 import { useAppContext } from '../../contexts/appContext';
+import { InputFiles } from 'typescript';
 const appSetting: AppSetting = require('../../appSetting.json');
 
 const Message: React.FC = (): ReactElement => {
 
     const { locale, } = useAppContext();
     const currentUser = getLoggedUser()!;
-
+    const txtSearchRef = useRef<HTMLInputElement>(null);
     const [GetConversationListByUser, GetConversationListByUserStatus] = useGetConversationListByUserMutation();
     const [conversationalSearchKeyword, ConversationalSearchKeywordStatus] = useConversationalSearchKeywordMutation();
     const [CreateConversation, CreateConversationStatus] = useCreateConversationMutation();
@@ -60,8 +61,22 @@ const Message: React.FC = (): ReactElement => {
 
     const onDeleteConversationHandler = (conv: Conversation) => {
         let listConv = currentListConversations.filter(c => c.id != conv.id);
-        setCurrentListConversations(listConv);
+        setCurrentListConversations([...listConv]);
         setSelectedConversation(null);
+    };
+
+    const onInviteMemberToConversationHandler = (conv: Conversation) => {
+        let listConv = currentListConversations.filter(c => c.id != conv.id);
+        listConv.splice(0, 0, conv);
+        setCurrentListConversations([...listConv]);
+        setSelectedConversation(conv);
+    };
+
+    const onRemoveMemberToConversationHandler = (conv: Conversation) => {
+        let listConv = currentListConversations.filter(c => c.id != conv.id);
+        listConv.splice(0, 0, conv);
+        setCurrentListConversations([...listConv]);
+        setSelectedConversation(conv);
     };
 
     //
@@ -136,7 +151,7 @@ const Message: React.FC = (): ReactElement => {
     // handle searching user 
     const handleSeachingUser: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
         let searchkeys = e.currentTarget.value;
-        if (searchkeys.length >= 3 && e.key !== 'Backspace') {
+        if (searchkeys.length >= 2 && e.key !== 'Backspace') {
             setIsSearchingUser(true);
             conversationalSearchKeyword({ payload: { keyword: searchkeys } });
         }
@@ -152,10 +167,14 @@ const Message: React.FC = (): ReactElement => {
                     <div className="row h-100">
                         <div className="col-sm-3 border-right p-0 pt-2">
                             <h2><Translation tid="Chats" /></h2>
-                            <div className="form-group m-2 mb-5">
-                                <div className="d-inline">
-                                    <input type="text" className="form-control form-control-sm rounded-pill" onKeyDown={handleSeachingUser} placeholder="Search messenger" />
-                                </div>
+                            <div className="input-group input-group-search m-2 mb-5">
+                                {isSearchingUser &&
+                                    <div className="input-group-prepend">
+                                        <span><a href="#" onClick={() => { if (txtSearchRef.current) { txtSearchRef.current.value = ''; } setIsSearchingUser(false) }}> <i className="bi bi-arrow-left" style={{ fontSize: 20, marginRight: 5 }} ></i> </a></span>
+                                    </div>
+                                }
+                                <input type="text" ref={txtSearchRef} className="form-control border-1 form-control-sm rounded-pill" onKeyDown={handleSeachingUser} placeholder="Search messenger" />
+
                             </div>
                             {((GetConversationListByUserStatus.isLoading) || (ConversationalSearchKeywordStatus.isLoading)) &&
                                 <>
@@ -165,9 +184,10 @@ const Message: React.FC = (): ReactElement => {
                             <div className="conversationer-container overflow-auto">
                                 {!isSearchingUser && <>
                                     <Scrollbars key={"message-scrollbars-" + v4().toString()} >
-                                        {currentListConversations.map((item, index) => (
-                                            <Conversationer key={"conversationer-" + index + v4().toString() + item.id} hubConnection={signalRHubConnection} data={item} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
-                                        ))}
+                                        {currentListConversations
+                                            .map((item, index) => (
+                                                <Conversationer key={"conversationer-" + index + v4().toString() + item.id} hubConnection={signalRHubConnection} data={item} selectedConversationEvent={selectedConversationHandler} currentUser={currentUser} selectedConversation={selectedConversation} />
+                                            ))}
                                     </Scrollbars>
                                 </>}
                                 {isSearchingUser && <>
@@ -182,12 +202,11 @@ const Message: React.FC = (): ReactElement => {
                             </div>
                         </div>
                         <div className="col-sm-9">
-                            <ConversationDetail key={v4()} hubConnection={signalRHubConnection} currentConversation={selectedConversation} currentUser={currentUser} onDeleteEvent={onDeleteConversationHandler} />
+                            <ConversationDetail key={v4()} hubConnection={signalRHubConnection} currentConversation={selectedConversation} currentUser={currentUser} onDeleteEvent={onDeleteConversationHandler} onInviteMemberEvent={onInviteMemberToConversationHandler} onRemoveMemberEvent={onRemoveMemberToConversationHandler} />
                         </div>
                     </div>
                 </div>
             </Layout>
-
         </>
     );
 }

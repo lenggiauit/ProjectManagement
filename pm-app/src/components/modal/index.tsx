@@ -1,14 +1,13 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { render, unmountComponentAtNode } from 'react-dom'
 import { Translation } from "../translation";
 
+const pmModalDialogId = "pm-confirm-modal-dialog";
 type Props = {
     options: PropTypes
 }
 
 const ConfirmModal: React.FC<Props> = ({ options }) => {
-
-    const pmModalDialogId = "pm-modal-dialog";
 
     const removeModalComponent = (): void => {
         const target = document.getElementById(pmModalDialogId);
@@ -31,7 +30,7 @@ const ConfirmModal: React.FC<Props> = ({ options }) => {
     }
 
     return (<>
-        <div className="modal fade show" id="modal-default" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true">
+        <div className="modal fade show" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true">
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     {options.title && <>
@@ -52,7 +51,6 @@ const ConfirmModal: React.FC<Props> = ({ options }) => {
                 </div>
             </div>
         </div>
-
     </>);
 }
 
@@ -64,17 +62,16 @@ type PropTypes = {
 }
 
 const showConfirmModal = (options: PropTypes) => {
-    let divTarget = document.getElementById('pm-modal-dialog');
+    let divTarget = document.getElementById(pmModalDialogId);
     if (divTarget) {
         render(<ConfirmModal options={options} />, divTarget);
     } else {
 
         divTarget = document.createElement('div');
-        divTarget.id = 'pm-modal-dialog';
+        divTarget.id = pmModalDialogId;
         document.body.appendChild(divTarget);
         render(<ConfirmModal options={options} />, divTarget);
     }
-
 }
 
 export default showConfirmModal;
