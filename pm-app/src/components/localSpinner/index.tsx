@@ -5,7 +5,7 @@ import "./spinner.css";
 const LocalSpinner: React.FC = () => {
     return (
         <div className="local-spinner">
-            <Loader type="Oval" color="#74b4ff" height="25" width="25" />
+            <Loader type="Oval" color="#74b4ff" height="20" width="20" />
         </div>
     );
 }

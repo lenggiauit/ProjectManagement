@@ -329,5 +329,21 @@ namespace PM.API.Persistence.Repositories
                 return ResultCode.Error;
             }
         }
+
+        public async Task DeleteMessage(Guid userId, Guid conversationId, Guid messageId)
+        {
+            try
+            {
+                var ms = await _context.ConversationMessage.Where(m => m.ConversationId.Equals(conversationId) && m.Id.Equals(messageId) && m.UserId.Equals(userId)).FirstOrDefaultAsync();
+                if (ms != null)
+                {
+                    _context.ConversationMessage.Remove(ms);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message); 
+            }
+        }
     }
 }

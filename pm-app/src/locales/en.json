@@ -64,5 +64,7 @@
     "deleteConversationmsg": "Once you delete your copy of this conversation, it cannot be undone.",
     "InviteToConversation": "Invite to conversation",
     "btnInvite": "Invite",
-    "btnRemove": "Remove"
+    "btnRemove": "Remove",
+    "btnDelete": "Delete",
+    "MessageIsDeleted": "This message was deleted."
 }

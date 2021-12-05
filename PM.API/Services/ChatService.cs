@@ -43,6 +43,12 @@ namespace PM.API.Services
             return await _chatRepository.DeleteConversation(userId, request);
         }
 
+        public async Task DeleteMessage(Guid userId, Guid conversationId, Guid messageId)
+        {
+            await _chatRepository.DeleteMessage(userId, conversationId, messageId);
+            await _unitOfWork.CompleteAsync();
+        }
+
         public async Task<List<Conversation>> GetConversationListByUser(Guid userId, BaseRequest<GetConversationListRequest> request)
         {
             return await _chatRepository.GetConversationListByUser(userId, request);

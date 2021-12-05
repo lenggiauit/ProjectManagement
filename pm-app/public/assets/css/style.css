@@ -383,9 +383,7 @@
     background: #50a1ff;
   }
 }
-.conversation-item-container {
-  padding: 10px auto;
-}
+
 .input-group-search {
   border: none !important;
   width: auto !important;
@@ -402,4 +400,24 @@
 }
 .list-messenger .messenger-item.selected {
   background-color: #f1f2f3;
+}
+.message-content {
+  clear: both;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.conversation-item-container {
+  padding: 5px 5px !important;
+}
+.message-content-controls {
+  display: none !important;
+}
+.conversation-item-container:hover .message-content-controls {
+  display: inline-block !important;
+}
+.conversation-item-container:hover .message-content-controls.deleted {
+  display: none !important;
 }

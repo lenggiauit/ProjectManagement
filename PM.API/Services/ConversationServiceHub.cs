@@ -102,8 +102,21 @@ namespace PM.API.Services
                 _logger.LogError(ex.Message);
             }
         }
-         
 
+        public async Task DeleteMessage(Guid conversationId, Guid messageId)
+        {
+            try
+            { 
+                await Clients.Group(conversationId.ToString().Trim()).SendAsync("onDeleteMessage", conversationId, messageId); 
+                await _chatServices.DeleteMessage(GetCurrentUserId(), conversationId, messageId); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+        }
+
+         
         public async Task OnTyping(Guid conversationId, Guid userId)
         {
             await Clients.Group(conversationId.ToString().Trim()).SendAsync("onUserTyping", conversationId.ToString().Trim(), userId.ToString().Trim());

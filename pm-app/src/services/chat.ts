@@ -142,7 +142,17 @@ export const ChatService = createApi({
                 return response;
             },
         }),
+        DeleteMessage: builder.mutation<ApiResponse<CommonResponse>, ApiRequest<{ convesationId: any, messageId: any }>>({
+            query: (payload) => ({
+                url: 'chat/deleteMessage',
+                method: 'post',
+                body: payload,
 
+            }),
+            transformResponse(response: ApiResponse<CommonResponse>) {
+                return response;
+            },
+        }),
     })
 });
 
@@ -154,4 +164,5 @@ export const
         useDeleteConversationMutation,
         useSearchMessengerByKeywordMutation,
         useInviteToConversationMutation,
-        useRemoveFromConversationMutation } = ChatService;
+        useRemoveFromConversationMutation,
+        useDeleteMessageMutation } = ChatService;

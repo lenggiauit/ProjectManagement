@@ -8,7 +8,7 @@ import { useAppContext } from "../../contexts/appContext";
 import { User } from "../../services/models/user";
 import { Translation } from "../translation";
 import { ConversationMessage } from "../../services/models/conversationMessage";
-import ConversationMessageItem from "./conversationItem";
+import ConversationMessageItem from "./conversationMessage";
 import { v4 } from "uuid";
 import { useDeleteConversationMutation, useGetMessagesByConversationMutation, useInviteToConversationMutation, useRemoveFromConversationMutation, useSearchMessengerByKeywordMutation } from "../../services/chat";
 import { ResultCode } from "../../utils/enums";
@@ -37,11 +37,10 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
 
     const { locale } = useAppContext();
     const scrollbarsRef = useRef<Scrollbars>(null);
-    const [listTypingUsers, setListTypingUsers] = useState<string[]>([]);
+    const [listTypingUsers, setListTypingUsers] = useState<string>();
     const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [listReceivedMessage, setListReceivedMessage] = useState<ConversationMessage[]>([]);
-
     const [getMessagesByConversation, getMessagesByConversationStatus] = useGetMessagesByConversationMutation();
     const [deleteConversation, deleteConversationStatus] = useDeleteConversationMutation();
     const [inviteToConversation, inviteToConversationStatus] = useInviteToConversationMutation();
@@ -53,7 +52,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
         if (e.key === 'Enter') {
             let message = e.currentTarget.value;
             if (message != '') {
-                let convMessage: ConversationMessage = { conversationId: currentConversation?.id, userId: currentUser.id, message: message };
+                let convMessage: ConversationMessage = { id: v4(), conversationId: currentConversation?.id, userId: currentUser.id, message: message };
                 if (hubConnection.state === 'Connected') {
                     hubConnection.send("sendMessage", JSON.stringify(convMessage));
                 }
@@ -162,7 +161,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
     const handleTyping = () => {
         if (isOnHandleTyping) {
             setTimeout(function () {
-                setListTypingUsers([]);
+                setListTypingUsers('');
                 isOnHandleTyping = false;
             }, 2000);
         }
@@ -188,7 +187,7 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
 
             hubConnection.on("onUserTyping", (conversationId, userId) => {
                 if (conversationId == currentConversation?.id && currentUser.id != userId) {
-                    setListTypingUsers(prev => [...prev, userId]);
+                    setListTypingUsers(userId);
                     isOnHandleTyping = true;
                     handleTyping();
                 }
@@ -278,23 +277,19 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
                         {getMessagesByConversationStatus.isSuccess && <>
                             <Scrollbars ref={scrollbarsRef} >
                                 {getMessagesByConversationStatus.data && getMessagesByConversationStatus.data.resource.map((item, index) =>
-
-                                    <ConversationMessageItem key={"message-" + index + v4().toString()} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
-
+                                    <ConversationMessageItem key={"message-" + index + v4().toString()} hubConnection={hubConnection} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
                                 )}
                                 {listReceivedMessage.map((item, index) =>
-
-                                    <ConversationMessageItem key={"message-" + index + v4().toString()} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
-
+                                    <ConversationMessageItem key={"message-" + index + v4().toString()} hubConnection={hubConnection} message={item} currentUser={currentUser} user={currentConversation.conversationers.filter(c => c.id == item.userId)[0]} />
                                 )}
                             </Scrollbars>
                         </>}
                     </div>
                     <div className="conversation-detail-typing-users">
-                        {listTypingUsers.length > 0 && <> <div>
+                        {listTypingUsers && <> <div>
                             <div className="d-inline">
                                 {currentConversation.conversationers
-                                    .filter(c => listTypingUsers.find(l => l = c.id))
+                                    .filter(c => listTypingUsers == c.id)
                                     .filter(c => c.id != currentUser.id)
                                     .map((c, i) =>
 
