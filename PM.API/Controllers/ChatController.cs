@@ -117,7 +117,7 @@ namespace PM.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var resultCode = await _chatServices.InviteToConversation(request);
+                var resultCode = await _chatServices.InviteToConversation(request); 
                 return new CommonResponse(resultCode);
             }
             else

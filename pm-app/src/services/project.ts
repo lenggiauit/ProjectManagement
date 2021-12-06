@@ -4,6 +4,7 @@ import { getLoggedUser } from '../utils/functions';
 import { GetProjectRequest } from './communication/request/getProjectRequest';
 import { GetProjectResponse } from './communication/response/getProjectResponse';
 import * as FormDataFile from "form-data";
+import { Project } from './models/project';
 
 let appSetting: AppSetting = require('../appSetting.json');
 
@@ -22,18 +23,16 @@ export const ProjectService = createApi({
         },
     }),
     endpoints: (builder) => ({
-        GetProjectListByUser: builder.mutation<ApiResponse<GetProjectResponse>, ApiRequest<GetProjectRequest>>({
+        GetProjectListByUser: builder.mutation<ApiResponse<Project[]>, ApiRequest<GetProjectRequest>>({
             query: (payload) => ({
                 url: 'Project/getProjectListByUser',
                 method: 'post',
                 body: payload
             }),
-            transformResponse(response: ApiResponse<GetProjectResponse>) {
+            transformResponse(response: ApiResponse<Project[]>) {
                 return response;
             },
         }),
-
-
     })
 });
 

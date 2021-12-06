@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { dictionaryList } from '../../locales';
 import { useAppContext } from '../../contexts/appContext';
 import { InputFiles } from 'typescript';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 const appSetting: AppSetting = require('../../appSetting.json');
 
 const Message: React.FC = (): ReactElement => {
@@ -27,10 +28,7 @@ const Message: React.FC = (): ReactElement => {
     const [GetConversationListByUser, GetConversationListByUserStatus] = useGetConversationListByUserMutation();
     const [conversationalSearchKeyword, ConversationalSearchKeywordStatus] = useConversationalSearchKeywordMutation();
     const [CreateConversation, CreateConversationStatus] = useCreateConversationMutation();
-
     const [selectedConversation, setSelectedConversation] = useState<Conversation | null>();
-
-
     const [isSearchingUser, setIsSearchingUser] = useState<boolean>(false);
     const [currentListConversations, setCurrentListConversations] = useState<Conversation[]>([]);
     const [currentSearchListConversations, setCurrentSearchListConversations] = useState<Conversation[]>([]);
@@ -52,6 +50,9 @@ const Message: React.FC = (): ReactElement => {
 
     const selectedConversationHandler = (conv: Conversation) => {
         setSelectedConversation(conv);
+        // if (signalRHubConnection.state === 'Connected' && conv) {
+        //     signalRHubConnection.send("startConversation", conv?.id, JSON.stringify(conv));
+        // }
     };
 
     const createConversationHandler = (conv: Conversation) => {
@@ -83,9 +84,13 @@ const Message: React.FC = (): ReactElement => {
     useEffect(() => {
         if (CreateConversationStatus.isSuccess && CreateConversationStatus.data.resultCode == ResultCode.Success && CreateConversationStatus.data.resource) {
             var listConv = currentListConversations;
+            var conv = CreateConversationStatus.data.resource;
             setIsSearchingUser(false);
-            setCurrentListConversations([...listConv, CreateConversationStatus.data.resource]);
-            setSelectedConversation(CreateConversationStatus.data.resource);
+            setCurrentListConversations([...listConv, conv]);
+            setSelectedConversation(conv);
+            if (signalRHubConnection.state === 'Connected') {
+                signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
+            }
         }
     }, [CreateConversationStatus])
 
@@ -106,17 +111,52 @@ const Message: React.FC = (): ReactElement => {
     }, []);
 
     useEffect(() => {
-
-        if (signalRHubConnection.state === 'Connected') {
-            currentListConversations.map((conv) => {
-                setTimeout(() => {
-                    signalRHubConnection.send("startConversation", conv.id, JSON.stringify(conv));
-                    // console.log("Send startConversation: " + conv.id);
-                }, 2000);
-            });
-        }
-
+        setTimeout(() => {
+            if (signalRHubConnection.state === 'Connected' && currentListConversations.length > 0) {
+                signalRHubConnection.send("initConversations", currentListConversations.map((conv) => conv.id));
+                //console.log("init Conversations: " + currentListConversations.map((conv) => conv.id));
+            }
+        }, 1000);
     }, [currentListConversations])
+
+    useEffect(() => {
+
+        //if (signalRHubConnection.state === 'Connected') { 
+        signalRHubConnection.on("onStartConversation", (conversation) => {
+            console.log("onStartConversation");
+            try {
+                GetConversationListByUser({ payload: { userId: currentUser?.id } });
+                // const convStart = JSON.parse(conversation) as Conversation;
+                // console.log(convStart);
+                // let listConv = currentListConversations;
+
+                // if (convStart != null && listConv.filter(c => c.id === convStart.id).length == 0) {
+                //     //let listConv = currentListConversations;
+                //     //listConv.push(conv);
+                //     //listConv.splice(0, 0, conv);
+                //     setCurrentListConversations(prev => [...prev, convStart]);
+                //     //setSelectedConversation(conv);
+                // }
+            }
+            catch {
+                console.log("error onStartConversation");
+            }
+        });
+
+        signalRHubConnection.on("onInviteToConversation", (conversation) => {
+            GetConversationListByUser({ payload: { userId: currentUser?.id } });
+        });
+        signalRHubConnection.on("onRemoveFromConversation", (conversation) => {
+            GetConversationListByUser({ payload: { userId: currentUser?.id } });
+        });
+        //}
+
+    }, [signalRHubConnection])
+
+    useEffect(() => {
+
+
+    }, []);
 
     // handle user focus on chat message
     let windowIsOnFocus = true;

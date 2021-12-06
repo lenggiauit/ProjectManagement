@@ -15,7 +15,6 @@ const Teams: React.FC = (): ReactElement => {
         <>
             <Layout>
                 <ListTeam />
-
             </Layout>
 
         </>

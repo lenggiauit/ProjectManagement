@@ -49,3 +49,7 @@ export const logout = () => {
     localStorage.clear();
 }
 
+export function paginationRange(size: number, startAt: number = 0): ReadonlyArray<number> {
+    return Array.from({ length: size }, (x, i) => i + startAt);
+}
+

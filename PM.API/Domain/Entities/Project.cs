@@ -19,8 +19,11 @@ namespace PM.API.Domain.Entities
         public Guid? StatusId { get; set; }
         public Guid? UpdatedBy { get; set; }
 
+        public DateTime? UpdatedDate { get; set; }
+
         public virtual ProjectStatus Status { get; set; }
         public virtual List<Todo> Todo { get; set; }
-        public virtual List<UserOnProject> UserOnProject { get; set; }
+        public virtual List<UserOnProject> UserOnProject { get; set; } 
+        public int TotalRows { get; set; }
     }
 }

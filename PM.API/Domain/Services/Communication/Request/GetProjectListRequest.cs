@@ -7,6 +7,6 @@ namespace PM.API.Domain.Services.Communication.Request
 {
     public class GetProjectListRequest
     {
-        public Guid? UserId { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

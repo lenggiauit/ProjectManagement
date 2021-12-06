@@ -16,7 +16,6 @@ const Projects: React.FC = (): ReactElement => {
             <Layout>
                 <ProjectList />
             </Layout>
-
         </>
     );
 }

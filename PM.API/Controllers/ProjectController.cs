@@ -41,7 +41,7 @@ namespace PM.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var projectList = await _projectServices.GetProjectList(request);
+                var projectList = await _projectServices.GetProjectList(GetCurrentUserId(), request);
                 var resources = _mapper.Map<List<Project>, List<ProjectResource>>(projectList);
                 return new GetProjectListResponse(resources);
             }
@@ -50,13 +50,13 @@ namespace PM.API.Controllers
                 return new GetProjectListResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
-        [Permissions("GetProjectListByUser")]
+        [Permissions(PermissionConstant.GetProjectListByUser)]
         [HttpPost("GetProjectListByUser")]
         public async Task<GetProjectListResponse> GetProjectListByUser([FromBody] BaseRequest<GetProjectListRequest> request)
         {
             if (ModelState.IsValid)
             {
-                var projectList = await _projectServices.GetProjectListByUser(request);
+                var projectList = await _projectServices.GetProjectListByUser(GetCurrentUserId(), request);
                 var resources = _mapper.Map<List<Project>, List<ProjectResource>>(projectList);
                 return new GetProjectListResponse(resources);
             }

@@ -1,3 +1,3 @@
 export type GetProjectRequest = {
-    userId: any,
+    isArchived?: boolean
 };

@@ -82,7 +82,11 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
 
     const onSelectedInviteMember: any = (ms: Messenger[]) => {
         setShowInviteModal(current => !current);
-        inviteToConversation({ payload: { conversationId: currentConversation?.id, users: ms.map(m => m.id) } });
+        //inviteToConversation({ payload: { conversationId: currentConversation?.id, users: ms.map(m => m.id) } });
+        if (hubConnection.state === 'Connected') {
+            hubConnection.send("inviteToConversation", currentConversation?.id, ms.map(m => m.id));
+        }
+
         if (currentConversation) {
             let inviteConv: Conversation = {
                 id: currentConversation.id,
@@ -109,7 +113,10 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
 
     const onSelectedRemoveMember: any = (ms: Messenger[]) => {
         setShowRemoveModal(false);
-        removeFromConversation({ payload: { conversationId: currentConversation?.id, users: ms.map(m => m.id) } });
+        //removeFromConversation({ payload: { conversationId: currentConversation?.id, users: ms.map(m => m.id) } });
+        if (hubConnection.state === 'Connected') {
+            hubConnection.send("removeFromConversation", currentConversation?.id, ms.map(m => m.id));
+        }
         if (currentConversation) {
             let removeConv: Conversation = {
                 id: currentConversation.id,
@@ -124,8 +131,8 @@ const ConversationDetail: React.FC<Props> = ({ hubConnection, currentConversatio
             onRemoveMemberEvent(removeConv);
         }
     }
-
     //
+
     useEffect(() => {
         if (inviteToConversationStatus.isSuccess) {
 

@@ -66,5 +66,7 @@
     "btnInvite": "Invite",
     "btnRemove": "Remove",
     "btnDelete": "Delete",
-    "MessageIsDeleted": "This message was deleted."
+    "MessageIsDeleted": "This message was deleted.",
+    "btnPrev": "Prev",
+    "btnNext": "Next"
 }

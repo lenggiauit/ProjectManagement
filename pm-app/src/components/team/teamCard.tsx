@@ -20,7 +20,7 @@ const TeamCard: React.FC = () => {
                     <span className="team-type-tag po">PO</span>
                     <h6 className="mb-0">Team PO 1</h6>
                     <div>
-                        <small className="small-4 text-uppercase ls-2">Auvenir project</small>
+                        <small className="small-4 text-uppercase ls-2">Team project</small>
                     </div>
                     <div>
                         <small className="small-4 text-uppercase ls-2">12</small>

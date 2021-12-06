@@ -46,7 +46,7 @@ namespace PM.API.Persistence.Repositories
                             ConversationId = conversation.Id,
                             UserId = id
                         });
-                    }  
+                    }
                     await _context.ConversationUsers.AddRangeAsync(listc);
                     await _context.SaveChangesAsync();
                     conversation.Conversationers = _context.ConversationUsers.Where(cus2 => cus2.ConversationId.Equals(conversation.Id))
@@ -79,11 +79,11 @@ namespace PM.API.Persistence.Repositories
 
         public async Task<ResultCode> DeleteConversation(Guid userId, BaseRequest<Guid> request)
         {
-            try 
-            { 
+            try
+            {
                 _context.ConversationMessage.RemoveRange(_context.ConversationMessage.Where(cm => cm.ConversationId.Equals(request.Payload)).ToArray());
                 _context.ConversationUsers.RemoveRange(_context.ConversationUsers.Where(cm => cm.ConversationId.Equals(request.Payload)).ToArray());
-                _context.Conversation.Remove(new Conversation() {  Id = request.Payload});
+                _context.Conversation.Remove(new Conversation() { Id = request.Payload });
                 await _context.SaveChangesAsync();
                 return ResultCode.Success;
             }
@@ -150,7 +150,7 @@ namespace PM.API.Persistence.Repositories
                             Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
                         })
                         .ToList()
-                    }) 
+                    })
                     .AsNoTracking().GetPagingQueryable(request.MetaData).ToListAsync();
             }
             catch (Exception ex)
@@ -197,7 +197,7 @@ namespace PM.API.Persistence.Repositories
                 await _context.ConversationMessage.AddAsync(convMessage);
 
                 var conversation = _context.Conversation.Where(c => c.Id.Equals(conversationId)).FirstOrDefault();
-                if(conversation != null)
+                if (conversation != null)
                 {
                     conversation.LastMessage = message;
                     conversation.LastMessageDate = DateTime.Now;
@@ -236,7 +236,7 @@ namespace PM.API.Persistence.Repositories
                             LastMessage = string.Empty,
                             CreatedDate = DateTime.Now,
                             Conversationers = new List<User> { currentUser, u },
-                        }) 
+                        })
                     .ToListAsync();
 
 
@@ -294,13 +294,13 @@ namespace PM.API.Persistence.Repositories
         public async Task<List<User>> MessengerSearch(User currentUser, BaseRequest<MessengerSearchRequest> request)
         {
             return await _context.User.AsNoTracking()
-                .Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword)) 
-                &&  u.Id != currentUser.Id
-                && ( !request.Payload.CurrentIds.Contains(u.Id) ))
+                .Where(u => (u.UserName.Contains(request.Payload.Keyword) || u.FullName.Contains(request.Payload.Keyword))
+                && u.Id != currentUser.Id
+                && (!request.Payload.CurrentIds.Contains(u.Id)))
                        .Select(u => new User()
                        {
                            Id = u.Id,
-                           UserName =  u.UserName,
+                           UserName = u.UserName,
                            FullName = u.FullName,
                            JobTitle = u.JobTitle,
                            Avatar = u.Avatar
@@ -313,12 +313,12 @@ namespace PM.API.Persistence.Repositories
             try
             {
                 List<ConversationUsers> listc = _context.ConversationUsers
-                    .Where(cu => 
+                    .Where(cu =>
                     cu.ConversationId.Equals(request.Payload.ConversationId)
                     && request.Payload.Users.Contains(cu.UserId)
                     && cu.UserId != userId
-                    ).ToList(); 
-                
+                    ).ToList();
+
                 _context.ConversationUsers.RemoveRange(listc);
                 await _context.SaveChangesAsync();
                 return ResultCode.Success;
@@ -342,8 +342,39 @@ namespace PM.API.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message); 
+                _logger.LogError(ex.Message);
             }
+        }
+
+        public async Task<Conversation> GetConversationById(Guid conversationId)
+        {
+            return await _context.Conversation.Where(c => c.Id.Equals(conversationId))
+                    .Select(c => new Conversation()
+                    {
+                        Id = c.Id,
+                        Title = c.Title,
+                        LastMessage = c.LastMessage,
+                        CreatedBy = c.CreatedBy,
+                        CreatedDate = c.CreatedDate,
+                        UpdatedBy = c.UpdatedBy,
+                        LastMessageDate = c.LastMessageDate,
+                        Conversationers = _context.ConversationUsers.Where(cu => cu.ConversationId.Equals(c.Id))
+                          .Join(_context.User, cus2 => cus2.UserId, u => u.Id, (cus2, u) => new User()
+                          {
+                              Id = u.Id,
+                              UserName = u.UserName,
+                              Email = u.Email,
+                              Avatar = u.Avatar,
+                              FullName = u.FullName,
+                              Phone = u.Phone,
+                              Address = u.Address,
+                              JobTitle = u.JobTitle,
+                              Role = _context.Role.Where(r => r.Id == u.RoleId).FirstOrDefault()
+                          })
+                          .Distinct()
+                          .ToList()
+                    })
+                   .AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }

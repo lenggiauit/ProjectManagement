@@ -49,6 +49,11 @@ namespace PM.API.Services
             await _unitOfWork.CompleteAsync();
         }
 
+        public async Task<Conversation> GetConversationById(Guid conversationId)
+        {
+            return await _chatRepository.GetConversationById(conversationId);
+        }
+
         public async Task<List<Conversation>> GetConversationListByUser(Guid userId, BaseRequest<GetConversationListRequest> request)
         {
             return await _chatRepository.GetConversationListByUser(userId, request);

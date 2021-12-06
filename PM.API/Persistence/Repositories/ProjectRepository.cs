@@ -19,18 +19,18 @@ namespace PM.API.Persistence.Repositories
             _logger = logger;
         }
 
-        public async Task<bool> CreateProject(CreateProjectRequest createProjectRequest)
+        public async Task<bool> CreateProject(Guid userId, CreateProjectRequest request)
         {
             try
             {
                 Project newProject = new Project()
                 {
                     Id = Guid.NewGuid(),
-                    Name = createProjectRequest.Name,
-                    Description = createProjectRequest.Description,
-                    StatusId = createProjectRequest.StatusId,
+                    Name = request.Name,
+                    Description = request.Description,
+                    StatusId = request.StatusId,
                     CreatedDate = DateTime.Now,
-                    CreatedBy = Guid.Empty,
+                    CreatedBy = userId,
                 };
                 await _context.Project.AddAsync(newProject);
                 return true;
@@ -55,11 +55,42 @@ namespace PM.API.Persistence.Repositories
             }
         }
 
-        public async Task<List<Project>> GetProjectList(BaseRequest<GetProjectListRequest> ProjectListRequest)
+        public async Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> request)
         {
             try
             {
-                return await _context.Project.AsNoTracking().GetPagingQueryable(ProjectListRequest.MetaData).ToListAsync();
+                return await _context.Project.AsNoTracking().GetPagingQueryable(request.MetaData).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+         
+        public async Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> request)
+        {
+            try
+            {
+                return await _context.Project
+                    .Where(p => p.IsArchived == request.Payload.IsArchived)
+                    .Select(p => new Project()
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        CreatedDate = p.CreatedDate,
+                        CreatedBy = p.CreatedBy,
+                        UpdatedBy = p.UpdatedBy,
+                        UpdatedDate = p.UpdatedDate,
+                        IsArchived = p.IsArchived,
+                        Status = _context.ProjectStatus.Where(s => s.Id.Equals(p.StatusId)).FirstOrDefault(),
+                        TotalRows = _context.Project.Count()
+                    })
+                    .AsNoTracking()
+                    .GetPagingQueryable(request.MetaData)
+                    
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -68,42 +99,18 @@ namespace PM.API.Persistence.Repositories
             }
         }
 
-        public async Task<List<Project>> GetProjectListByProject(BaseRequest<GetProjectListRequest> ProjectListRequest)
+        public async Task<bool> Update(Guid userId, UpdateProjectRequest request)
         {
             try
             {
-                return await _context.Project.AsNoTracking().GetPagingQueryable(ProjectListRequest.MetaData).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return null;
-            }
-        }
-
-        public async Task<List<Project>> GetProjectListByUser(BaseRequest<GetProjectListRequest> ProjectListRequest)
-        {
-            try
-            {
-                return await _context.Project.AsNoTracking().GetPagingQueryable(ProjectListRequest.MetaData).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return null;
-            }
-        }
-
-        public async Task<bool> Update(UpdateProjectRequest updateProjectRequest)
-        {
-            try
-            {
-                var project = await _context.Project.Where(u => u.Id.Equals(updateProjectRequest.Id)).FirstOrDefaultAsync();
+                var project = await _context.Project.Where(u => u.Id.Equals(request.Id)).FirstOrDefaultAsync();
                 if (project != null)
                 {
-                    project.Name = updateProjectRequest.Name;
-                    project.Description = updateProjectRequest.Description;
-                    project.StatusId = updateProjectRequest.StatusId;
+                    project.Name = request.Name;
+                    project.Description = request.Description;
+                    project.StatusId = request.StatusId;
+                    project.UpdatedBy = userId;
+                    project.UpdatedDate = DateTime.Now;
                     _context.Update(project);
                     return true;
                 }

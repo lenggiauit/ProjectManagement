@@ -22,12 +22,6 @@ const Conversationer: React.FC<Props> = ({ hubConnection, data, selectedConversa
     const [lastcurrentMessage, setlastcurrentMessage] = useState<string>(data?.lastMessage);
 
     const [isReceivedMessageButNotActive, setIsReceivedMessageButNotActive] = useState<boolean>(false);
-    useEffect(() => {
-        if (hubConnection.state === 'Connected') {
-            hubConnection.send("startConversation", data?.id, JSON.stringify(data));
-        }
-        setIsReceivedMessageButNotActive(false);
-    }, [])
 
     useEffect(() => {
 
@@ -55,21 +49,21 @@ const Conversationer: React.FC<Props> = ({ hubConnection, data, selectedConversa
                     setlastcurrentMessage('Typing...');
                 }
             });
+
         }
     }, [hubConnection])
     if (data) {
         let title: string = data.title;
-        if (title == null || title.trim().length == 0) {
-            title = data.conversationers.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.name }).join(', ');
-            title = title.length > 20 ? title.substring(0, 20) + ", ..." : title;
+        if (title == null) {
+            title = data.conversationers?.filter(c => c.id != currentUser.id).map(c => { return c.fullName ?? c.name }).join(', ');
+            title = title?.length > 20 ? title?.substring(0, 20) + ", ..." : title;
         }
         return (<>
             <div className={"conversationer-item-container " + (data.id == selectedConversation?.id ? "active-conversation" : "") + (isReceivedMessageButNotActive ? "receiving-message" : "")} onClick={() => { selectedConversationEvent(data) }}>
                 <div className="conversationer-item-body-container p-2">
                     <div className="row m-0">
                         <div className="col-md-4 m-0 pl-0 conversation-avatars-container">
-                            {data.conversationers
-                                .filter(c => c.id != currentUser.id)
+                            {data.conversationers?.filter(c => c.id != currentUser.id)
                                 .map((c, i) =>
                                     <img key={"avatar-" + i + v4().toString()} src={c.avatar ?? "/assets/images/Avatar.png"} className="rounded-circle multiple conversation-avatars" />
                                 )}

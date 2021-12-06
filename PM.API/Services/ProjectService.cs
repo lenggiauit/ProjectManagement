@@ -26,9 +26,9 @@ namespace PM.API.Services
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
         }
-        public async Task<ResultCode> CreateProject(CreateProjectRequest createProjectRequest)
+        public async Task<ResultCode> CreateProject(Guid userId, CreateProjectRequest createProjectRequest)
         {
-            await _projectRepository.CreateProject(createProjectRequest);
+            await _projectRepository.CreateProject(userId, createProjectRequest);
             await _unitOfWork.CompleteAsync();
             return ResultCode.Success;
         }
@@ -38,20 +38,20 @@ namespace PM.API.Services
             return await _projectRepository.GetById(id);
         }
 
-        public async Task<List<Project>> GetProjectList(BaseRequest<GetProjectListRequest> getprojectListRequest)
+        public async Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> getprojectListRequest)
         {
-            return await _projectRepository.GetProjectList(getprojectListRequest);
+            return await _projectRepository.GetProjectList(userId, getprojectListRequest);
         }
 
         
-        public async Task<List<Project>> GetProjectListByUser(BaseRequest<GetProjectListRequest> getprojectListRequest)
+        public async Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> getprojectListRequest)
         {
-            return await _projectRepository.GetProjectListByUser(getprojectListRequest);
+            return await _projectRepository.GetProjectListByUser(userId, getprojectListRequest);
         }
 
-        public async Task<ResultCode> Update(UpdateProjectRequest updateprojectRequest)
+        public async Task<ResultCode> Update(Guid userId, UpdateProjectRequest updateprojectRequest)
         {
-            await _projectRepository.Update(updateprojectRequest);
+            await _projectRepository.Update(userId, updateprojectRequest);
             await _unitOfWork.CompleteAsync();
             return ResultCode.Success;
         }

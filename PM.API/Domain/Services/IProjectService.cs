@@ -11,9 +11,9 @@ namespace PM.API.Domain.Services
     public interface IProjectService
     {
         Task<Project> GetById(Guid id);
-        Task<ResultCode> CreateProject(CreateProjectRequest createProjectRequest);
-        Task<ResultCode> Update(UpdateProjectRequest updateProjectRequest);
-        Task<List<Project>> GetProjectList(BaseRequest<GetProjectListRequest> getProjectListRequest);
-        Task<List<Project>> GetProjectListByUser(BaseRequest<GetProjectListRequest> getProjectListRequest); 
+        Task<ResultCode> CreateProject(Guid userId, CreateProjectRequest createProjectRequest);
+        Task<ResultCode> Update(Guid userId, UpdateProjectRequest updateProjectRequest);
+        Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> getProjectListRequest);
+        Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> getProjectListRequest); 
     }
 }

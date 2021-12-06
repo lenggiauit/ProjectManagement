@@ -21,5 +21,6 @@ namespace PM.API.Domain.Services
         Task<List<User>> MessengerSearch(User user, BaseRequest<MessengerSearchRequest> request);
         Task<ResultCode> RemoveFromConversation(Guid userId, BaseRequest<RemoveFromConversationRequest> request);
         Task DeleteMessage(Guid guid, Guid conversationId, Guid messageId);
+        Task<Conversation> GetConversationById(Guid conversationId);
     }
 }
