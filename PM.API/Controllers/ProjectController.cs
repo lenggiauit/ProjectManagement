@@ -10,6 +10,7 @@ using PM.API.Domain.Services.Communication.Request;
 using PM.API.Domain.Services.Communication.Response;
 using PM.API.Infrastructure;
 using PM.API.Resources;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -50,6 +51,7 @@ namespace PM.API.Controllers
                 return new GetProjectListResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
+
         [Permissions(PermissionConstant.GetProjectListByUser)]
         [HttpPost("GetProjectListByUser")]
         public async Task<GetProjectListResponse> GetProjectListByUser([FromBody] BaseRequest<GetProjectListRequest> request)
@@ -65,5 +67,25 @@ namespace PM.API.Controllers
                 return new GetProjectListResponse(Constants.InvalidMsg, ResultCode.Invalid);
             }
         }
+
+        //[Permissions(PermissionConstant.GetProjectDetail)]
+        [HttpPost("GetProjectDetailById")]
+        public async Task<GetProjectResponse> GetProjectDetailById([FromBody] BaseRequest<Guid> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var project = await _projectServices.GetProjectDetailById(GetCurrentUserId(), request);
+                var resources = _mapper.Map<Project, ProjectDetailResource>(project);
+                return new GetProjectResponse(resources);
+            }
+            else
+            {
+                return new GetProjectResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+        }
+
+        
+
+
     }
 }

@@ -8,6 +8,8 @@ namespace PM.API.Domain.Helpers
     public static class PermissionConstant
     {
         public const string GetProjectListByUser = "GetProjectListByUser";
-         
+        public const string GetProjectDetail = "GetProjectDetail";
+
+
     }
 }

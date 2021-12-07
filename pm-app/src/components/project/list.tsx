@@ -17,6 +17,7 @@ const ProjectList: React.FC = () => {
     const [metaData, setMetaData] = useState<MetaData>({ paging: { index: 1, size: appSetting.PageSize } });
     const [pagingData, setPagingData] = useState<Paging>({ index: 1, size: appSetting.PageSize });
     const [totalPage, setTotalPage] = useState<number>(0);
+    const [isArchived, setIsArchived] = useState<boolean>(false);
     const [projectList, setProjectList] = useState<Project[]>([]);
     const pagingChangeEvent: any = (p: Paging) => {
 
@@ -36,8 +37,8 @@ const ProjectList: React.FC = () => {
 
 
     useEffect(() => {
-        getProjectList({ payload: { isArchived: false }, metaData: metaData });
-    }, [metaData]);
+        getProjectList({ payload: { isArchived: isArchived }, metaData: metaData });
+    }, [metaData, isArchived]);
 
     useEffect(() => {
         if (getProjectListStatus.isSuccess && getProjectListStatus.data.resource != null) {
@@ -46,6 +47,9 @@ const ProjectList: React.FC = () => {
 
                 let num = Math.round(listproject[0].totalRows / appSetting.PageSize);
                 setTotalPage(num);
+            }
+            else {
+                setTotalPage(0);
             }
             setProjectList(listproject);
         }
@@ -63,10 +67,10 @@ const ProjectList: React.FC = () => {
                 <div data-provide="shuffle">
                     <ul className="nav nav-center nav-bold nav-uppercase nav-pills mb-7 mt-0" data-shuffle="filter">
                         <li className="nav-item">
-                            <a className="nav-link active" href="#" data-shuffle="button"><Translation tid="all" /></a>
+                            <a className={"nav-link " + (!isArchived ? "active" : "")} href="#" data-shuffle="button" onClick={() => { setIsArchived(false) }}><Translation tid="all" /></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#" data-shuffle="button" data-group="bag"><Translation tid="archived" /></a>
+                            <a className={"nav-link " + (isArchived ? "active" : "")} href="#" data-shuffle="button" onClick={() => { setIsArchived(true) }} data-group="bag"><Translation tid="archived" /></a>
                         </li>
                     </ul>
                     <div className="row gap-y gap-2" data-shuffle="list">

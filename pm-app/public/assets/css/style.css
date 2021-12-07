@@ -430,3 +430,42 @@
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+/* project */
+
+.card-body.project-container {
+  min-height: 120px;
+  max-height: 120px;
+}
+
+.project-container {
+  text-align: right;
+  padding: 2rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+.project-container .project-status {
+  position: absolute;
+  top: 0;
+  left: 40px;
+  color: #fff;
+  padding: 1px 0.75rem;
+  padding-right: 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  font-weight: 400;
+  border-top-right-radius: 5rem;
+  border-bottom-right-radius: 5rem;
+  transform: rotate(90deg);
+  transform-origin: top left;
+}
+.project-container .project-status.open {
+  background-color: #3cd458;
+}
+.project-container .project-status.hold {
+  background-color: #f1a114;
+}
+.project-container .project-status.closed {
+  background-color: #f70c70;
+}

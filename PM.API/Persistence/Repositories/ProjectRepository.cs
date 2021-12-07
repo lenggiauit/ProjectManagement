@@ -55,6 +55,46 @@ namespace PM.API.Persistence.Repositories
             }
         }
 
+        public async Task<Project> GetProjectDetailById(object userId, BaseRequest<Guid> request)
+        {
+            try
+            {
+                return await _context.Project
+                    .Where(p => p.Id.Equals(request.Payload))
+                    .Select(p => new Project()
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        CreatedDate = p.CreatedDate,
+                        CreatedBy = p.CreatedBy,
+                        UpdatedBy = p.UpdatedBy,
+                        UpdatedDate = p.UpdatedDate,
+                        IsArchived = p.IsArchived,
+                        Status = _context.ProjectStatus.Where(s => s.Id.Equals(p.StatusId)).FirstOrDefault(),
+                        Members = _context.UserOnProject.Where(up => up.ProjectId.Equals(p.Id))
+                            .Join(_context.User, UoP => UoP.UserId, U => U.Id, (UoP, U) => new User() { 
+                                Id = U.Id,
+                                UserName = U.UserName,
+                                Email = U.Email,
+                                FullName = U.FullName,
+                                JobTitle = U.JobTitle,
+                                Avatar = U.Avatar,
+                                Address = U.Address,
+                                Phone = U.Phone,
+                                Role = _context.Role.Where(r => r.Id.Equals(UoP.RoleId)).FirstOrDefault()                            
+                            } ).ToList() 
+                    })
+                    .AsNoTracking() 
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> request)
         {
             try

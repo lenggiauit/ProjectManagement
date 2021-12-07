@@ -14,6 +14,7 @@ namespace PM.API.Domain.Services
         Task<ResultCode> CreateProject(Guid userId, CreateProjectRequest createProjectRequest);
         Task<ResultCode> Update(Guid userId, UpdateProjectRequest updateProjectRequest);
         Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> getProjectListRequest);
-        Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> getProjectListRequest); 
+        Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> getProjectListRequest);
+        Task<Project> GetProjectDetailById(Guid guid, BaseRequest<Guid> request);
     }
 }

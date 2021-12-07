@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace PM.API.Domain.Entities
+namespace PM.API.Domain.Entities.Update
 {
     public partial class Todo
     {
@@ -28,7 +28,7 @@ namespace PM.API.Domain.Entities
         public DateTime? CreatedDate { get; set; }
         public Guid? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public bool? IsArchived { get; set; } 
+        public bool? IsArchived { get; set; }
 
         public virtual User AssigneeNavigation { get; set; }
         public virtual Priority Priority { get; set; }

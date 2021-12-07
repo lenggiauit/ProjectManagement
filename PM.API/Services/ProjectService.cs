@@ -38,6 +38,11 @@ namespace PM.API.Services
             return await _projectRepository.GetById(id);
         }
 
+        public async Task<Project> GetProjectDetailById(Guid userId, BaseRequest<Guid> request)
+        {
+            return await _projectRepository.GetProjectDetailById(userId, request);
+        }
+
         public async Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> getprojectListRequest)
         {
             return await _projectRepository.GetProjectList(userId, getprojectListRequest);

@@ -5,16 +5,15 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace PM.API.Domain.Entities
+namespace PM.API.Domain.Entities.Update
 {
-    public partial class ProjectStatus
-    { 
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool? IsActive { get; set; }
+    public partial class Comment
+    {
+        public Guid? Id { get; set; }
+        public Guid? ParentId { get; set; }
+        public string Comment1 { get; set; }
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatedBy { get; set; }
-         
+        public bool? IsDeleted { get; set; }
     }
 }

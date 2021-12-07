@@ -14,5 +14,6 @@ namespace PM.API.Domain.Repositories
         Task<bool> Update(Guid userId, UpdateProjectRequest request);
         Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> request);
         Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> request);
+        Task<Project> GetProjectDetailById(object userId, BaseRequest<Guid> request);
     }
 }

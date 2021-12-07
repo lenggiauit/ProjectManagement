@@ -5,6 +5,7 @@ import { GetProjectRequest } from './communication/request/getProjectRequest';
 import { GetProjectResponse } from './communication/response/getProjectResponse';
 import * as FormDataFile from "form-data";
 import { Project } from './models/project';
+import { ProjectDetail } from './models/projectDetail';
 
 let appSetting: AppSetting = require('../appSetting.json');
 
@@ -33,7 +34,17 @@ export const ProjectService = createApi({
                 return response;
             },
         }),
+        GetProjectDetailById: builder.mutation<ApiResponse<ProjectDetail>, ApiRequest<any>>({
+            query: (payload) => ({
+                url: 'Project/getProjectDetailById',
+                method: 'post',
+                body: payload
+            }),
+            transformResponse(response: ApiResponse<ProjectDetail>) {
+                return response;
+            },
+        }),
     })
 });
 
-export const { useGetProjectListByUserMutation, } = ProjectService;
+export const { useGetProjectListByUserMutation, useGetProjectDetailByIdMutation } = ProjectService;

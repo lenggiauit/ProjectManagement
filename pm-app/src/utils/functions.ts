@@ -4,6 +4,8 @@ import { Cookies } from 'react-cookie';
 import { GlobalKeys } from "./constants";
 import { User } from "../services/models/user";
 import { Redirect } from "react-router";
+import { useLocation } from "react-router-dom";
+import React from "react";
 
 var cookies = new Cookies();
 const bgColors = ["primary", "secondary", "success", "danger", "warning", "info", "dark"];
@@ -51,5 +53,10 @@ export const logout = () => {
 
 export function paginationRange(size: number, startAt: number = 0): ReadonlyArray<number> {
     return Array.from({ length: size }, (x, i) => i + startAt);
+}
+
+export function useQuery() {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 

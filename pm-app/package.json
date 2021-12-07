@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.2",
-    "@types/dateformat": "^3.0.1"
+    "@types/dateformat": "^3.0.1",
+    "@types/query-string": "^6.3.0"
   }
 }

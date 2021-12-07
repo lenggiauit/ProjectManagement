@@ -20,6 +20,14 @@ const Projects = lazy(() => {
         .then(([moduleExports]) => moduleExports);
 });
 
+const ProjectDetailView = lazy(() => {
+    return Promise.all([
+        import("../views/projects/detail"),
+        new Promise(resolve => setTimeout(resolve, 500))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
 const Teams = lazy(() => {
     return Promise.all([
         import("../views/teams"),
@@ -91,6 +99,7 @@ const IndexRouter: React.FC = (): ReactElement => {
                     <Switch>
                         <Route path="/" exact component={Dashboard} />
                         <Route path="/projects" exact component={Projects} />
+                        <Route path="/projects/:id" exact component={ProjectDetailView} />
                         <Route path="/teams" exact component={Teams} />
                         <Route path="/messages" exact component={Messages} />
                         <Route path="/profile" exact component={Profile} />
