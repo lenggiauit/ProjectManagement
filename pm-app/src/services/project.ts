@@ -44,7 +44,17 @@ export const ProjectService = createApi({
                 return response;
             },
         }),
+        CreateProject: builder.mutation<ApiResponse<Project>, ApiRequest<{ name: string, description: string }>>({
+            query: (payload) => ({
+                url: 'Project/createProject',
+                method: 'post',
+                body: payload
+            }),
+            transformResponse(response: ApiResponse<Project>) {
+                return response;
+            },
+        }),
     })
 });
 
-export const { useGetProjectListByUserMutation, useGetProjectDetailByIdMutation } = ProjectService;
+export const { useGetProjectListByUserMutation, useGetProjectDetailByIdMutation, useCreateProjectMutation } = ProjectService;

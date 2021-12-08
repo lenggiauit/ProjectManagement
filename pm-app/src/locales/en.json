@@ -68,5 +68,9 @@
     "btnDelete": "Delete",
     "MessageIsDeleted": "This message was deleted.",
     "btnPrev": "Prev",
-    "btnNext": "Next"
+    "btnNext": "Next",
+    "btnSave": "Save",
+    "btnCreate": "Create",
+    "CreateNewProject": "Create new project",
+    "EditProject": "Edit project"
 }

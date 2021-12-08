@@ -26,11 +26,10 @@ namespace PM.API.Services
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
         }
-        public async Task<ResultCode> CreateProject(Guid userId, CreateProjectRequest createProjectRequest)
+        public async Task<Project> CreateProject(Guid userId, CreateProjectRequest createProjectRequest)
         {
-            await _projectRepository.CreateProject(userId, createProjectRequest);
-            await _unitOfWork.CompleteAsync();
-            return ResultCode.Success;
+            return await _projectRepository.CreateProject(userId, createProjectRequest);
+             
         }
 
         public async Task<Project> GetById(Guid id)

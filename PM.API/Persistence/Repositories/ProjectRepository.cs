@@ -19,7 +19,7 @@ namespace PM.API.Persistence.Repositories
             _logger = logger;
         }
 
-        public async Task<bool> CreateProject(Guid userId, CreateProjectRequest request)
+        public async Task<Project> CreateProject(Guid userId, CreateProjectRequest request)
         {
             try
             {
@@ -27,18 +27,18 @@ namespace PM.API.Persistence.Repositories
                 {
                     Id = Guid.NewGuid(),
                     Name = request.Name,
-                    Description = request.Description,
-                    StatusId = request.StatusId,
+                    Description = request.Description,  
                     CreatedDate = DateTime.Now,
                     CreatedBy = userId,
                 };
                 await _context.Project.AddAsync(newProject);
-                return true;
+                await _context.SaveChangesAsync();
+                return newProject;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                return null;
             }
         }
 

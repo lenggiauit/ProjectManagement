@@ -60,12 +60,12 @@ const RemoveMember: React.FC<Props> = ({ conv, currentUser, onClose, onSelected 
         onSelected(seletedMessengers);
     }
     return (<>
-        <div className="modal fade show" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true"  >
+        <div className="modal fade show" role="dialog" aria-labelledby="removeModalLabel" aria-modal="true"  >
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
 
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel"><Translation tid="InviteToConversation" /></h5>
+                        <h5 className="modal-title" id="removeModalLabel"><Translation tid="InviteToConversation" /></h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={onCloseHandler} >
                             <span aria-hidden="true">×</span>
                         </button>

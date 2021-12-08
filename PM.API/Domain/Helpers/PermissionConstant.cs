@@ -9,7 +9,8 @@ namespace PM.API.Domain.Helpers
     {
         public const string GetProjectListByUser = "GetProjectListByUser";
         public const string GetProjectDetail = "GetProjectDetail";
-
-
+        public const string AddNewProject = "AddNewProject";
+        public const string UpdateProject = "UpdateProject";
+        public const string DeleteProject = "DeleteProject";
     }
 }

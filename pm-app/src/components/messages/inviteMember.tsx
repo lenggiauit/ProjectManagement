@@ -61,12 +61,12 @@ const InviteMember: React.FC<Props> = ({ isShow, conv, onClose, onSelected }) =>
     }
     if (isShow) {
         return (<>
-            <div className="modal fade show" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true"  >
+            <div className="modal fade show" role="dialog" aria-labelledby="inviteModalLabel" aria-modal="true"  >
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
 
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel"><Translation tid="InviteToConversation" /></h5>
+                            <h5 className="modal-title" id="inviteModalLabel"><Translation tid="InviteToConversation" /></h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={onCloseHandler} >
                                 <span aria-hidden="true">×</span>
                             </button>

@@ -60,3 +60,13 @@ export function useQuery() {
     return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
+export function hasPermission(per: string) {
+    const user = getLoggedUser();
+    if (user) {
+        return user.permissions.filter(p => p.code === per).length > 0;
+    }
+    else {
+        return false;
+    }
+}
+

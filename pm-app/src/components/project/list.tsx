@@ -8,6 +8,8 @@ import ProjectItem from "./item";
 import { v4 } from "uuid";
 import PageLoading from "../pageLoading";
 import LocalSpinner from "../localSpinner";
+import AddProjectButton from "./add";
+import { hasPermission } from "../../utils/functions";
 const appSetting: AppSetting = require('../../appSetting.json');
 
 const ProjectList: React.FC = () => {
@@ -74,6 +76,7 @@ const ProjectList: React.FC = () => {
                         </li>
                     </ul>
                     <div className="row gap-y gap-2" data-shuffle="list">
+                        {!isArchived && hasPermission("AddNewProject") && <AddProjectButton />}
                         {projectList.map(p => <ProjectItem key={v4().toString()} project={p} />)}
                     </div>
                     {totalPage > 0 &&

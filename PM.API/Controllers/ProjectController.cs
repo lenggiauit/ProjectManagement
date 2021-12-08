@@ -52,6 +52,22 @@ namespace PM.API.Controllers
             }
         }
 
+        [Permissions(PermissionConstant.AddNewProject)]
+        [HttpPost("CreateProject")]
+        public async Task<CreateProjectResponse> CreateProject([FromBody] BaseRequest<CreateProjectRequest> request)
+        {
+            if (ModelState.IsValid)
+            {
+                var project = await _projectServices.CreateProject(GetCurrentUserId(), request.Payload);
+                var resources = _mapper.Map<Project, ProjectResource>(project);
+                return new CreateProjectResponse(resources, project != null ? ResultCode.Success: ResultCode.Error);
+            }
+            else
+            {
+                return new CreateProjectResponse(Constants.InvalidMsg, ResultCode.Invalid);
+            }
+        }
+
         [Permissions(PermissionConstant.GetProjectListByUser)]
         [HttpPost("GetProjectListByUser")]
         public async Task<GetProjectListResponse> GetProjectListByUser([FromBody] BaseRequest<GetProjectListRequest> request)

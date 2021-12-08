@@ -18,6 +18,12 @@ namespace PM.API.Domain.Services.Communication.Response
             Resource = resource;
             ResultCode = ResultCode.Success;
         }
+        protected BaseResponse(T resource, ResultCode resultCode)
+        {
+            Messages = string.Empty;
+            Resource = resource;
+            ResultCode = resultCode;
+        }
         protected BaseResponse(string message, ResultCode resultCode = ResultCode.Unknown)
         { 
             Messages = message;

@@ -10,7 +10,7 @@ namespace PM.API.Domain.Repositories
     public interface IProjectRepository
     {
         Task<Project> GetById(Guid id);
-        Task<bool> CreateProject(Guid userId, CreateProjectRequest request);
+        Task<Project> CreateProject(Guid userId, CreateProjectRequest request);
         Task<bool> Update(Guid userId, UpdateProjectRequest request);
         Task<List<Project>> GetProjectList(Guid userId, BaseRequest<GetProjectListRequest> request);
         Task<List<Project>> GetProjectListByUser(Guid userId, BaseRequest<GetProjectListRequest> request);
