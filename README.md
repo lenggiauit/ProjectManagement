@@ -2,7 +2,7 @@
 
 This project is build a tool to manage project for a small team like trello.
 
-Technologies: .Net Core 3x, React TypeScript, Redux Toolkit - RTK Query, React Bootstrap.
+Technologies: .Net Core 3x, SignalR, MSSQL, React TypeScript, Redux Toolkit - RTK Query, React Bootstrap.
 
 Screenshots:
 
