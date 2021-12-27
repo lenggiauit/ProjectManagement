@@ -24,7 +24,7 @@ const Navigation: React.FC = () => {
                         <nav className="nav nav-navbar nav-text-normal mr-auto">
                             <a className="nav-link" href="/"><Translation tid="nav_dashboard" /></a>
                             <a className="nav-link" href="/projects"><Translation tid="nav_projects" /></a>
-                            <a className="nav-link" href="/teams"><Translation tid="nav_teams" /></a>
+                            {/* <a className="nav-link" href="/teams"><Translation tid="nav_teams" /></a> */}
                             <a className="nav-link" href="/messages"><Translation tid="nav_messages" /></a>
                             <a className="nav-link" href="/profile"><Translation tid="nav_profile" /></a>
                             <a className="nav-link" href="#" onClick={() => logout()}><Translation tid="nav_logout" /></a>

@@ -4,6 +4,7 @@ import { AccountService, UserService } from '../services/account';
 import { ChatService } from '../services/chat';
 import { FileService } from '../services/fileService';
 import { ProjectService } from '../services/project';
+import { RefService } from '../services/refService';
 import { TeamService } from '../services/team';
 import userReducer from './userSlice';
 export const store = configureStore({
@@ -16,6 +17,8 @@ export const store = configureStore({
         [TeamService.reducerPath]: TeamService.reducer,
         [FileService.reducerPath]: FileService.reducer,
         [ChatService.reducerPath]: ChatService.reducer,
+        [RefService.reducerPath]: RefService.reducer,
+
     },
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
@@ -26,7 +29,8 @@ export const store = configureStore({
             .concat(ProjectService.middleware)
             .concat(TeamService.middleware)
             .concat(FileService.middleware)
-            .concat(ChatService.middleware);
+            .concat(ChatService.middleware)
+            .concat(RefService.middleware);
     }
 });
 

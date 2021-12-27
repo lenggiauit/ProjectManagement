@@ -39,11 +39,7 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
         onClose();
     }
 
-    //
-
-
     let initialValues: FormValues = { name: '', description: '' };
-
 
     const validationSchema = () => {
         return Yup.object().shape({
@@ -85,6 +81,19 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
                         <Formik initialValues={initialValues} onSubmit={handleOnSubmit} validationSchema={validationSchema} validateOnChange={false}  >
                             {({ errors, touched }) => (
                                 <Form autoComplete="off">
+                                    <div className="form-group">
+                                        <span className="mr-2"> Status:</span>
+                                        <label className="btn btn-round active btn-success">
+                                            <input type="radio" name="status" id="option1" checked /> Active
+                                        </label>
+                                        <label className="btn btn-round btn-success">
+                                            <input type="radio" name="status" id="option2" /> Radio
+                                        </label>
+                                        <label className="btn btn-round btn-success">
+                                            <input type="radio" name="status" id="option3" /> Radio
+                                        </label>
+
+                                    </div>
                                     <div className="form-group">
                                         <Field type="text" className="form-control" name="name" placeholder="name" />
                                         <ErrorMessage

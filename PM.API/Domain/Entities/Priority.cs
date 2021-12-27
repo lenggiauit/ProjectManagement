@@ -14,7 +14,6 @@ namespace PM.API.Domain.Entities
         public int? Order { get; set; }
         public string Color { get; set; }
         public bool? IsActive { get; set; }
-
-        public virtual List<Todo> Todo { get; set; }
+        public bool IsDefault { get; set; } 
     }
 }

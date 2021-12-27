@@ -469,3 +469,13 @@
 .project-container .project-status.closed {
   background-color: #f70c70;
 }
+/*  status radio  */
+label.btn input[type="radio"] {
+  display: none;
+}
+
+label.btn {
+  align-items: center;
+  text-align: center;
+  margin-right: 5px;
+}

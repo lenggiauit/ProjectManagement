@@ -30,7 +30,6 @@ const ProjectList: React.FC = () => {
         setPagingData(mp);
     }
     useEffect(() => {
-        console.log(metaData);
         let md: MetaData = {
             paging: pagingData
         }
