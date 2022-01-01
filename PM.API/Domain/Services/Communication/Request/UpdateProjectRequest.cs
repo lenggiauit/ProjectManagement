@@ -17,6 +17,6 @@ namespace PM.API.Domain.Services.Communication.Request
         [Required]
         public bool IsAcchive { get; set; }
         [Required]
-        public Guid? StatusId { get; set; }
+        public Guid StatusId { get; set; }
     }
 }

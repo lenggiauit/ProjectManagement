@@ -6,6 +6,7 @@ import { User } from "../services/models/user";
 import { Redirect } from "react-router";
 import { useLocation } from "react-router-dom";
 import React from "react";
+import { ProjectStatus } from "../services/models/projectStatus";
 
 var cookies = new Cookies();
 const bgColors = ["primary", "secondary", "success", "danger", "warning", "info", "dark"];

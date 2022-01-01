@@ -21,14 +21,23 @@ namespace PM.API.Persistence.Repositories
         
         public async Task<List<RefModel>> GetProjectStatus(Guid guid, RefRequest payload)
         {
-            return await _context.ProjectStatus.AsNoTracking().Where(s => s.IsActive == true)
-                .Select( ps => new RefModel() { 
-                    Id = ps.Id,
-                    Name = ps.Name,
-                    Description = ps.Description,
-                    IsDefault = ps.IsDefault,
-                })
-                .ToListAsync();
+            try
+            {
+                return await _context.ProjectStatus.AsNoTracking().Where(s => s.IsActive == true)
+                    .Select(ps => new RefModel()
+                    {
+                        Id = ps.Id,
+                        Name = ps.Name,
+                        Description = ps.Description,
+                        IsDefault = ps.IsDefault,
+                    })
+                    .ToListAsync();
+            }
+            catch(Exception ex)
+            { 
+                _logger.LogError(ex.Message);
+                return null;
+            }
         }
 
         public async Task<List<RefModel>> GetPriorities(Guid guid, RefRequest payload)

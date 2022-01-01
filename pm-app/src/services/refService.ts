@@ -20,9 +20,9 @@ export const RefService = createApi({
         },
     }),
     endpoints: (builder) => ({
-        GetProjectStatus: builder.mutation<ApiResponse<ProjectStatus[]>, ApiRequest<{}>>({
+        GetProjectStatus: builder.query<ApiResponse<ProjectStatus[]>, ApiRequest<{}>>({
             query: (payload) => ({
-                url: 'Ref/getProjectStatus',
+                url: 'Ref/GetProjectStatus',
                 method: 'post',
                 body: payload
             }),
@@ -34,4 +34,8 @@ export const RefService = createApi({
     })
 });
 
-export const { useGetProjectStatusMutation } = RefService;
+export const { useGetProjectStatusQuery } = RefService;
+
+
+
+

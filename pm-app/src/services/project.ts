@@ -44,7 +44,7 @@ export const ProjectService = createApi({
                 return response;
             },
         }),
-        CreateProject: builder.mutation<ApiResponse<Project>, ApiRequest<{ name: string, description: string }>>({
+        CreateProject: builder.mutation<ApiResponse<Project>, ApiRequest<{ name: string, description: string, statusId: string }>>({
             query: (payload) => ({
                 url: 'Project/createProject',
                 method: 'post',

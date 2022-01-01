@@ -479,3 +479,64 @@ label.btn {
   text-align: center;
   margin-right: 5px;
 }
+
+/* project left nav */
+
+.project-nav {
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+  height: calc(100vh - 56px);
+  position: absolute;
+  top: 56px;
+  left: 0px;
+  z-index: 999;
+}
+.project-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.project-nav ul li {
+  line-height: 40px;
+  padding: 0px 8px;
+  font-size: 15px;
+  border-bottom: solid 1px #ffffff;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+.project-nav ul li a {
+  display: block;
+}
+.logo {
+  font-size: 21px;
+}
+.project-nav i {
+  color: #fff;
+  font-size: 22px;
+  width: 30px;
+  text-align: center;
+}
+.project-nav ul li div {
+  color: #fff;
+  display: none;
+  padding-left: 10px;
+}
+.project-nav ul li a:hover {
+  text-decoration: none;
+}
+.project-nav ul li:hover {
+  background: #066996;
+}
+.project-nav:hover {
+  width: 250px;
+}
+.project-nav:hover div {
+  display: inline-block;
+}
+
+.project-detail-container {
+  margin-left: 46px;
+  padding: 0 15px;
+}

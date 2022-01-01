@@ -27,9 +27,12 @@ namespace PM.API.Persistence.Repositories
                 {
                     Id = Guid.NewGuid(),
                     Name = request.Name,
-                    Description = request.Description,  
+                    Description = request.Description,
                     CreatedDate = DateTime.Now,
                     CreatedBy = userId,
+                    UpdatedDate  = DateTime.Now,
+                    StatusId = request.StatusId,
+                    IsArchived = false,
                 };
                 await _context.Project.AddAsync(newProject);
                 await _context.SaveChangesAsync();
@@ -128,6 +131,7 @@ namespace PM.API.Persistence.Repositories
                         TotalRows = _context.Project.Count()
                     })
                     .AsNoTracking()
+                    .OrderByDescending(x => x.CreatedDate)
                     .GetPagingQueryable(request.MetaData)
                     
                     .ToListAsync();

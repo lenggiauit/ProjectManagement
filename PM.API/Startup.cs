@@ -84,11 +84,13 @@ namespace PM.API
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IRefService, RefService>();
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IRefRepository, RefRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             // File Service
             services.AddTransient<IFileService, FileService>();

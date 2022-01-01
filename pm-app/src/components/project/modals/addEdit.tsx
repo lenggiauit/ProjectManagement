@@ -9,12 +9,16 @@ import { AppSetting } from "../../../types/type";
 import { ResultCode } from "../../../utils/enums";
 import { useCreateProjectMutation } from "../../../services/project";
 import PageLoading from "../../pageLoading";
+import { getProjectStatus } from "../../../utils/initData";
+import { useGetProjectStatusQuery } from "../../../services/refService";
+import LocalSpinner from "../../localSpinner";
 
 let appSetting: AppSetting = require('../../../appSetting.json');
 
 interface FormValues {
     name: string;
     description: string;
+    pstatus: string
 
 }
 
@@ -29,6 +33,7 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
     const { locale } = useAppContext();
     const [project, setProject] = useState<Project | undefined>(proj);
     const [createProject, createProjectStatus] = useCreateProjectMutation();
+    const projectStatusData = useGetProjectStatusQuery({ payload: {} });
 
     const onCancelHandler: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
@@ -39,19 +44,21 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
         onClose();
     }
 
-    let initialValues: FormValues = { name: '', description: '' };
+    let initialValues: FormValues = { name: '', description: '', pstatus: '' };
 
     const validationSchema = () => {
         return Yup.object().shape({
             name: Yup.string().required(dictionaryList[locale]["RequiredField"]),
             description: Yup.string()
+                .required(dictionaryList[locale]["RequiredField"]),
+            pstatus: Yup.string()
                 .required(dictionaryList[locale]["RequiredField"])
 
         });
     }
     const handleOnSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
         if (!project) {
-            createProject({ payload: { name: values.name, description: values.description } });
+            createProject({ payload: { name: values.name, description: values.description, statusId: values.pstatus } });
         }
     }
 
@@ -60,6 +67,9 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
             window.location.href = "/projects/" + createProjectStatus.data.resource.id;
         }
     }, [createProjectStatus])
+
+
+
     // 
     return (<>
         {createProjectStatus.isLoading && <PageLoading />}
@@ -79,20 +89,26 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
                     <div className="modal-body pb-0 pt-5">
 
                         <Formik initialValues={initialValues} onSubmit={handleOnSubmit} validationSchema={validationSchema} validateOnChange={false}  >
-                            {({ errors, touched }) => (
+                            {({ values, errors, touched }) => (
                                 <Form autoComplete="off">
                                     <div className="form-group">
                                         <span className="mr-2"> Status:</span>
-                                        <label className="btn btn-round active btn-success">
-                                            <input type="radio" name="status" id="option1" checked /> Active
-                                        </label>
-                                        <label className="btn btn-round btn-success">
-                                            <input type="radio" name="status" id="option2" /> Radio
-                                        </label>
-                                        <label className="btn btn-round btn-success">
-                                            <input type="radio" name="status" id="option3" /> Radio
-                                        </label>
-
+                                        {projectStatusData.isLoading && <LocalSpinner />}
+                                        {projectStatusData.data && <>
+                                            {projectStatusData.data.resource.map((status) => (
+                                                <>
+                                                    <label className={"btn btn-round btn-light" + (values.pstatus == status.id ? " active" : "")}>
+                                                        <Field type="radio" name="pstatus" value={status.id} checked={values.pstatus == status.id} />{status.name}
+                                                    </label>
+                                                </>
+                                            ))}
+                                        </>
+                                        }
+                                        <ErrorMessage
+                                            name="pstatus"
+                                            component="div"
+                                            className="alert alert-field alert-danger"
+                                        />
                                     </div>
                                     <div className="form-group">
                                         <Field type="text" className="form-control" name="name" placeholder="name" />
@@ -117,7 +133,7 @@ const AddEditProjectModal: React.FC<Props> = ({ proj, onClose, onSubmit }) => {
                                     </div>
                                     <div className="modal-footer border-0 pr-0 pl-0">
                                         <button type="button" className="btn btn-secondary" onClick={onCancelHandler} data-dismiss="modal"><Translation tid="btnClose" /></button>
-                                        <button type="submit" className="btn btn-primary">
+                                        <button type="submit" className="btn btn-primary" >
                                             {project && <Translation tid="btnSave" />}
                                             {!project && <Translation tid="btnCreate" />}
                                         </button>

@@ -17,7 +17,7 @@ namespace PM.API.Domain.Entities
         public bool? IsArchived { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public Guid? StatusId { get; set; }
+        public Guid StatusId { get; set; }
         public Guid? UpdatedBy { get; set; } 
         public DateTime? UpdatedDate { get; set; } 
         public ProjectStatus Status { get; set; }
