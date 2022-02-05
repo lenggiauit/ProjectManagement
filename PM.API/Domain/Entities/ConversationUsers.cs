@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class ConversationUsers
-    {
-        public Guid Id { get; set; }
+    public  class ConversationUsers : BaseEntity
+    { 
         public Guid UserId { get; set; }
         public Guid ConversationId { get; set; }
     }

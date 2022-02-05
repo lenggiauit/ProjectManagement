@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class PermissionInRole
-    {
-        public Guid Id { get; set; }
+    public class PermissionInRole : BaseEntity
+    { 
         public Guid PermissionId { get; set; }
         public Guid RoleId { get; set; }
 

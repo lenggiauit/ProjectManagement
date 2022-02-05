@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class UserOnTeam
-    {
-        public Guid Id { get; set; }
+    public class UserOnTeam : BaseEntity
+    { 
         public Guid? UserId { get; set; }
         public Guid? TeamId { get; set; }
 

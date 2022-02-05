@@ -8,16 +8,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class Conversation
-    {
-        public Guid Id { get; set; }
+    public class Conversation : BaseEntity
+    { 
         public string Title { get; set; }
         public string LastMessage { get; set; }
-        public DateTime? LastMessageDate { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public Guid? UpdatedBy { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        [NotMapped]
+        public DateTime? LastMessageDate { get; set; } 
         public virtual List<User> Conversationers { get; set; }
     }
 }

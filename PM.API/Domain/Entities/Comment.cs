@@ -7,13 +7,10 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class Comment
-    {
-        public Guid? Id { get; set; }
-        public Guid? ParentId { get; set; }
-        public string Comment1 { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public Guid? CreatedBy { get; set; }
+    public class Comment : BaseEntity
+    { 
+        public Guid ParentId { get; set; }
+        public string CommentContent { get; set; } 
         public bool? IsDeleted { get; set; }
     }
 }

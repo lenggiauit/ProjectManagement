@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class Todo
-    {
-        public Guid Id { get; set; }
+    public class Todo : BaseEntity
+    { 
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }
@@ -23,11 +22,7 @@ namespace PM.API.Domain.Entities
         public int? PositionX { get; set; }
         public int? PositionY { get; set; }
         public int? PositionW { get; set; }
-        public int? PositionH { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public Guid? UpdatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public int? PositionH { get; set; } 
         public bool? IsArchived { get; set; } 
 
         public virtual User AssigneeNavigation { get; set; }

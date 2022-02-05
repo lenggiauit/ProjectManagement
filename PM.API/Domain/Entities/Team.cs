@@ -7,17 +7,12 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class Team
-    { 
-
-        public Guid Id { get; set; }
+    public class Team : BaseEntity
+    {  
         public string Name { get; set; }
         public string Description { get; set; }
         public bool? IsPublic { get; set; }
-        public bool? IsActive { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public DateTime? CreatedDate { get; set; }
-
+        public bool? IsActive { get; set; }  
         public virtual List<UserOnTeam> UserOnTeam { get; set; }
     }
 }

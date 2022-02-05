@@ -8,15 +8,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class Permission
-    { 
-        public Guid Id { get; set; }
+    public class Permission : BaseEntity
+    {  
         public string Name { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public bool? IsActive { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        [NotMapped]
+        public bool? IsActive { get; set; } 
         public virtual List<PermissionInRole> PermissionInRole { get; set; }
     }
 }

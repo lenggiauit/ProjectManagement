@@ -7,15 +7,12 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class ProjectStatus
-    { 
-        public Guid Id { get; set; }
+    public class ProjectStatus : BaseEntity
+    {  
         public string Name { get; set; }
         public string Description { get; set; }
         public bool? IsActive { get; set; }
-        public bool IsDefault { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public Guid? CreatedBy { get; set; }
+        public bool IsDefault { get; set; } 
          
     }
 }

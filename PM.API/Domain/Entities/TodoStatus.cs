@@ -7,15 +7,11 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class TodoStatus
-    {
-        
-        public Guid Id { get; set; }
+    public class TodoStatus : BaseEntity
+    { 
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool? IsActive { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public DateTime? CreatedDate { get; set; }
+        public bool? IsActive { get; set; } 
 
         public virtual List<Todo> Todo { get; set; }
     }

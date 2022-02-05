@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace PM.API.Domain.Entities
 {
-    public partial class Priority
+    public class Priority : BaseEntity
     { 
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public int? Order { get; set; }
         public string Color { get; set; }
