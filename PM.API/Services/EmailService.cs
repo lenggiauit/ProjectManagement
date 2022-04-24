@@ -3,11 +3,11 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;  
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;  
 using System.Threading.Tasks;
 
-namespace PM.API.Services
+namespace CV.API.Services
 {
     public class EmailService : IEmailService
     {

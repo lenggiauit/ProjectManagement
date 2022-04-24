@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;
-using PM.API.Domain.Services.Communication.Response;
-using PM.API.Infrastructure;
-using PM.API.Resources;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;
+using CV.API.Domain.Services.Communication.Response;
+using CV.API.Infrastructure;
+using CV.API.Resources;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
-namespace PM.API.Controllers
+namespace CV.API.Controllers
 {
     [Authorize] 
     [Route("File")]
@@ -44,6 +45,30 @@ namespace PM.API.Controllers
             else
             {
                 return new FileResponse("Cannot image upload!");
+            }
+        }
+        [HttpPost("UploadPackageFile")]
+        public async Task<FileResponse> UploadPackageFile(IFormFile file)
+        {
+            if (_appSettings.TemplateSupportExtension.Any(e => e.ToLower().Equals(file.ContentType.ToLower()))) {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), _appSettings.TemplateFolderPath);
+                string fileName = await _fileService.UploadTemplateZipFile(file, path);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    return new FileResponse(new FileResource
+                    {
+                        FileName = fileName,
+                        Url = string.Format("{0}://{1}{2}/{3}", Request.Scheme, Request.Host.Value, _appSettings.TemplateRequestUrl, fileName)
+                    }); ;
+                }
+                else
+                {
+                    return new FileResponse("Cannot file upload!");
+                }
+            }
+            else
+            {
+                return new FileResponse("File doesn't not support!");
             }
         }
     }

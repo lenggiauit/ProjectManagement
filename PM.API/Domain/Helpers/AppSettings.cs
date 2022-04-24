@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
     public class AppSettings
     {
@@ -23,7 +23,10 @@ namespace PM.API.Domain.Helpers
         public string ForgotPasswordUrl { get; set; }
         public string ClientErrorMappingUrl { get; set; }
         public string FileFolderPath { get; set; }
+        public string TemplateFolderPath { get; set; }
+        public string[] TemplateSupportExtension { get; set; }
         public string FileRequestUrl { get; set; }
+        public string TemplateRequestUrl { get; set; }
         public string AllowOriginUrl { get; set; }
         public string AllowOriginUrl1 { get; set; }
         public string AllowOriginUrl2 { get; set; }

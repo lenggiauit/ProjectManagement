@@ -1,5 +1,3 @@
-USE [ProjectManagement]
-GO
  
  
 INSERT INTO [dbo].[Role]

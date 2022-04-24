@@ -1,16 +1,16 @@
-﻿using PM.API.Domain.Helpers;
+﻿using CV.API.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Services.Communication.Response
+namespace CV.API.Domain.Services.Communication.Response
 {
     public abstract class BaseResponse<T>
     { 
         public ResultCode ResultCode { get; private set; }
         public string? Messages { get; private set; }
-        public T Resource { get; private set; }
+        public T Resource { get; private set; } 
        
         protected BaseResponse(T resource)
         { 

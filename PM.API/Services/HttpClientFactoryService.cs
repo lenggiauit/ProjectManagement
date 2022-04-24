@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace PM.API.Services
+namespace CV.API.Services
 {
     public class HttpClientFactoryService : IHttpClientFactoryService
     {

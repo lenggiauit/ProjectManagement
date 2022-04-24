@@ -3,11 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PM.API.Domain.Entities;
+using CV.API.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PM.API
 {
@@ -23,13 +24,14 @@ namespace PM.API
                 try
                 {
                     context.Database.EnsureCreated();
-                    //context.Database.Migrate(); 
+                    context.Database.Migrate(); 
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
             }
+
 
             host.Run();
         }

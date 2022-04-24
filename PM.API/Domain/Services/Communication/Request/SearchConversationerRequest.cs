@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Services.Communication.Request
+namespace CV.API.Domain.Services.Communication.Request
 {
     public class ConversationalSearchRequest
     {

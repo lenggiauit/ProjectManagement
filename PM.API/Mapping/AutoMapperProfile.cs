@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Models;
-using PM.API.Resources;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Models;
+using CV.API.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Mapping
+namespace CV.API.Mapping
 {
     public class AutoMapperProfile : Profile
     {
@@ -27,7 +27,13 @@ namespace PM.API.Mapping
             CreateMap<User, ConversationerResource>();
             CreateMap<ConversationMessage, ConversationMessageResource>(); 
             CreateMap<Todo, TodoResource>();
-              
+            //
+            CreateMap<TemplateType, TemplateTypeResource>();
+            CreateMap<Template, TemplateResource>();
+            CreateMap<Control, ControlResource>();
+            CreateMap<CSSContent, CSSContentResource>();
+            CreateMap<Language, LanguageResource>();
+            //
         }
     }
 }

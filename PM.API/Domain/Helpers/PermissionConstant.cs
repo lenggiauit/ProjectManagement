@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
     public static class PermissionConstant
     {
@@ -12,5 +12,13 @@ namespace PM.API.Domain.Helpers
         public const string AddNewProject = "AddNewProject";
         public const string UpdateProject = "UpdateProject";
         public const string DeleteProject = "DeleteProject";
+
+        // Template permissions
+        public const string CreateEditTemplateType = "CreateTemplateType";
+        public const string UploadTemplate = "UploadTemplate";
+        public const string GetTemplateType = "GetTemplateType";
+        public const string GetTemplate = "GetTemplate";
+
+
     }
 }

@@ -34,9 +34,19 @@ export const FileService = createApi({
                 return response;
             },
         }),
+        UploadPackageFile: builder.mutation<ApiResponse<FileResponse>, FormData>({
+            query: (payload) => ({
+                url: 'file/uploadPackageFile',
+                method: 'post',
+                body: payload,
 
+            }),
+            transformResponse(response: ApiResponse<FileResponse>) {
+                return response;
+            },
+        }),
 
     })
 });
 
-export const { useUploadImageMutation } = FileService;
+export const { useUploadImageMutation, useUploadPackageFileMutation } = FileService;

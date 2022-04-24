@@ -5,30 +5,33 @@ import Navigation from '../../components/navigation/'
 import { AppProvider } from '../../contexts/appContext';
 import { getLoggedUser } from '../../utils/functions';
 
+type Props = {
+    isPublic?: boolean,
+    navCssClass?: string
+}
 
-const Layout: React.FC = ({ children }): ReactElement => {
+const Layout: React.FC<Props> = ({ isPublic = false, navCssClass, children }): ReactElement => {
 
     const currentUser = getLoggedUser();
 
-    if (currentUser != null) {
+    if (!isPublic && currentUser == null) {
+        return (
+            <Redirect to='/login' />
+        );
+    }
+    else {
         return (
             <>
                 <AppProvider>
-
                     <bt.Container className="nav-container">
                         <bt.Row>
-                            <Navigation />
+                            <Navigation isPublic={isPublic} currentUser={currentUser} navCssClass={navCssClass} />
                         </bt.Row>
                     </bt.Container>
                     {children}
                 </AppProvider>
             </>
         )
-    }
-    else {
-        return (
-            <Redirect to='/login' />
-        );
     }
 };
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
     public class ChatConnectionMapping<T>
     {

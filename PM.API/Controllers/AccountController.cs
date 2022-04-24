@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;
-using PM.API.Domain.Services.Communication.Request;
-using PM.API.Domain.Services.Communication.Response;
-using PM.API.Infrastructure;
-using PM.API.Resources;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;
+using CV.API.Domain.Services.Communication.Request;
+using CV.API.Domain.Services.Communication.Response;
+using CV.API.Infrastructure;
+using CV.API.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PM.API.Controllers
+namespace CV.API.Controllers
 {
     [Authorize]
     [Route("Account")]

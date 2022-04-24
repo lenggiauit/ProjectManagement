@@ -1,5 +1,4 @@
-USE [ProjectManagement]
-
+ 
 GO
 
 Declare @RoleId uniqueidentifier;

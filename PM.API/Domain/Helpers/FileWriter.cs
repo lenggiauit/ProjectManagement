@@ -5,14 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
-    public interface IImageWriter
+    public interface IFileWriter
     {
         Task<string> UploadImage(IFormFile file, string path);
+        Task<string> UploadFile(IFormFile file, string path);
     } 
 
-    public class ImageWriter : IImageWriter
+    public class FileWriter : IFileWriter
     {
         public async Task<string> UploadImage(IFormFile file, string path)
         {
@@ -21,6 +22,11 @@ namespace PM.API.Domain.Helpers
                 return await WriteFile(file, path);
             }
             return string.Empty;
+        }
+
+        public async Task<string> UploadFile(IFormFile file, string path)
+        {
+            return await WriteFile(file, path); 
         }
 
         private bool CheckIfImageFile(IFormFile file)

@@ -22,3 +22,7 @@ export const PTranslation: React.FC<props> = ({ tid }) => {
     const { locale } = useAppContext();
     return <p>{dictionaryList[locale][tid] || tid}</p>
 };
+
+
+
+

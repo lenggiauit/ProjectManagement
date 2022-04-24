@@ -8,13 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting; 
 using Microsoft.IdentityModel.Tokens;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Helpers; 
-using PM.API.Domain.Repositories;
-using PM.API.Domain.Services;
-using PM.API.Extensions;
-using PM.API.Persistence.Repositories;
-using PM.API.Services;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Helpers; 
+using CV.API.Domain.Repositories;
+using CV.API.Domain.Services;
+using CV.API.Extensions;
+using CV.API.Persistence.Repositories;
+using CV.API.Services;
 using System; 
 using System.IO; 
 using System.Text;
@@ -85,16 +85,20 @@ namespace PM.API
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IRefService, RefService>();
+            services.AddScoped<ITemplateService, TemplateService>();
+
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IRefRepository, RefRepository>();
+            services.AddScoped<ITemplateRepository, TemplateRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             // File Service
             services.AddTransient<IFileService, FileService>();
-            services.AddTransient<IImageWriter, ImageWriter>();
+            services.AddTransient<IFileWriter, FileWriter>();
 
             services.AddScoped<IHttpClientFactoryService, HttpClientFactoryService>();
              
@@ -172,9 +176,16 @@ namespace PM.API
                 Path.Combine(Directory.GetCurrentDirectory(), appSettings.FileFolderPath)),
                 RequestPath = appSettings.FileRequestUrl
             });
-             
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), appSettings.TemplateFolderPath)),
+                RequestPath = appSettings.TemplateRequestUrl
+            }); 
+
             app.UseRouting();
-             
+
             app.UseCors(x => x
                 .WithOrigins(appSettings.AllowOriginUrl, appSettings.AllowOriginUrl1, appSettings.AllowOriginUrl2, appSettings.AllowOriginUrl3, appSettings.AllowOriginUrl4)
                 .AllowAnyMethod()
@@ -190,7 +201,6 @@ namespace PM.API
                 endpoints.MapHub<ConversationServiceHub>("/conversationServiceHub");
             });
 
-           
 
 
         }

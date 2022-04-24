@@ -4,13 +4,23 @@ import * as bt from 'react-bootstrap';
 import { Translation } from '../../components/translation/'
 import { LanguageSelector } from '../languageSelector';
 import { AppProvider } from '../../contexts/appContext';
-import { logout } from '../../utils/functions';
+import { getLoggedUser, hasPermission, hasPermissions, logout } from '../../utils/functions';
 import { AnimationLogo } from '../animationLogo';
-const Navigation: React.FC = () => {
+import { User } from '../../services/models/user';
+import { PermissionKeys } from '../../utils/constants';
+
+type Props = {
+    isPublic: boolean,
+    navCssClass?: string,
+    currentUser: User | null
+}
+
+const Navigation: React.FC<Props> = ({ isPublic, navCssClass, currentUser }) => {
+    const location = useLocation();
+
     return (
         <>
-
-            <nav className="navbar navbar-expand-lg navbar-dark">
+            <nav className={"navbar navbar-expand-lg navbar-dark " + (navCssClass ? navCssClass : "")}>
                 <div className="container">
 
                     <div className="navbar-left mr-4">
@@ -21,14 +31,55 @@ const Navigation: React.FC = () => {
                     </div>
                     <section className="navbar-mobile">
                         <span className="navbar-divider d-mobile-none"></span>
-                        <nav className="nav nav-navbar nav-text-normal mr-auto">
-                            <a className="nav-link" href="/"><Translation tid="nav_dashboard" /></a>
-                            <a className="nav-link" href="/projects"><Translation tid="nav_projects" /></a>
-                            {/* <a className="nav-link" href="/teams"><Translation tid="nav_teams" /></a> */}
-                            <a className="nav-link" href="/messages"><Translation tid="nav_messages" /></a>
-                            <a className="nav-link" href="/profile"><Translation tid="nav_profile" /></a>
-                            <a className="nav-link" href="#" onClick={() => logout()}><Translation tid="nav_logout" /></a>
-                        </nav>
+                        <ul className="nav nav-navbar nav-text-normal mr-auto">
+                            <li className="nav-item">
+                                <a className={`nav-link ${(location.pathname == '/') ? "active" : ""}`} href="/"><Translation tid="nav_home" /></a>
+                            </li>
+                            {currentUser != null && <>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${(location.pathname.indexOf('resume') != -1) ? "active" : ""}`} href="#"><Translation tid="nav_resume" /><span className="arrow"></span></a>
+                                    <nav className="nav">
+                                        <a className="nav-link" href="/yourresume"><Translation tid="nav_yourResume" /></a>
+                                        <a className="nav-link" href="/createresume"><Translation tid="nav_createResume" /></a>
+                                    </nav>
+                                </li>
+                            </>
+                            }
+                            {currentUser != null
+                                && (hasPermissions([PermissionKeys.CreateTemplateType, PermissionKeys.GetTemplate, PermissionKeys.GetTemplateType, PermissionKeys.UploadTemplate]))
+                                && <>
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${(location.pathname.indexOf('admin') != -1) ? "active" : ""}`} href="#"><Translation tid="nav_admin" /><span className="arrow"></span></a>
+                                        <nav className="nav">
+                                            <a className="nav-link" href="/admin/templatetype">Template Type</a>
+                                            <a className="nav-link" href="/admin/template">Template</a>
+                                            <a className="nav-link" href="/admin/resumes">Resumes</a>
+                                        </nav>
+                                    </li>
+                                </>
+                            }
+                            {currentUser != null && <>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${(location.pathname.indexOf('messages') != -1) ? "active" : ""}`} href="/messages"><Translation tid="nav_messages" /></a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${(location.pathname.indexOf('profile') != -1) ? "active" : ""}`} href="/profile"><Translation tid="nav_profile" /></a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#" onClick={() => logout()}><Translation tid="nav_logout" /></a>
+                                </li>
+                            </>
+                            }
+                            {isPublic && currentUser == null && <>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/login"><Translation tid="nav_login" /></a>
+                                </li>
+                            </>}
+                        </ul>
+                        <div>
+                            <a className="btn btn-sm btn-success" href="#">Donate</a>
+                            <span className="navbar-divider d-mobile-none"></span>
+                        </div>
                         <LanguageSelector />
                     </section>
 

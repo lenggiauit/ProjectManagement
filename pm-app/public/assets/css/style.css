@@ -168,9 +168,14 @@
   display: block !important;
   background-color: rgba(200, 200, 200, 0.5);
 }
+
 .navbar-dark {
   background-color: #191919;
 }
+.navbar-blue {
+  background-color: #27b4fa;
+}
+
 .navbar {
   position: relative !important;
   top: 0px !important;
@@ -179,9 +184,13 @@
 .navbar-dark .nav-navbar > .nav-link {
   color: #ccc !important;
 }
-.navbar-dark .nav-navbar > .nav-link:hover {
-  color: #fff !important;
+.navbar-dark .nav-item > .nav-link:hover {
+  color: #eee !important;
 }
+.navbar-dark .nav-link.active {
+  color: #eee !important;
+}
+
 .nav-container {
   width: 100%;
   max-width: 100% !important;
@@ -432,9 +441,15 @@
 }
 /* project */
 
-.card-body.project-container {
+.card-body.project-container,
+.card-body.template-type-item-container {
   min-height: 120px;
   max-height: 120px;
+}
+.card.template-item-container {
+  min-height: 450px;
+  max-height: 450px;
+  overflow: hidden;
 }
 
 .project-container {
@@ -539,4 +554,34 @@ label.btn {
 .project-detail-container {
   margin-left: 46px;
   padding: 0 15px;
+}
+
+.h-fullscreen-nav {
+  height: calc(100vh - 60px) !important;
+}
+.template-image {
+  min-height: 250px;
+  max-height: 250px;
+  overflow: hidden;
+  text-align: center;
+}
+.template-image img {
+  height: 250px;
+
+  object-fit: scale-down;
+}
+
+.template-layout-container {
+  background-color: #fff;
+  margin: 10px 0px;
+  padding: 10px 10px;
+}
+
+.editlable-container {
+  margin-left: 10px;
+  display: inline-block;
+  cursor: cell;
+}
+
+.editlable-container:hover {
 }

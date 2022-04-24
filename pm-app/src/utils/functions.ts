@@ -24,12 +24,13 @@ export const getLoggedUser = () => {
             return <User>JSON.parse(JSON.stringify(decrypt(loggedUser)));
         }
         else {
-            window.location.href = "/login";
+            return null;
         }
     }
     catch (e) {
         console.log(e);
-        window.location.href = "/login";
+        return null;
+        //window.location.href = "/login";
     }
 }
 
@@ -64,7 +65,17 @@ export function useQuery() {
 export function hasPermission(per: string) {
     const user = getLoggedUser();
     if (user) {
-        return user.permissions.filter(p => p.code === per).length > 0;
+        return user.permissions.filter(p => p.code.toLocaleUpperCase() === per.toLocaleUpperCase()).length > 0;
+    }
+    else {
+        return false;
+    }
+}
+
+export function hasPermissions(per: string[]) {
+    const user = getLoggedUser();
+    if (user) {
+        return user.permissions.filter(p => per.findIndex(pe => p.code.toLocaleUpperCase() === pe.toLocaleUpperCase()) > -1).length > 0;
     }
     else {
         return false;

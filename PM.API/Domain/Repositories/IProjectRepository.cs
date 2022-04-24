@@ -1,11 +1,11 @@
-﻿using PM.API.Domain.Entities;
-using PM.API.Domain.Services.Communication.Request;
+﻿using CV.API.Domain.Entities;
+using CV.API.Domain.Services.Communication.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Repositories
+namespace CV.API.Domain.Repositories
 {
     public interface IProjectRepository
     {

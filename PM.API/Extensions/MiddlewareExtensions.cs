@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using PM.API.Domain.Helpers;
+using CV.API.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Extensions
+namespace CV.API.Extensions
 {
     public static class MiddlewareExtensions
     {
@@ -17,9 +17,9 @@ namespace PM.API.Extensions
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "PM API",
+                    Title = "Resume API",
                     Version = "v1",
-                    Description = "PM API",
+                    Description = "Resume API",
                     Contact = new OpenApiContact
                     {
                         Name = "Giau Le",
@@ -57,7 +57,7 @@ namespace PM.API.Extensions
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"{appSettings.SubFolder}/swagger/v1/swagger.json", "C19Tracking API V1");
+                c.SwaggerEndpoint($"{appSettings.SubFolder}/swagger/v1/swagger.json", "Resume API V1");
                 c.RoutePrefix = string.Empty;
             });
 

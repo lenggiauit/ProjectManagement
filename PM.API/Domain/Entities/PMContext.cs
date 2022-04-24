@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace PM.API.Domain.Entities
+namespace CV.API.Domain.Entities
 {
     public partial class PMContext : DbContext
     {
@@ -49,7 +49,12 @@ namespace PM.API.Domain.Entities
         public virtual DbSet<TodoType> TodoType { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOnProject> UserOnProject { get; set; }
-        public virtual DbSet<UserOnTeam> UserOnTeam { get; set; }
+        public virtual DbSet<UserOnTeam> UserOnTeam { get; set; } 
+        public virtual DbSet<TemplateType> TemplateType { get; set; }
+        public virtual DbSet<Template> Template { get; set; }
+        public virtual DbSet<Control> Control { get; set; }
+        public virtual DbSet<Language> Language { get; set; }
+        public virtual DbSet<CSSContent> CSSContent { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -273,6 +278,65 @@ namespace PM.API.Domain.Entities
 
                 
             });
+
+            modelBuilder.Entity<TemplateType>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.Property(e => e.Description).HasMaxLength(250);
+
+                entity.Property(e => e.IsArchived).HasDefaultValue(false);
+
+            });
+
+            modelBuilder.Entity<Template>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.Property(e => e.Description).HasMaxLength(250);
+
+                entity.Property(e => e.IsArchived).HasDefaultValue(false);
+
+            });
+
+            modelBuilder.Entity<Control>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(100); 
+
+            });
+
+            modelBuilder.Entity<Language>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+            });
+
+            modelBuilder.Entity<CSSContent>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

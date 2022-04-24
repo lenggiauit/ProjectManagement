@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Services.Communication.Response;
-using PM.API.Resources;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Services.Communication.Response;
+using CV.API.Resources;
 using System; 
 using System.Linq;
 using System.Security.Claims; 
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class PermissionsAttribute : Attribute, IAuthorizationFilter 

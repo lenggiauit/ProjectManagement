@@ -1,13 +1,13 @@
-﻿using PM.API.Domain.Services.Communication.Request; 
+﻿using CV.API.Domain.Services.Communication.Request; 
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Data; 
 using System.Linq.Dynamic.Core;
-using PM.API.Domain.Helpers;
+using CV.API.Domain.Helpers;
 
-namespace PM.API.Extensions
+namespace CV.API.Extensions
 {
     public static class PagingQueryable
     {

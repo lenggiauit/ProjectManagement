@@ -1,11 +1,11 @@
-﻿using PM.API.Domain.Models;
-using PM.API.Domain.Services.Communication.Request;
+﻿using CV.API.Domain.Models;
+using CV.API.Domain.Services.Communication.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Services
+namespace CV.API.Domain.Services
 {
     public interface IRefService
     {

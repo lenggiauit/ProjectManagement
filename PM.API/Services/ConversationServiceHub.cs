@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;
-using PM.API.Domain.Services.Communication.Request;
-using PM.API.Domain.Services.Communication.Response;
-using PM.API.Resources;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;
+using CV.API.Domain.Services.Communication.Request;
+using CV.API.Domain.Services.Communication.Response;
+using CV.API.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace PM.API.Services
+namespace CV.API.Services
 {
     [Authorize]
     public class ConversationServiceHub : Hub

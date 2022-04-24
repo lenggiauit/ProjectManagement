@@ -1,6 +1,6 @@
-﻿using PM.API.Resources;
+﻿using CV.API.Resources;
 
-namespace PM.API.Domain.Services.Communication.Response
+namespace CV.API.Domain.Services.Communication.Response
 {
     public class FileResponse : BaseResponse<FileResource>
     {

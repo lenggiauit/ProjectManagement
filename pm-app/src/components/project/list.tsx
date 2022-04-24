@@ -18,7 +18,7 @@ const ProjectList: React.FC = () => {
     const [getProjectList, getProjectListStatus] = useGetProjectListByUserMutation();
     const [metaData, setMetaData] = useState<MetaData>({ paging: { index: 1, size: appSetting.PageSize } });
     const [pagingData, setPagingData] = useState<Paging>({ index: 1, size: appSetting.PageSize });
-    const [totalPage, setTotalPage] = useState<number>(0);
+    const [totalRows, setTotalRows] = useState<number>(0);
     const [isArchived, setIsArchived] = useState<boolean>(false);
     const [projectList, setProjectList] = useState<Project[]>([]);
     const pagingChangeEvent: any = (p: Paging) => {
@@ -45,12 +45,10 @@ const ProjectList: React.FC = () => {
         if (getProjectListStatus.isSuccess && getProjectListStatus.data.resource != null) {
             let listproject = getProjectListStatus.data.resource;
             if (listproject.length > 0) {
-
-                let num = Math.round(listproject[0].totalRows / appSetting.PageSize);
-                setTotalPage(num);
+                setTotalRows(listproject[0].totalRows);
             }
             else {
-                setTotalPage(0);
+                setTotalRows(0);
             }
             setProjectList(listproject);
         }
@@ -78,13 +76,10 @@ const ProjectList: React.FC = () => {
                         {!isArchived && hasPermission("AddNewProject") && <AddProjectButton />}
                         {projectList.map(p => <ProjectItem key={v4().toString()} project={p} />)}
                     </div>
-                    {totalPage > 0 &&
-                        <>
-                            <div className="mt-7">
-                                <Pagination totalPages={totalPage} pageChangeEvent={pagingChangeEvent} />
-                            </div>
-                        </>
-                    }
+
+                    <div className="mt-7">
+                        <Pagination totalRows={totalRows} pageChangeEvent={pagingChangeEvent} />
+                    </div>
                 </div>
             </div>
         </section>

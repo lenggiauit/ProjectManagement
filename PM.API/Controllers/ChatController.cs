@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;
-using PM.API.Domain.Services.Communication.Request;
-using PM.API.Domain.Services.Communication.Response;
-using PM.API.Infrastructure;
-using PM.API.Resources;
-using PM.API.Services;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;
+using CV.API.Domain.Services.Communication.Request;
+using CV.API.Domain.Services.Communication.Response;
+using CV.API.Infrastructure;
+using CV.API.Resources;
+using CV.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Controllers
+namespace CV.API.Controllers
 {
     [Authorize]
     [Route("Chat")]

@@ -1,10 +1,10 @@
-﻿using PM.API.Domain.Helpers;
+﻿using CV.API.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Resources
+namespace CV.API.Resources
 { 
     public class ErrorResource
     {

@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using PM.API.Domain.Entities;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Repositories;
-using PM.API.Domain.Services.Communication.Request;
-using PM.API.Extensions;
+using CV.API.Domain.Entities;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Repositories;
+using CV.API.Domain.Services.Communication.Request;
+using CV.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Persistence.Repositories
+namespace CV.API.Persistence.Repositories
 {
     public class TeamRepository : BaseRepository, ITeamRepository
     {

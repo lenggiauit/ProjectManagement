@@ -1,24 +1,29 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Services;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Services
+namespace CV.API.Services
 {
     public class FileService : IFileService
     {
-        private readonly IImageWriter _imageWriter;
-        public FileService(IImageWriter imageWriter)
+        private readonly IFileWriter _fileWriter;
+        public FileService(IFileWriter fileWriter)
         {
-            _imageWriter = imageWriter;
+            _fileWriter = fileWriter;
         }
 
         public async Task<string> UploadImage(IFormFile file, string path)
         {
-            return await _imageWriter.UploadImage(file, path);
+            return await _fileWriter.UploadImage(file, path);
+        }
+
+        public async Task<string> UploadTemplateZipFile(IFormFile file, string path)
+        {
+            return await _fileWriter.UploadFile(file, path);
         }
     }
 }

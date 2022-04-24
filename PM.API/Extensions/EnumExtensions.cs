@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace PM.API.Extensions
+namespace CV.API.Extensions
 {
     public static class EnumExtensions
     {

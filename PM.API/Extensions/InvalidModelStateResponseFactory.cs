@@ -1,9 +1,9 @@
 ﻿
-using PM.API.Resources;
+using CV.API.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 
-namespace PM.API.Extensions
+namespace CV.API.Extensions
 {
     public static class InvalidModelStateResponseFactory
     {

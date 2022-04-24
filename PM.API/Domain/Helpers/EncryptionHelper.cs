@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
     public static class EncryptionHelper
     {

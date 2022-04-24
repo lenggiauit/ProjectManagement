@@ -6,6 +6,7 @@ import { FileService } from '../services/fileService';
 import { ProjectService } from '../services/project';
 import { RefService } from '../services/refService';
 import { TeamService } from '../services/team';
+import { TemplatteService } from '../services/template';
 import userReducer from './userSlice';
 export const store = configureStore({
     reducer: {
@@ -18,7 +19,7 @@ export const store = configureStore({
         [FileService.reducerPath]: FileService.reducer,
         [ChatService.reducerPath]: ChatService.reducer,
         [RefService.reducerPath]: RefService.reducer,
-
+        [TemplatteService.reducerPath]: TemplatteService.reducer,
     },
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
@@ -30,7 +31,8 @@ export const store = configureStore({
             .concat(TeamService.middleware)
             .concat(FileService.middleware)
             .concat(ChatService.middleware)
-            .concat(RefService.middleware);
+            .concat(RefService.middleware)
+            .concat(TemplatteService.middleware);
     }
 });
 

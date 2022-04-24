@@ -1,4 +1,4 @@
-USE [ProjectManagement]
+
 GO
 --- Delete from [dbo].[Permission]
 --- Select * from [dbo].[Permission]
@@ -86,7 +86,38 @@ INSERT INTO [dbo].[Permission]
 			   ,'Get Project list by user'
 			   ,1
 			   ,GETDATE()
+            ),
+			(NEWID()
+			   ,'CreateTemplateType'
+			   ,'CreateTemplateType'
+			   ,'CreateTemplateType'
+			   ,1
+			   ,GETDATE()
+            ) ,
+			(NEWID()
+			   ,'UploadTemplate'
+			   ,'UploadTemplate'
+			   ,'UploadTemplate'
+			   ,1
+			   ,GETDATE()
             ) 
+			,
+			(NEWID()
+			   ,'GetTemplateType'
+			   ,'GetTemplateType'
+			   ,'GetTemplateType'
+			   ,1
+			   ,GETDATE()
+            ) 
+			,
+			(NEWID()
+			   ,'GetTemplate'
+			   ,'GetTemplate'
+			   ,'GetTemplate'
+			   ,1
+			   ,GETDATE()
+            ) 
+			 
 			 
 GO
 

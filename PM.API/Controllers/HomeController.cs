@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PM.API.Domain.Helpers;
-using PM.API.Infrastructure;
+using CV.API.Domain.Helpers;
+using CV.API.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Controllers
+namespace CV.API.Controllers
 {
     public class HomeController : PMBaseController
     {

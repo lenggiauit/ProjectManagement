@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PM.API.Domain.Helpers;
-using PM.API.Domain.Models;
-using PM.API.Domain.Repositories;
-using PM.API.Domain.Services;
-using PM.API.Domain.Services.Communication.Request;
+using CV.API.Domain.Helpers;
+using CV.API.Domain.Models;
+using CV.API.Domain.Repositories;
+using CV.API.Domain.Services;
+using CV.API.Domain.Services.Communication.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PM.API.Services
+namespace CV.API.Services
 {
     public class RefService : IRefService
     {

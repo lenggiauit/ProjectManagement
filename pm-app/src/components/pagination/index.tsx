@@ -9,14 +9,13 @@ import { Translation } from "../translation";
 const appSetting: AppSetting = require('../../appSetting.json');
 
 type Props = {
-    totalPages: number,
+    totalRows: number,
     pageChangeEvent: (metaData: Paging) => void,
 }
-const Pagination: React.FC<Props> = ({ totalPages, pageChangeEvent }) => {
+const Pagination: React.FC<Props> = ({ totalRows, pageChangeEvent }) => {
 
-
+    let totalPages = Math.ceil(totalRows / appSetting.PageSize);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalPage, setTotalPage] = useState<number>(totalPages);
 
     const nextPageHandle = () => {
         let p = currentPage + 1;
@@ -44,7 +43,7 @@ const Pagination: React.FC<Props> = ({ totalPages, pageChangeEvent }) => {
                         <li className={"page-item " + (currentPage === 1 ? "disabled" : "")}>
                             <a className="page-link pl-2 pr-2 noselect" href="#" onClick={prevPageHandle} ><Translation tid="btnPrev" /></a>
                         </li>
-                        {paginationRange(totalPage >= 5 ? 5 : totalPage, (currentPage - 4) < 1 ? 1 : (currentPage - 4)).map(p =>
+                        {paginationRange(totalPages >= 5 ? 5 : totalPages, (currentPage - 4) < 1 ? 1 : (currentPage - 4)).map(p =>
                             <li key={v4().toString()} className={"page-item  " + (currentPage === p ? "active" : "")}><a className="page-link noselect" href="#" target={p.toString()} onClick={moveToPageHandle} >{p}</a></li>
                         )}
                         <li className={"page-item " + (currentPage === totalPages ? "disabled" : "")}>

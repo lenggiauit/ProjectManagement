@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PM.API.Domain.Helpers
+namespace CV.API.Domain.Helpers
 {
     public class WriterHelper
     {
@@ -50,6 +52,20 @@ namespace PM.API.Domain.Helpers
                 return ImageFormat.jpeg;
 
             return ImageFormat.unknown;
+        }
+        public static bool ValidateExtension(ZipArchiveEntry entry, string ext)
+        {
+            return entry.Name.EndsWith(
+                        ext,
+                        StringComparison.InvariantCultureIgnoreCase);
+        }
+        public static string ExtractFileStrings(ZipArchiveEntry entry)
+        {
+            using (var stream = entry.Open())
+            using (var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }
