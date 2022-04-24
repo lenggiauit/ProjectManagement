@@ -131,17 +131,7 @@ namespace PM.API.Domain.Entities
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.HasOne(d => d.Permission)
-                    .WithMany(p => p.PermissionInRole)
-                    .HasForeignKey(d => d.PermissionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Permissio__Permi__2DE6D218");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.PermissionInRole)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Permissio__RoleI__2EDAF651");
+               
             });
 
             modelBuilder.Entity<Priority>(entity =>
@@ -161,10 +151,7 @@ namespace PM.API.Domain.Entities
 
                 entity.Property(e => e.Name).HasMaxLength(100);
 
-                //entity.HasOne(d => d.Status)
-                //    .WithMany(p => p.Project)
-                //    .HasForeignKey(d => d.StatusId)
-                //    .HasConstraintName("FK__Project__StatusI__76969D2E");
+                
             });
 
             modelBuilder.Entity<ProjectStatus>(entity =>
@@ -220,30 +207,7 @@ namespace PM.API.Domain.Entities
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
-                //entity.HasOne(d => d.AssigneeNavigation)
-                //    .WithMany(p => p.Todo)
-                //    .HasForeignKey(d => d.Assignee)
-                //    .HasConstraintName("FK__Todo__Assignee__0B91BA14");
-
-                //entity.HasOne(d => d.Priority)
-                //    .WithMany(p => p.Todo)
-                //    .HasForeignKey(d => d.PriorityId)
-                //    .HasConstraintName("FK__Todo__PriorityId__0C85DE4D");
-
-                //entity.HasOne(d => d.Project)
-                //    .WithMany(p => p.Todo)
-                //    .HasForeignKey(d => d.ProjectId)
-                //    .HasConstraintName("FK__Todo__ProjectId__0D7A0286");
-
-                //entity.HasOne(d => d.TodoStatus)
-                //    .WithMany(p => p.Todo)
-                //    .HasForeignKey(d => d.TodoStatusId)
-                //    .HasConstraintName("FK__Todo__TodoStatus__0E6E26BF");
-
-                //entity.HasOne(d => d.TodoType)
-                //    .WithMany(p => p.Todo)
-                //    .HasForeignKey(d => d.TodoTypeId)
-                //    .HasConstraintName("FK__Todo__TodoTypeId__0F624AF8");
+               
             });
 
             modelBuilder.Entity<TodoStatus>(entity =>
@@ -293,49 +257,21 @@ namespace PM.API.Domain.Entities
                     .IsFixedLength();
 
                 entity.Property(e => e.UserName).HasMaxLength(250);
-
-                //entity.HasOne(d => d.Role)
-                //    .WithMany(p => p.User)
-                //    .HasForeignKey(d => d.RoleId)
-                //    .HasConstraintName("FK__User__RoleId__1EA48E88");
+ 
             });
 
             modelBuilder.Entity<UserOnProject>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                //entity.HasOne(d => d.Project)
-                //    .WithMany(p => p.UserOnProject)
-                //    .HasForeignKey(d => d.ProjectId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK__UserOnPro__Proje__3F115E1A");
-
-                //entity.HasOne(d => d.Role)
-                //    .WithMany(p => p.UserOnProject)
-                //    .HasForeignKey(d => d.RoleId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK__UserOnPro__RoleI__40058253");
-
-                //entity.HasOne(d => d.User)
-                //    .WithMany(p => p.UserOnProject)
-                //    .HasForeignKey(d => d.UserId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK__UserOnPro__UserI__3E1D39E1");
+                
             });
 
             modelBuilder.Entity<UserOnTeam>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                //entity.HasOne(d => d.Team)
-                //    .WithMany(p => p.UserOnTeam)
-                //    .HasForeignKey(d => d.TeamId)
-                //    .HasConstraintName("FK__UserOnTea__TeamI__1CBC4616");
-
-                //entity.HasOne(d => d.User)
-                //    .WithMany(p => p.UserOnTeam)
-                //    .HasForeignKey(d => d.UserId)
-                //    .HasConstraintName("FK__UserOnTea__UserI__1DB06A4F");
+                
             });
 
             OnModelCreatingPartial(modelBuilder);

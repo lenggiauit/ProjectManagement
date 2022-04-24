@@ -1,5 +1,5 @@
 {
-    "BaseUrl": "https://localhost:44333/",
+    "BaseUrl": "https://pmapi.nagistar.com/",
     "GoogleClientId": "522351386373-vd9iv3qesca501vuv0ccbhmth4ema178.apps.googleusercontent.com",
-    "PageSize": 10
+    "PageSize": 7
 }
